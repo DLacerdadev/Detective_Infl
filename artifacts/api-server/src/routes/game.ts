@@ -42,16 +42,16 @@ router.get("/origins", async (_req: Request, res: Response) => {
 
 router.post("/origins", async (req: Request, res: Response) => {
   if (!isAdmin(req)) { res.status(403).json({ error: "Forbidden" }); return; }
-  const { nome, descricao, periciasConcedidas = [], poderConcedido } = req.body;
+  const { nome, descricao, periciasConcedidas = [], poderConcedido, poderDescricao, fonte, criador } = req.body;
   if (!nome) { res.status(400).json({ error: "nome required" }); return; }
-  const [row] = await db.insert(origensTable).values({ nome, descricao, periciasConcedidas, poderConcedido }).returning();
+  const [row] = await db.insert(origensTable).values({ nome, descricao, periciasConcedidas, poderConcedido, poderDescricao, fonte, criador }).returning();
   res.status(201).json(mapOrigin(row));
 });
 
 router.put("/origins/:id", async (req: Request, res: Response) => {
   if (!isAdmin(req)) { res.status(403).json({ error: "Forbidden" }); return; }
-  const { nome, descricao, periciasConcedidas, poderConcedido } = req.body;
-  const [row] = await db.update(origensTable).set({ nome, descricao, periciasConcedidas, poderConcedido }).where(eq(origensTable.id, req.params.id)).returning();
+  const { nome, descricao, periciasConcedidas, poderConcedido, poderDescricao, fonte, criador } = req.body;
+  const [row] = await db.update(origensTable).set({ nome, descricao, periciasConcedidas, poderConcedido, poderDescricao, fonte, criador }).where(eq(origensTable.id, req.params.id)).returning();
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   res.json(mapOrigin(row));
 });
@@ -197,6 +197,9 @@ function mapOrigin(row: Record<string, unknown>) {
     descricao: row.descricao,
     periciasConcedidas: row.periciasConcedidas,
     poderConcedido: row.poderConcedido,
+    poderDescricao: row.poderDescricao,
+    fonte: row.fonte,
+    criador: row.criador,
     createdAt: row.createdAt,
   };
 }

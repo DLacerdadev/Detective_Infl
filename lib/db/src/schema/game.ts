@@ -24,6 +24,9 @@ export const origensTable = pgTable("origens", {
   descricao: text("descricao"),
   periciasConcedidas: jsonb("pericias_concedidas").$type<string[]>().default([]),
   poderConcedido: text("poder_concedido"),
+  poderDescricao: text("poder_descricao"),
+  fonte: text("fonte"),
+  criador: text("criador"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
