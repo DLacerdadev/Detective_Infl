@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { useAuth } from "@workspace/replit-auth-web";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, Shield, FileText } from "lucide-react";
 
@@ -33,7 +33,7 @@ export function Navbar() {
             
             <div className="flex items-center space-x-3">
               <div className="flex flex-col items-end hidden sm:flex">
-                <span className="text-sm font-display tracking-wider text-foreground leading-none">{user?.username || "Agente"}</span>
+                <span className="text-sm font-display tracking-wider text-foreground leading-none">{user?.firstName || user?.email || "Agente"}</span>
                 <span className="text-xs text-primary font-display uppercase tracking-widest">{user?.role === 'admin' ? 'Veríssimo' : 'Operador'}</span>
               </div>
               <Button variant="outline" size="icon" onClick={logout} title="Desconectar" className="border-border/50 hover:bg-destructive/20 hover:text-destructive hover:border-destructive/50 transition-colors">

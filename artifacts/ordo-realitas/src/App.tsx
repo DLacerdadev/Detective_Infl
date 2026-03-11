@@ -2,11 +2,12 @@ import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useAuth } from "@workspace/replit-auth-web";
+import { useAuth } from "@/hooks/useAuth";
 import { Navbar } from "@/components/layout/Navbar";
 
 // Pages
 import Home from "@/pages/Home";
+import Login from "@/pages/Login";
 import Characters from "@/pages/Characters";
 import CreateCharacter from "@/pages/CreateCharacter";
 import CharacterSheet from "@/pages/CharacterSheet";
@@ -50,6 +51,7 @@ function Router() {
       <main className="flex-1">
         <Switch>
           <Route path="/" component={Home} />
+          <Route path="/login" component={Login} />
           <Route path="/characters">
             {() => <ProtectedRoute component={Characters} />}
           </Route>

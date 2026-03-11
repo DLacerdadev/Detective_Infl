@@ -1,4 +1,4 @@
-import { useAuth } from "@workspace/replit-auth-web";
+import { useAuth } from "@/hooks/useAuth";
 import { useLocation } from "wouter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useListClasses, useListOrigins, useListPericias } from "@workspace/api-client-react";

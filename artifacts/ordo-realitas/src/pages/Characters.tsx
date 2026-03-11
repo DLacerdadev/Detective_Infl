@@ -1,4 +1,4 @@
-import { useAuth } from "@workspace/replit-auth-web";
+import { useAuth } from "@/hooks/useAuth";
 import { useListCharacters } from "@workspace/api-client-react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ export default function Characters() {
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8 border-b border-border/50 pb-6">
         <div>
           <h1 className="text-3xl font-display text-foreground tracking-widest mb-2">ARQUIVOS DE AGENTES</h1>
-          <p className="text-muted-foreground font-sans">Dossiês vinculados ao operador {user?.username}</p>
+          <p className="text-muted-foreground font-sans">Dossiês vinculados ao operador {user?.firstName || user?.email}</p>
         </div>
         <Button onClick={() => setLocation("/characters/new")} className="mt-4 sm:mt-0 shadow-[0_0_15px_rgba(220,38,38,0.3)]">
           <Plus className="mr-2 h-4 w-4" /> RECRUTAR AGENTE

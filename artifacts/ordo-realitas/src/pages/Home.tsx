@@ -1,4 +1,4 @@
-import { useAuth } from "@workspace/replit-auth-web";
+import { useAuth } from "@/hooks/useAuth";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,7 @@ import { ShieldAlert, BookOpen, Skull } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Home() {
-  const { isAuthenticated, login, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const [, setLocation] = useLocation();
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function Home() {
 
         <Button 
           size="lg" 
-          onClick={login}
+          onClick={() => setLocation("/login")}
           className="text-lg px-12 py-6 animate-pulse hover:animate-none hover:scale-105 transition-transform"
         >
           Acessar Terminal da Ordem
