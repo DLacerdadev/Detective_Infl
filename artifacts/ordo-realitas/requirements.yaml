@@ -1,0 +1,28 @@
+packages:
+  "framer-motion": "Animations for wizard transitions and character cards"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility for merging tailwind classes without conflicts"
+  "lucide-react": "Icons for the UI"
+  "react-hook-form": "Form state management"
+  "@hookform/resolvers": "Zod resolver for react-hook-form validation"
+  "zod": "Schema validation for forms"
+  "date-fns": "Date formatting for character creation dates"
+  "@radix-ui/react-dialog": "Accessible dialogs for admin forms and editing"
+  "@radix-ui/react-tabs": "Accessible tabs for character sheet and admin panel"
+  "@radix-ui/react-progress": "Progress bars for PV, PE, Sanidade"
+
+images:
+  - path: "artifacts/ordo-realitas/public/images/noir-office-bg.png"
+    description: "A dark, moody 1980s detective office at night, dimly lit by a desk lamp. Sepia tones, heavy shadows, a vintage typewriter on a dark wooden desk, scattered case files, a slight paranormal eerie fog in the background."
+    aspect_ratio: "16:9"
+  - path: "artifacts/ordo-realitas/public/images/dossier-texture.png"
+    description: "Close up texture of an aged, slightly stained, yellowed vintage manila dossier folder paper, with subtle creases and faded ink marks. Moody lighting."
+    aspect_ratio: "1:1"
+  - path: "artifacts/ordo-realitas/public/images/blood-stamp.png"
+    description: "A dark red, slightly faded stamp mark that looks like an occult symbol or the words 'CLASSIFIED' with a slight blood-like splatter effect around the edges on a transparent background."
+    aspect_ratio: "1:1"
+
+notes:
+  - Uses @workspace/replit-auth-web for authentication.
+  - Uses @workspace/api-client-react for TanStack Query hooks.
+  - UI follows a dark noir, paranormal investigation aesthetic.

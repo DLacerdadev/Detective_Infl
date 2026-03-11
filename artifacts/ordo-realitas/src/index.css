@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Special+Elite&display=swap');
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: 'Crimson Text', serif;
+  --font-display: 'Special Elite', monospace;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-pv: hsl(0 75% 45%);
+  --color-pe: hsl(260 60% 50%);
+  --color-san: hsl(45 90% 50%);
+}
+
+:root {
+  /* Noir / Aged Office Palette */
+  --background: 24 15% 10%; /* Very dark wood/shadow */
+  --foreground: 40 20% 85%; /* Aged parchment */
+  
+  --card: 30 15% 14%; /* Darker wood / leather folder */
+  --card-foreground: 40 20% 85%;
+  
+  --primary: 0 75% 40%; /* Dried blood red */
+  --primary-foreground: 0 0% 100%;
+  
+  --secondary: 30 15% 25%; /* Worn desk wood */
+  --secondary-foreground: 40 20% 85%;
+  
+  --muted: 24 10% 20%;
+  --muted-foreground: 40 10% 60%;
+  
+  --accent: 15 30% 30%; /* Rust / Sepia accent */
+  --accent-foreground: 40 20% 90%;
+  
+  --destructive: 0 80% 40%;
+  --destructive-foreground: 0 0% 100%;
+  
+  --border: 24 20% 25%; /* Ink / dark wood grain */
+  --input: 24 15% 16%;
+  --ring: 0 75% 40%;
+
+  --radius: 0.25rem; /* Slight rounding, mostly sharp corners for files */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased font-sans selection:bg-primary/30 selection:text-primary-foreground;
+    background-image: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.4) 100%), 
+                      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    @apply font-normal tracking-wide;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+  }
+
+  /* Custom scrollbar for dossiers */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-background border-l border-border;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-secondary border border-border;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent;
+  }
+}
+
+.typewriter-text {
+  font-family: var(--font-display);
+  color: hsl(40 20% 85%);
+  text-shadow: 0 0 1px rgba(255,255,255,0.3);
+}
+
+.dossier-paper {
+  background-color: hsl(40 25% 85%);
+  color: hsl(24 20% 15%);
+  background-image: 
+    linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+    linear-gradient(#eee .1em, transparent .1em);
+  background-size: 100% 1.2em;
+  box-shadow: inset 0 0 40px rgba(150, 120, 90, 0.4), 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.dossier-paper h1, .dossier-paper h2, .dossier-paper h3, .dossier-paper p, .dossier-paper span {
+  color: hsl(24 20% 15%);
+  text-shadow: none;
+}
+
+.glass-panel {
+  @apply bg-background/80 backdrop-blur-md border border-border/50 shadow-xl;
+}

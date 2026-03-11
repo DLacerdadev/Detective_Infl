@@ -1,22 +1,36 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Ordo Realitas RPG API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication operations
+  - name: characters
+    description: Character management
+  - name: classes
+    description: RPG Classes
+  - name: origins
+    description: Character origins
+  - name: skills
+    description: Character skills/pericias
+  - name: rituals
+    description: RPG Rituals
+  - name: items
+    description: Game items
+  - name: tables
+    description: Virtual tables
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +38,535 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /auth/user:
+    get:
+      operationId: getCurrentAuthUser
+      tags: [auth]
+      summary: Get current authenticated user
+      responses:
+        "200":
+          description: Current auth state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetCurrentAuthUserResponse"
+
+  /characters:
+    get:
+      operationId: listCharacters
+      tags: [characters]
+      summary: List all characters for authenticated user
+      responses:
+        "200":
+          description: List of characters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Character"
+        "401":
+          description: Unauthorized
+    post:
+      operationId: createCharacter
+      tags: [characters]
+      summary: Create a new character
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCharacterBody"
+      responses:
+        "201":
+          description: Character created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Character"
+        "401":
+          description: Unauthorized
+
+  /characters/{id}:
+    get:
+      operationId: getCharacter
+      tags: [characters]
+      summary: Get character by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Character details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Character"
+        "404":
+          description: Not found
+    put:
+      operationId: updateCharacter
+      tags: [characters]
+      summary: Update a character
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCharacterBody"
+      responses:
+        "200":
+          description: Character updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Character"
+    delete:
+      operationId: deleteCharacter
+      tags: [characters]
+      summary: Delete a character
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /classes:
+    get:
+      operationId: listClasses
+      tags: [classes]
+      summary: List all RPG classes
+      responses:
+        "200":
+          description: List of classes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RpgClass"
+    post:
+      operationId: createClass
+      tags: [classes]
+      summary: Create a new class (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateClassBody"
+      responses:
+        "201":
+          description: Class created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RpgClass"
+
+  /classes/{id}:
+    put:
+      operationId: updateClass
+      tags: [classes]
+      summary: Update a class (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateClassBody"
+      responses:
+        "200":
+          description: Class updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RpgClass"
+    delete:
+      operationId: deleteClass
+      tags: [classes]
+      summary: Delete a class (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /origins:
+    get:
+      operationId: listOrigins
+      tags: [origins]
+      summary: List all origins
+      responses:
+        "200":
+          description: List of origins
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Origin"
+    post:
+      operationId: createOrigin
+      tags: [origins]
+      summary: Create a new origin (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOriginBody"
+      responses:
+        "201":
+          description: Origin created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Origin"
+
+  /origins/{id}:
+    put:
+      operationId: updateOrigin
+      tags: [origins]
+      summary: Update an origin (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOriginBody"
+      responses:
+        "200":
+          description: Origin updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Origin"
+    delete:
+      operationId: deleteOrigin
+      tags: [origins]
+      summary: Delete an origin (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /pericias:
+    get:
+      operationId: listPericias
+      tags: [skills]
+      summary: List all pericias (skills)
+      responses:
+        "200":
+          description: List of pericias
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pericia"
+    post:
+      operationId: createPericia
+      tags: [skills]
+      summary: Create a new pericia (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePericiaBody"
+      responses:
+        "201":
+          description: Pericia created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pericia"
+
+  /pericias/{id}:
+    put:
+      operationId: updatePericia
+      tags: [skills]
+      summary: Update a pericia (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePericiaBody"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pericia"
+    delete:
+      operationId: deletePericia
+      tags: [skills]
+      summary: Delete a pericia (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /rituals:
+    get:
+      operationId: listRituals
+      tags: [rituals]
+      summary: List all rituals
+      responses:
+        "200":
+          description: List of rituals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Ritual"
+    post:
+      operationId: createRitual
+      tags: [rituals]
+      summary: Create a new ritual (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRitualBody"
+      responses:
+        "201":
+          description: Ritual created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ritual"
+
+  /rituals/{id}:
+    put:
+      operationId: updateRitual
+      tags: [rituals]
+      summary: Update a ritual (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRitualBody"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ritual"
+    delete:
+      operationId: deleteRitual
+      tags: [rituals]
+      summary: Delete a ritual (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /items:
+    get:
+      operationId: listItems
+      tags: [items]
+      summary: List all items
+      responses:
+        "200":
+          description: List of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+    post:
+      operationId: createItem
+      tags: [items]
+      summary: Create a new item (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateItemBody"
+      responses:
+        "201":
+          description: Item created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+
+  /items/{id}:
+    put:
+      operationId: updateItem
+      tags: [items]
+      summary: Update an item (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateItemBody"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+    delete:
+      operationId: deleteItem
+      tags: [items]
+      summary: Delete an item (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /mobile-auth/token-exchange:
+    post:
+      operationId: exchangeMobileAuthorizationCode
+      tags: [auth]
+      summary: Exchange mobile authorization code for session token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExchangeMobileAuthorizationCodeBody"
+      responses:
+        "200":
+          description: Session token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExchangeMobileAuthorizationCodeResponse"
+
+  /mobile-auth/logout:
+    post:
+      operationId: logoutMobileSession
+      tags: [auth]
+      summary: Logout mobile session
+      responses:
+        "200":
+          description: Logout result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogoutMobileSessionResponse"
+
+  /admin/users:
+    get:
+      operationId: listAdminUsers
+      tags: [auth]
+      summary: List all users (admin only)
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AdminUser"
+
+  /admin/users/{id}/role:
+    put:
+      operationId: updateUserRole
+      tags: [auth]
+      summary: Update user role (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRoleBody"
+      responses:
+        "200":
+          description: Role updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUser"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +577,504 @@ components:
       required:
         - status
 
+    GetCurrentAuthUserResponse:
+      type: object
+      properties:
+        isAuthenticated:
+          type: boolean
+        user:
+          $ref: "#/components/schemas/AuthUser"
+      required:
+        - isAuthenticated
+
+    AuthUser:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        profileImage:
+          type: string
+        role:
+          type: string
+          enum: [user, admin]
+      required:
+        - id
+        - role
+
+    AdminUser:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        profileImage:
+          type: string
+        role:
+          type: string
+          enum: [user, admin]
+        createdAt:
+          type: string
+      required:
+        - id
+        - role
+
+    UpdateUserRoleBody:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, admin]
+      required:
+        - role
+
+    Character:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        nome:
+          type: string
+        classeId:
+          type: string
+        origemId:
+          type: string
+        nivel:
+          type: integer
+        nex:
+          type: integer
+        patente:
+          type: string
+        pvAtual:
+          type: integer
+        pvMaximo:
+          type: integer
+        peAtual:
+          type: integer
+        peMaximo:
+          type: integer
+        sanAtual:
+          type: integer
+        sanMaximo:
+          type: integer
+        forca:
+          type: integer
+        agilidade:
+          type: integer
+        intelecto:
+          type: integer
+        vigor:
+          type: integer
+        presenca:
+          type: integer
+        defesa:
+          type: integer
+        historia:
+          type: string
+        pericias:
+          type: array
+          items:
+            type: string
+        rituals:
+          type: array
+          items:
+            type: string
+        inventario:
+          type: array
+          items:
+            type: object
+        classe:
+          $ref: "#/components/schemas/RpgClass"
+        origem:
+          $ref: "#/components/schemas/Origin"
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - userId
+        - nome
+        - nivel
+        - nex
+
+    CreateCharacterBody:
+      type: object
+      properties:
+        nome:
+          type: string
+        classeId:
+          type: string
+        origemId:
+          type: string
+        nivel:
+          type: integer
+          default: 1
+        nex:
+          type: integer
+          default: 0
+        patente:
+          type: string
+        forca:
+          type: integer
+          default: 1
+        agilidade:
+          type: integer
+          default: 1
+        intelecto:
+          type: integer
+          default: 1
+        vigor:
+          type: integer
+          default: 1
+        presenca:
+          type: integer
+          default: 1
+        historia:
+          type: string
+        pericias:
+          type: array
+          items:
+            type: string
+      required:
+        - nome
+
+    UpdateCharacterBody:
+      type: object
+      properties:
+        nome:
+          type: string
+        classeId:
+          type: string
+        origemId:
+          type: string
+        nivel:
+          type: integer
+        nex:
+          type: integer
+        patente:
+          type: string
+        pvAtual:
+          type: integer
+        peAtual:
+          type: integer
+        sanAtual:
+          type: integer
+        forca:
+          type: integer
+        agilidade:
+          type: integer
+        intelecto:
+          type: integer
+        vigor:
+          type: integer
+        presenca:
+          type: integer
+        defesa:
+          type: integer
+        historia:
+          type: string
+        pericias:
+          type: array
+          items:
+            type: string
+        rituals:
+          type: array
+          items:
+            type: string
+        inventario:
+          type: array
+          items:
+            type: object
+
+    RpgClass:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        descricao:
+          type: string
+        pvInicial:
+          type: integer
+        pvPorNivel:
+          type: integer
+        peInicial:
+          type: integer
+        pePorNivel:
+          type: integer
+        sanInicial:
+          type: integer
+        sanPorNivel:
+          type: integer
+        periciasTreindasBase:
+          type: integer
+        createdAt:
+          type: string
+      required:
+        - id
+        - nome
+
+    CreateClassBody:
+      type: object
+      properties:
+        nome:
+          type: string
+        descricao:
+          type: string
+        pvInicial:
+          type: integer
+        pvPorNivel:
+          type: integer
+        peInicial:
+          type: integer
+        pePorNivel:
+          type: integer
+        sanInicial:
+          type: integer
+        sanPorNivel:
+          type: integer
+        periciasTreindasBase:
+          type: integer
+      required:
+        - nome
+        - pvInicial
+        - pvPorNivel
+        - peInicial
+        - pePorNivel
+        - sanInicial
+        - sanPorNivel
+
+    Origin:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        descricao:
+          type: string
+        periciasConcedidas:
+          type: array
+          items:
+            type: string
+        poderConcedido:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - nome
+
+    CreateOriginBody:
+      type: object
+      properties:
+        nome:
+          type: string
+        descricao:
+          type: string
+        periciasConcedidas:
+          type: array
+          items:
+            type: string
+        poderConcedido:
+          type: string
+      required:
+        - nome
+
+    Pericia:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        atributoBase:
+          type: string
+          enum: [FOR, AGI, INT, VIG, PRE]
+        somenteTrainada:
+          type: boolean
+        createdAt:
+          type: string
+      required:
+        - id
+        - nome
+        - atributoBase
+
+    CreatePericiaBody:
+      type: object
+      properties:
+        nome:
+          type: string
+        atributoBase:
+          type: string
+          enum: [FOR, AGI, INT, VIG, PRE]
+        somenteTrainada:
+          type: boolean
+      required:
+        - nome
+        - atributoBase
+
+    Ritual:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        elemento:
+          type: string
+          enum: [Sangue, Morte, Conhecimento, Energia, Medo]
+        circulo:
+          type: integer
+        execucao:
+          type: string
+        alcance:
+          type: string
+        alvo:
+          type: string
+        duracao:
+          type: string
+        resistencia:
+          type: string
+        custoPe:
+          type: integer
+        descricao:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - nome
+        - elemento
+        - circulo
+
+    CreateRitualBody:
+      type: object
+      properties:
+        nome:
+          type: string
+        elemento:
+          type: string
+          enum: [Sangue, Morte, Conhecimento, Energia, Medo]
+        circulo:
+          type: integer
+        execucao:
+          type: string
+        alcance:
+          type: string
+        alvo:
+          type: string
+        duracao:
+          type: string
+        resistencia:
+          type: string
+        custoPe:
+          type: integer
+        descricao:
+          type: string
+      required:
+        - nome
+        - elemento
+        - circulo
+
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        tipo:
+          type: string
+          enum: [Arma, Protecao, Utilitario, Amaldicoado, Outro]
+        descricao:
+          type: string
+        espacos:
+          type: number
+        categoria:
+          type: string
+        peso:
+          type: number
+        preco:
+          type: integer
+        requisitos:
+          type: object
+        createdAt:
+          type: string
+      required:
+        - id
+        - nome
+        - tipo
+
+    ExchangeMobileAuthorizationCodeBody:
+      type: object
+      properties:
+        code:
+          type: string
+        code_verifier:
+          type: string
+        redirect_uri:
+          type: string
+        state:
+          type: string
+        nonce:
+          type: string
+      required:
+        - code
+        - code_verifier
+        - redirect_uri
+        - state
+
+    ExchangeMobileAuthorizationCodeResponse:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+        - token
+
+    LogoutMobileSessionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required:
+        - success
+
+    CreateItemBody:
+      type: object
+      properties:
+        nome:
+          type: string
+        tipo:
+          type: string
+          enum: [Arma, Protecao, Utilitario, Amaldicoado, Outro]
+        descricao:
+          type: string
+        espacos:
+          type: number
+        categoria:
+          type: string
+        peso:
+          type: number
+        preco:
+          type: integer
+        requisitos:
+          type: object
+      required:
+        - nome
+        - tipo
