@@ -1,5 +1,6 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import bcrypt from "bcryptjs";
+import { OAuth2Client } from "google-auth-library";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import {
@@ -10,6 +11,8 @@ import {
   setSessionCookie,
   type SessionUser,
 } from "../lib/auth";
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const router: IRouter = Router();
 
@@ -100,6 +103,73 @@ router.post("/auth/login", async (req: Request, res: Response) => {
   if (!valid) {
     res.status(401).json({ error: "Email ou senha inválidos" });
     return;
+  }
+
+  const sessionUser: SessionUser = {
+    id: user.id,
+    email: user.email,
+    firstName: user.firstName ?? undefined,
+    lastName: user.lastName ?? undefined,
+    role: user.role as "user" | "admin",
+  };
+
+  const sid = await createSession({ user: sessionUser });
+  setSessionCookie(res, sid);
+
+  res.json({
+    isAuthenticated: true,
+    user: sessionUser,
+  });
+});
+
+router.post("/auth/google", async (req: Request, res: Response) => {
+  const { credential } = req.body;
+
+  if (!credential) {
+    res.status(400).json({ error: "Credencial do Google não fornecida" });
+    return;
+  }
+
+  if (!process.env.GOOGLE_CLIENT_ID) {
+    res.status(500).json({ error: "Google OAuth não está configurado no servidor" });
+    return;
+  }
+
+  let payload;
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    payload = ticket.getPayload();
+  } catch {
+    res.status(401).json({ error: "Token do Google inválido" });
+    return;
+  }
+
+  if (!payload?.email) {
+    res.status(401).json({ error: "Não foi possível obter o email do Google" });
+    return;
+  }
+
+  const emailLower = payload.email.toLowerCase();
+
+  let [user] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.email, emailLower));
+
+  if (!user) {
+    const [created] = await db
+      .insert(usersTable)
+      .values({
+        email: emailLower,
+        firstName: payload.given_name || null,
+        lastName: payload.family_name || null,
+        role: "user",
+      })
+      .returning();
+    user = created;
   }
 
   const sessionUser: SessionUser = {

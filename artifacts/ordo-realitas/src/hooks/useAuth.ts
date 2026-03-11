@@ -52,6 +52,18 @@ async function apiRegister(
   return data;
 }
 
+async function apiGoogleLogin(credential: string): Promise<AuthState> {
+  const res = await fetch(`${API}/auth/google`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ credential }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Erro ao entrar com Google");
+  return data;
+}
+
 async function apiLogout(): Promise<void> {
   await fetch(`${API}/auth/logout`, {
     method: "POST",
@@ -93,6 +105,13 @@ export function useAuth() {
     },
   });
 
+  const googleLoginMutation = useMutation({
+    mutationFn: (credential: string) => apiGoogleLogin(credential),
+    onSuccess: (result) => {
+      queryClient.setQueryData(["auth"], result);
+    },
+  });
+
   const logoutMutation = useMutation({
     mutationFn: apiLogout,
     onSuccess: () => {
@@ -113,10 +132,14 @@ export function useAuth() {
       firstName?: string,
       lastName?: string,
     ) => registerMutation.mutateAsync({ email, password, firstName, lastName }),
+    loginWithGoogle: (credential: string) =>
+      googleLoginMutation.mutateAsync(credential),
     logout: () => logoutMutation.mutate(),
     loginError: loginMutation.error?.message,
     registerError: registerMutation.error?.message,
+    googleError: googleLoginMutation.error?.message,
     isLoggingIn: loginMutation.isPending,
     isRegistering: registerMutation.isPending,
+    isGoogleLoading: googleLoginMutation.isPending,
   };
 }

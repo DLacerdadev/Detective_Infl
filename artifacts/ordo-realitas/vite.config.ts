@@ -46,6 +46,9 @@ export default defineConfig({
         ]
       : []),
   ],
+  define: {
+    "import.meta.env.VITE_GOOGLE_CLIENT_ID": JSON.stringify(process.env.GOOGLE_CLIENT_ID ?? ""),
+  },
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "src"),

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
+import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,17 +9,18 @@ import { Shield, Eye, EyeOff } from "lucide-react";
 
 type Mode = "login" | "register";
 
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
+
 export default function Login() {
-  const { login, register, isAuthenticated, isLoading, isLoggingIn, isRegistering, loginError, registerError } = useAuth();
+  const {
+    login, register, loginWithGoogle,
+    isAuthenticated, isLoading,
+    isLoggingIn, isRegistering, isGoogleLoading,
+  } = useAuth();
   const [, setLocation] = useLocation();
   const [mode, setMode] = useState<Mode>("login");
   const [showPassword, setShowPassword] = useState(false);
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-  });
+  const [form, setForm] = useState({ email: "", password: "", firstName: "", lastName: "" });
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -41,7 +43,17 @@ export default function Login() {
     }
   };
 
-  const isSubmitting = isLoggingIn || isRegistering;
+  const handleGoogleSuccess = async (response: { credential?: string }) => {
+    if (!response.credential) return;
+    setError(null);
+    try {
+      await loginWithGoogle(response.credential);
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  const isSubmitting = isLoggingIn || isRegistering || isGoogleLoading;
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4">
@@ -61,8 +73,43 @@ export default function Login() {
 
         {/* Card */}
         <div className="border border-border/60 bg-card/60 backdrop-blur-sm rounded-sm shadow-2xl p-8">
+
+          {/* Google Sign-In — only shown when client ID is configured */}
+          {GOOGLE_CLIENT_ID && (
+            <>
+              <div className="mb-5">
+                <p className="text-xs text-muted-foreground font-display uppercase tracking-widest text-center mb-3">
+                  Acesso rápido
+                </p>
+                <div className="flex justify-center">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={() => setError("Falha ao entrar com o Google. Tente novamente.")}
+                    text="signin_with"
+                    shape="rectangular"
+                    theme="filled_black"
+                    locale="pt-BR"
+                    size="large"
+                    width="360"
+                  />
+                </div>
+              </div>
+
+              <div className="relative my-5">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border/40"></div>
+                </div>
+                <div className="relative flex justify-center text-xs">
+                  <span className="px-3 bg-card text-muted-foreground font-mono uppercase tracking-widest">
+                    ou use email e senha
+                  </span>
+                </div>
+              </div>
+            </>
+          )}
+
           {/* Mode Tabs */}
-          <div className="flex border border-border/50 rounded-sm mb-6 overflow-hidden">
+          <div className="flex border border-border/50 rounded-sm mb-5 overflow-hidden">
             <button
               type="button"
               onClick={() => { setMode("login"); setError(null); }}
@@ -148,6 +195,7 @@ export default function Login() {
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   className="bg-background/50 border-border/50 font-mono text-sm pr-10"
+                  autoComplete={mode === "login" ? "current-password" : "new-password"}
                 />
                 <button
                   type="button"
