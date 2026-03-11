@@ -13,7 +13,8 @@ Full-stack web application for managing characters in the **Ordem Paranormal** t
 - **Frontend**: React + Vite (artifact: `ordo-realitas`, preview path: `/`)
 - **API framework**: Express 5 (artifact: `api-server`, path: `/api`)
 - **Database**: PostgreSQL + Drizzle ORM
-- **Authentication**: Replit Auth (OpenID Connect / PKCE)
+- **Authentication**: Custom email/password (bcrypt) + Google Sign-In (`google-auth-library`)
+- **Sessions**: Cookie-based sessions stored in PostgreSQL (`express-session` + `connect-pg-simple`)
 - **Validation**: Zod (`zod/v4`), `drizzle-zod`
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
@@ -31,21 +32,30 @@ artifacts-monorepo/
 │   ├── api-spec/           # OpenAPI spec + Orval codegen config
 │   ├── api-client-react/   # Generated React Query hooks
 │   ├── api-zod/            # Generated Zod schemas from OpenAPI
-│   ├── db/                 # Drizzle ORM schema + DB connection
-│   └── replit-auth-web/    # Replit Auth browser hooks
-├── scripts/                # Utility scripts
-└── ...
+│   └── db/                 # Drizzle ORM schema + DB connection
+├── docker/
+│   ├── nginx.conf          # nginx reverse proxy config for frontend container
+│   └── entrypoint.sh       # API container startup (migrate + seed + run)
+├── Dockerfile.api          # Multi-stage API build (esbuild → node)
+├── Dockerfile.frontend     # Multi-stage frontend build (Vite → nginx)
+├── docker-compose.yml      # Production Docker Compose (postgres + api + frontend)
+├── docker-compose.example.env  # Template for .env file
+├── .dockerignore
+└── scripts/                # Utility scripts
 ```
 
 ## Features
 
 ### Authentication
-- Replit Auth via OpenID Connect (PKCE)
-- Cookie-based sessions stored in PostgreSQL
+- **Email/password**: bcrypt (12 rounds), session-based
+- **Google Sign-In**: ID token verification via `google-auth-library`, auto-creates user on first login
+- Sessions stored in PostgreSQL via `connect-pg-simple`
 - User roles: `user` (default) and `admin`
+- `GOOGLE_CLIENT_ID` env var gates the Google button on the login page
 
 ### Frontend Pages
 - `/` — Landing page with noir investigation aesthetic
+- `/login` — Email/password + Google Sign-In
 - `/characters` — Character list (protected), shows all characters for logged-in user
 - `/characters/new` — Multi-step character creation wizard (protected)
 - `/characters/:id` — Full character sheet view with tabs (protected)
@@ -61,8 +71,8 @@ Manages all static game data:
 - User role management
 
 ### Database Schema
-- `users` — Auth users with role field
-- `sessions` — Session storage for Replit Auth
+- `users` — Auth users (`password_hash`, `google_id`, `role`)
+- `sessions` — Session storage
 - `personagens` — Character sheets
 - `classes` — RPG classes
 - `origens` — Character origins/backgrounds
@@ -94,7 +104,55 @@ Dark noir investigation room aesthetic:
 
 ## Development Commands
 
-- `pnpm --filter @workspace/api-server run dev` — Start API server
-- `pnpm --filter @workspace/ordo-realitas run dev` — Start frontend
-- `pnpm --filter @workspace/db run push` — Push DB schema changes
-- `pnpm --filter @workspace/api-spec run codegen` — Regenerate API types
+```bash
+pnpm --filter @workspace/api-server run dev   # Start API server
+pnpm --filter @workspace/ordo-realitas run dev # Start frontend
+pnpm --filter @workspace/db run push          # Push DB schema changes
+pnpm --filter @workspace/db run seed          # Seed initial game data
+pnpm --filter @workspace/api-spec run codegen # Regenerate API types
+```
+
+## Docker Deployment (Self-Hosted VM)
+
+### Prerequisites
+- Docker + Docker Compose plugin
+- Port 80 open on the VM
+
+### Setup
+
+```bash
+# 1. Clone the repo on the VM
+git clone <repo-url> ordo-realitas
+cd ordo-realitas
+
+# 2. Create the .env file
+cp docker-compose.example.env .env
+# Edit .env and set POSTGRES_PASSWORD and optionally GOOGLE_CLIENT_ID
+
+# 3. Build and start
+docker compose up -d --build
+
+# 4. View logs
+docker compose logs -f
+```
+
+### Services
+| Service    | Image          | Role                                 |
+|------------|----------------|--------------------------------------|
+| `postgres` | postgres:16    | Database                             |
+| `api`      | Dockerfile.api | Express API (migrations + seed auto) |
+| `frontend` | Dockerfile.frontend | Nginx serving React build + proxy |
+
+### Environment Variables (`.env`)
+| Variable           | Required | Description                              |
+|--------------------|----------|------------------------------------------|
+| `POSTGRES_PASSWORD`| Yes      | PostgreSQL password                      |
+| `GOOGLE_CLIENT_ID` | No       | Enables Google Sign-In button on login   |
+
+### How it Works
+1. `postgres` starts and waits for healthcheck
+2. `api` container starts → `entrypoint.sh` runs:
+   - `drizzle-kit push --force` (applies schema)
+   - `tsx src/seed.ts` (seeds game data if tables are empty)
+   - `node artifacts/api-server/dist/index.cjs` (starts Express)
+3. `frontend` (nginx) starts and proxies `/api/` to `api:8080`

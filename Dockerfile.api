@@ -1,0 +1,33 @@
+FROM node:24-alpine AS builder
+
+RUN npm install -g pnpm@10
+
+WORKDIR /app
+
+COPY . .
+
+RUN pnpm install --frozen-lockfile
+
+RUN pnpm --filter @workspace/api-server run build
+
+FROM node:24-alpine AS production
+
+RUN npm install -g pnpm@10
+
+WORKDIR /app
+
+COPY . .
+
+RUN pnpm install --frozen-lockfile
+
+COPY --from=builder /app/artifacts/api-server/dist ./artifacts/api-server/dist
+
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENV NODE_ENV=production
+ENV PORT=8080
+
+EXPOSE 8080
+
+ENTRYPOINT ["/entrypoint.sh"]
