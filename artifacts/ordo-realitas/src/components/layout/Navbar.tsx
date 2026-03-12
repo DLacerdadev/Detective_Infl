@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { LogOut, Shield, FileText } from "lucide-react";
+import { LogOut, Shield } from "lucide-react";
 
 export function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -22,6 +22,9 @@ export function Navbar() {
           <nav className="flex items-center space-x-4">
             <Link href="/characters" className="text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
               Arquivos
+            </Link>
+            <Link href="/compendio" className="text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
+              Compêndio
             </Link>
             {user?.role === "admin" && (
               <Link href="/admin" className="text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors hidden sm:block">

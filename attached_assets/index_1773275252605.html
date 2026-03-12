@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ordem Paranormal RPG — Origens</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0a0a0f;
+      --bg-card: #12121a;
+      --bg-card2: #1a1a26;
+      --accent-red: #c0392b;
+      --accent-red-glow: #e74c3c;
+      --accent-gold: #d4a017;
+      --accent-blue: #2980b9;
+      --accent-purple: #8e44ad;
+      --accent-green: #27ae60;
+      --text-primary: #e8e8f0;
+      --text-secondary: #9a9ab0;
+      --text-muted: #5a5a70;
+      --border: #2a2a3a;
+      --border-glow: rgba(192,57,43,0.4);
+      --shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #0d0d15 0%, #1a0a0a 50%, #0d0d15 100%);
+      border-bottom: 2px solid var(--accent-red);
+      padding: 2rem 1rem 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(192,57,43,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent-red-glow);
+      margin-bottom: 0.5rem;
+    }
+    header h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, #fff 30%, var(--accent-red-glow) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+    header p {
+      margin-top: 0.75rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .header-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .stat-pill {
+      background: rgba(192,57,43,0.15);
+      border: 1px solid rgba(192,57,43,0.3);
+      border-radius: 2rem;
+      padding: 0.4rem 1.2rem;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+    .stat-pill strong { color: var(--accent-red-glow); }
+
+    /* ── MAIN LAYOUT ── */
+    main { max-width: 1400px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border) 0%, transparent 100%);
+    }
+    .section-title .badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .badge-base { background: rgba(41,128,185,0.25); color: #5dade2; border: 1px solid rgba(41,128,185,0.4); }
+    .badge-supl { background: rgba(192,57,43,0.25); color: var(--accent-red-glow); border: 1px solid rgba(192,57,43,0.4); }
+    .badge-comm { background: rgba(212,160,23,0.2); color: var(--accent-gold); border: 1px solid rgba(212,160,23,0.35); }
+
+    /* ── CHARTS SECTION ── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .chart-card h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .chart-wrap { position: relative; height: 220px; }
+
+    /* ── CONTROLS ── */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+    }
+    .search-wrap {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+    .search-wrap input {
+      width: 100%;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 1rem 0.6rem 2.5rem;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-wrap input:focus { border-color: var(--accent-red); }
+    .search-wrap .icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .filter-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .filter-btn {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .filter-btn:hover { border-color: var(--accent-red); color: var(--text-primary); }
+    .filter-btn.active { background: rgba(192,57,43,0.2); border-color: var(--accent-red); color: var(--accent-red-glow); }
+    .sort-select {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      cursor: pointer;
+      outline: none;
+    }
+    .results-count {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    /* ── CARDS GRID ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* ── ORIGIN CARD ── */
+    .origin-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      cursor: pointer;
+    }
+    .origin-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(192,57,43,0.3);
+      border-color: rgba(192,57,43,0.4);
+    }
+    .origin-card.expanded { border-color: var(--accent-red); }
+
+    .card-header {
+      padding: 1rem 1.25rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .icon-base { background: rgba(41,128,185,0.2); }
+    .icon-supl { background: rgba(192,57,43,0.2); }
+
+    .card-title-wrap { flex: 1; min-width: 0; }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .card-source {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .card-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.4rem; }
+
+    .card-body { padding: 1rem 1.25rem; }
+    .card-desc {
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .origin-card.expanded .card-desc {
+      -webkit-line-clamp: unset;
+      overflow: visible;
+    }
+
+    .card-skills {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+    .skill-tag {
+      background: rgba(41,128,185,0.15);
+      border: 1px solid rgba(41,128,185,0.3);
+      border-radius: 6px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.72rem;
+      color: #5dade2;
+    }
+
+    .card-power {
+      margin-top: 0.75rem;
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+    }
+    .power-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.35rem;
+    }
+    .power-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.35rem;
+    }
+    .power-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      display: none;
+    }
+    .origin-card.expanded .power-desc { display: block; }
+
+    .card-creator {
+      margin-top: 0.6rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .card-footer {
+      padding: 0.6rem 1.25rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .expand-btn {
+      font-size: 0.78rem;
+      color: var(--accent-red-glow);
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0;
+    }
+    .expand-icon { transition: transform 0.2s; }
+    .origin-card.expanded .expand-icon { transform: rotate(180deg); }
+
+    .copy-btn {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .copy-btn:hover { background: var(--bg-card2); color: var(--text-primary); }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    /* ── DB SCHEMA SECTION ── */
+    .schema-section {
+      margin-top: 3rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .schema-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .schema-header h2 { font-size: 1rem; font-weight: 700; }
+    .schema-body { padding: 1.5rem; display: none; }
+    .schema-body.open { display: block; }
+    .schema-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .schema-table th {
+      background: var(--bg-card2);
+      padding: 0.6rem 1rem;
+      text-align: left;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .schema-table td {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-primary);
+      vertical-align: top;
+    }
+    .schema-table tr:last-child td { border-bottom: none; }
+    .schema-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .type-badge {
+      display: inline-block;
+      background: rgba(142,68,173,0.2);
+      border: 1px solid rgba(142,68,173,0.35);
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.7rem;
+      color: #bb8fce;
+      font-family: monospace;
+    }
+
+    /* ── SQL EXPORT ── */
+    .sql-section {
+      margin-top: 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .sql-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .sql-header h2 { font-size: 1rem; font-weight: 700; }
+    .sql-body { padding: 0; display: none; }
+    .sql-body.open { display: block; }
+    .sql-code {
+      background: #0d0d12;
+      padding: 1.5rem;
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.75rem;
+      color: #a8c8e8;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.7;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .sql-keyword { color: #c586c0; }
+    .sql-string { color: #ce9178; }
+    .sql-comment { color: #6a9955; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .cards-grid { grid-template-columns: 1fr; }
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-red); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--bg-card2);
+      border: 1px solid var(--accent-red);
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">Banco de Dados — Referência</div>
+  <h1>Ordem Paranormal RPG<br>Origens dos Agentes</h1>
+  <p>Catálogo completo das origens do Livro Base e do suplemento <em>Sobrevivendo ao Horror</em>, estruturado para integração com banco de dados.</p>
+  <div class="header-stats">
+    <div class="stat-pill"><strong>44</strong> origens totais</div>
+    <div class="stat-pill"><strong>24</strong> Livro Base</div>
+    <div class="stat-pill"><strong>20</strong> Sobrevivendo ao Horror</div>
+    <div class="stat-pill"><strong>10</strong> origens da comunidade</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- CHARTS -->
+  <div class="section-title">Visualizações</div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>Distribuição por Fonte</h3>
+      <div class="chart-wrap"><canvas id="chartFonte"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Perícias Mais Concedidas</h3>
+      <div class="chart-wrap"><canvas id="chartPericias"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Origens da Comunidade vs Oficiais</h3>
+      <div class="chart-wrap"><canvas id="chartComunidade"></canvas></div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Buscar por nome, perícia ou poder..." />
+    </div>
+    <div class="filter-group">
+      <button class="filter-btn active" data-filter="all">Todas</button>
+      <button class="filter-btn" data-filter="base">Livro Base</button>
+      <button class="filter-btn" data-filter="supl">Sobrevivendo ao Horror</button>
+      <button class="filter-btn" data-filter="comm">Comunidade</button>
+    </div>
+    <select class="sort-select" id="sortSelect">
+      <option value="nome">A–Z</option>
+      <option value="fonte">Por Fonte</option>
+      <option value="poder">Por Poder</option>
+    </select>
+    <span class="results-count" id="resultsCount">44 resultados</span>
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards-grid" id="cardsGrid"></div>
+
+  <!-- DB SCHEMA -->
+  <div class="schema-section" style="margin-top:3rem">
+    <div class="schema-header" onclick="toggleSection('schemaBody', this)">
+      <h2>📋 Estrutura da Tabela <code style="font-size:0.85em;color:var(--accent-gold)">origens</code> — Banco de Dados</h2>
+      <span id="schemaArrow">▼</span>
+    </div>
+    <div class="schema-body" id="schemaBody">
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Campo</th>
+            <th>Tipo</th>
+            <th>Descrição</th>
+            <th>Observações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>id</code></td>
+            <td><span class="type-badge">UUID</span></td>
+            <td>Identificador único da origem</td>
+            <td>Chave primária. Ex: <code>lb-001</code>, <code>sh-001</code></td>
+          </tr>
+          <tr>
+            <td><code>nome</code></td>
+            <td><span class="type-badge">String</span></td>
+            <td>Nome da origem</td>
+            <td>Ex: Acadêmico, Colegial, Astronauta</td>
+          </tr>
+          <tr>
+            <td><code>descricao</code></td>
+            <td><span class="type-badge">Text</span></td>
+            <td>Descrição narrativa da origem</td>
+            <td>Texto completo do livro</td>
+          </tr>
+          <tr>
+            <td><code>pericias_concedidas</code></td>
+            <td><span class="type-badge">JSON Array</span></td>
+            <td>Lista de perícias treinadas concedidas</td>
+            <td>Referência a <code>pericias.id</code></td>
+          </tr>
+          <tr>
+            <td><code>poder_nome</code></td>
+            <td><span class="type-badge">String</span></td>
+            <td>Nome do poder especial da origem</td>
+            <td>Pode ser NULL</td>
+          </tr>
+          <tr>
+            <td><code>poder_descricao</code></td>
+            <td><span class="type-badge">Text</span></td>
+            <td>Descrição mecânica do poder</td>
+            <td>Texto completo com regras</td>
+          </tr>
+          <tr>
+            <td><code>fonte</code></td>
+            <td><span class="type-badge">Enum</span></td>
+            <td>Livro de origem</td>
+            <td><code>Livro Base</code> | <code>Sobrevivendo ao Horror</code></td>
+          </tr>
+          <tr>
+            <td><code>origem_comunidade</code></td>
+            <td><span class="type-badge">Boolean</span></td>
+            <td>Se foi criada pela comunidade</td>
+            <td>TRUE para 10 origens do SaH</td>
+          </tr>
+          <tr>
+            <td><code>criador</code></td>
+            <td><span class="type-badge">String</span></td>
+            <td>Criador da origem (comunidade)</td>
+            <td>NULL para origens oficiais</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SQL EXPORT -->
+  <div class="sql-section">
+    <div class="sql-header" onclick="toggleSection('sqlBody', this)">
+      <h2>💾 SQL INSERT — Amostra de Dados</h2>
+      <div style="display:flex;gap:0.75rem;align-items:center">
+        <button onclick="event.stopPropagation();copySql()" class="copy-btn" style="color:var(--accent-red-glow);border:1px solid rgba(192,57,43,0.4);border-radius:6px;padding:0.3rem 0.75rem">Copiar SQL</button>
+        <span id="sqlArrow">▼</span>
+      </div>
+    </div>
+    <div class="sql-body" id="sqlBody">
+      <div class="sql-code" id="sqlCode"></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Ordem Paranormal RPG © Cellbit, Dan Ramos, Guilherme Dei Svaldi, Leonel Caldela, Miguel Souza, Rafael Dei Svaldi &nbsp;|&nbsp;
+  Sobrevivendo ao Horror — Primeiro Suplemento Oficial &nbsp;|&nbsp;
+  Dados compilados para uso em banco de dados de aplicativo
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+const ORIGENS = [
+  // ── LIVRO BASE ──
+  { id:"lb-001", nome:"Acadêmico", descricao:"Você trabalhou em uma universidade, instituto de pesquisa ou museu. Seu trabalho envolvia pesquisa, ensino ou curadoria de conhecimento. Em algum momento, suas pesquisas esbarraram no paranormal.", pericias:["Atualidades","Ciências"], poder:"Estudioso", poderDesc:"Você recebe +2 em testes de Atualidades e Ciências. Além disso, uma vez por cena, pode gastar 1 PE para fazer um teste de Atualidades ou Ciências no lugar de qualquer outra perícia de Intelecto.", fonte:"Livro Base", comunidade:false, criador:null, icon:"📚" },
+  { id:"lb-002", nome:"Agente de Saúde", descricao:"Você trabalhou na área da saúde, seja como médico, enfermeiro, paramédico ou técnico. Seu contato com o sofrimento humano e, eventualmente, com casos inexplicáveis, o levou à Ordem.", pericias:["Medicina","Vontade"], poder:"Socorrista", poderDesc:"Você pode usar Medicina para estabilizar personagens sem um kit médico, com DT 15. Além disso, quando usa um kit médico, você pode gastar 2 PE para curar 1d6+INT PV adicionais.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🏥" },
+  { id:"lb-003", nome:"Amnésico", descricao:"Você não se lembra de quem era antes. Talvez tenha sido um experimento, uma vítima de ritual ou simplesmente alguém que viu algo que não deveria. Sua vida começa agora, na Ordem.", pericias:["Reflexos","Vontade"], poder:"Memória Fragmentada", poderDesc:"Escolha duas perícias quaisquer. Você é treinado nelas (memórias de sua vida anterior). Além disso, uma vez por missão, pode 'lembrar' de algo relevante para a cena atual, a critério do mestre.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🌫️" },
+  { id:"lb-004", nome:"Artista", descricao:"Você era um ator, músico, escritor, pintor ou qualquer outro tipo de artista. Sua sensibilidade e criatividade o tornaram mais perceptivo ao paranormal.", pericias:["Artes","Enganação"], poder:"Inspiração", poderDesc:"Uma vez por cena, você pode gastar 2 PE para conceder +2 em um teste de perícia a um aliado em alcance médio.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🎨" },
+  { id:"lb-005", nome:"Chef", descricao:"Você era um cozinheiro profissional, seja em um restaurante sofisticado ou em uma barraca de rua. Sua habilidade com ingredientes e sua criatividade na cozinha o tornaram um membro valioso da Ordem.", pericias:["Profissão (cozinheiro)","Vontade"], poder:"Refeição Revigorante", poderDesc:"Durante um interlúdio, você pode preparar uma refeição especial. Todos que a consumirem recuperam 1d6+PRE PV adicionais durante o descanso.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🍳" },
+  { id:"lb-006", nome:"Combatente", descricao:"Você tem experiência em combate, seja como lutador de artes marciais, praticante de esportes de contato ou simplesmente alguém que cresceu em um ambiente violento.", pericias:["Atletismo","Luta"], poder:"Durão", poderDesc:"Você recebe +2 PV para cada NEX que possui. Além disso, quando fica com 0 PV, pode gastar 2 PE para ficar com 1 PV em vez de cair inconsciente.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🥊" },
+  { id:"lb-007", nome:"Criminoso", descricao:"Você viveu à margem da lei, seja como ladrão, hacker, traficante ou outro tipo de criminoso. Suas habilidades ilícitas provaram ser surpreendentemente úteis na Ordem.", pericias:["Crime","Furtividade"], poder:"Vida no Crime", poderDesc:"Você recebe +2 em testes de Crime e Furtividade. Além disso, uma vez por cena, pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Crime.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🔓" },
+  { id:"lb-008", nome:"Detetive", descricao:"Você trabalhou como detetive particular ou investigador. Sua habilidade em encontrar pistas e interrogar suspeitos o tornou um ativo valioso para a Ordem.", pericias:["Investigação","Percepção"], poder:"Faro Investigativo", poderDesc:"Você recebe +2 em testes de Investigação e Percepção. Além disso, quando examina uma cena de crime ou local suspeito, pode gastar 2 PE para fazer um teste de Investigação e descobrir uma pista adicional.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🔎" },
+  { id:"lb-009", nome:"Esportista", descricao:"Você foi um atleta profissional ou amador de alto nível. Seu corpo treinado e sua mentalidade competitiva o tornaram um agente eficaz.", pericias:["Atletismo","Reflexos"], poder:"Atleta", poderDesc:"Você recebe +2 em testes de Atletismo e Reflexos. Além disso, seu deslocamento aumenta em 3 metros.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🏃" },
+  { id:"lb-010", nome:"Herdeiro", descricao:"Você nasceu em uma família rica e influente. Seja por herança, casamento ou golpe de sorte, você tem acesso a recursos que a maioria das pessoas jamais terá.", pericias:["Diplomacia","Intuição"], poder:"Recursos Familiares", poderDesc:"Você recebe +2 em testes de Diplomacia. Além disso, uma vez por missão, pode gastar 5 PE para adquirir um item de Categoria I ou II sem custo.", fonte:"Livro Base", comunidade:false, criador:null, icon:"💎" },
+  { id:"lb-011", nome:"Jornalista", descricao:"Você trabalhou como repórter, fotógrafo jornalístico ou editor. Sua curiosidade insaciável e sua habilidade em encontrar a verdade o levaram a investigar casos paranormais.", pericias:["Atualidades","Investigação"], poder:"Fontes Confiáveis", poderDesc:"Você recebe +2 em testes de Investigação. Além disso, uma vez por missão, pode contatar uma fonte e obter informações relevantes sobre o caso atual, a critério do mestre.", fonte:"Livro Base", comunidade:false, criador:null, icon:"📰" },
+  { id:"lb-012", nome:"Magnata", descricao:"Você possui muito dinheiro ou patrimônio. Pode ser o herdeiro de uma família antiga ligada ao oculto, ter criado e vendido uma empresa e decidido usar sua riqueza para uma causa maior, ou ter ganho uma loteria após inadvertidamente escolher números amaldiçoados.", pericias:["Diplomacia","Pilotagem"], poder:"Patrocinador da Ordem", poderDesc:"Seu limite de crédito é sempre considerado um acima do atual.", fonte:"Livro Base", comunidade:false, criador:null, icon:"💰" },
+  { id:"lb-013", nome:"Mercenário", descricao:"Você é um soldado de aluguel, que trabalha sozinho ou como parte de alguma organização que vende serviços militares. Escoltas e assassinatos fizeram parte de sua rotina por tempo o suficiente para você se envolver em alguma situação com o paranormal.", pericias:["Iniciativa","Intimidação"], poder:"Posição de Combate", poderDesc:"No primeiro turno de cada cena de ação, você pode gastar 2 PE para receber uma ação de movimento adicional.", fonte:"Livro Base", comunidade:false, criador:null, icon:"⚔️" },
+  { id:"lb-014", nome:"Militar", descricao:"Você serviu em uma força militar, como o exército ou a marinha. Passou muito tempo treinando com armas de fogo, até se tornar um perito no uso delas. Acostumado a obedecer ordens e partir em missões, está em casa na Ordo Realitas.", pericias:["Pontaria","Tática"], poder:"Para Bellum", poderDesc:"Você recebe +2 em rolagens de dano com armas de fogo.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🎖️" },
+  { id:"lb-015", nome:"Operário", descricao:"Pedreiro, industriário, operador de máquinas em uma fábrica… Você passou uma parte de sua vida em um emprego braçal, desempenhando atividades práticas que lhe deram uma visão pragmática do mundo.", pericias:["Fortitude","Profissão"], poder:"Ferramenta de Trabalho", poderDesc:"Escolha uma arma simples ou tática que, a critério do mestre, poderia ser usada como ferramenta em sua profissão. Você sabe usar a arma escolhida e recebe +1 em testes de ataque, rolagens de dano e margem de ameaça com ela.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🔧" },
+  { id:"lb-016", nome:"Policial", descricao:"Você fez parte de uma força de segurança pública, civil ou militar. Em alguma patrulha ou chamado se deparou com um caso paranormal e sobreviveu para contar a história.", pericias:["Percepção","Pontaria"], poder:"Patrulha", poderDesc:"Você recebe +2 em Defesa.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🚔" },
+  { id:"lb-017", nome:"Religioso", descricao:"Você é devoto ou sacerdote de uma fé. Independentemente da religião que pratica, se dedica a auxiliar as pessoas com problemas espirituais. A partir disso, teve contato com o paranormal.", pericias:["Religião","Vontade"], poder:"Acalentar", poderDesc:"Você recebe +5 em testes de Religião para acalmar. Além disso, quando acalma uma pessoa, ela recebe um número de pontos de Sanidade igual a 1d6 + a sua Presença.", fonte:"Livro Base", comunidade:false, criador:null, icon:"✝️" },
+  { id:"lb-018", nome:"Servidor Público", descricao:"Você possuía carreira em um órgão do governo, lidando com burocracia e atendendo pessoas. Sua rotina foi quebrada quando você viu que o prefeito era um cultista ou que a câmara de vereadores se reunia à noite para realizar rituais.", pericias:["Intuição","Vontade"], poder:"Espírito Cívico", poderDesc:"Sempre que faz um teste para ajudar, você pode gastar 1 PE para aumentar o bônus concedido em +2.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🏛️" },
+  { id:"lb-019", nome:"Teórico da Conspiração", descricao:"A humanidade nunca pisou na lua. Reptilianos ocupam importantes cargos públicos. A Terra é plana... E secretamente governada pelos Illuminati. Você sabe isso tudo, pois investigou a fundo esses importantes assuntos.", pericias:["Investigação","Ocultismo"], poder:"Eu Já Sabia", poderDesc:"Você não se abala com entidades ou anomalias. Afinal, sempre soube que isso tudo existia. Você recebe resistência a dano mental igual ao seu Intelecto.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🔺" },
+  { id:"lb-020", nome:"T.I.", descricao:"Programador, engenheiro de software ou simplesmente 'o cara da T.I.', você tem treinamento e experiência para lidar com sistemas informatizados. Seu talento (ou curiosidade exagerada) chamou a atenção da Ordem.", pericias:["Investigação","Tecnologia"], poder:"Motor de Busca", poderDesc:"A critério do Mestre, sempre que tiver acesso a internet, você pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Tecnologia.", fonte:"Livro Base", comunidade:false, criador:null, icon:"💻" },
+  { id:"lb-021", nome:"Trabalhador Rural", descricao:"Você trabalhava no campo ou em áreas isoladas, como fazendeiro, pescador, biólogo, veterinário... Você se acostumou com o convívio com a natureza e os animais e talvez tenha ouvido uma ou outra história de fantasmas ao redor da fogueira.", pericias:["Adestramento","Sobrevivência"], poder:"Desbravador", poderDesc:"Quando faz um teste de Adestramento ou Sobrevivência, você pode gastar 2 PE para receber +5 nesse teste. Além disso, você não sofre penalidade em deslocamento por terreno difícil.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🌾" },
+  { id:"lb-022", nome:"Trambiqueiro", descricao:"Uma vida digna exige muito trabalho, então é melhor nem tentar. Você vivia de pequenos golpes, jogatina ilegal e falcatruas. Certo dia, enganou a pessoa errada; no dia seguinte, se viu servindo à Ordem.", pericias:["Crime","Enganação"], poder:"Impostor", poderDesc:"Uma vez por cena, você pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Enganação.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🃏" },
+  { id:"lb-023", nome:"Universitário", descricao:"Você era aluno de uma faculdade. Em sua rotina de estudos, provas e festas, acabou descobrindo algo — talvez um livro amaldiçoado na antiga biblioteca do campus? Por seu achado, foi convocado pela Ordem.", pericias:["Atualidades","Investigação"], poder:"Dedicação", poderDesc:"Você recebe +1 PE, e mais 1 PE adicional a cada NEX ímpar (15%, 25%...). Além disso, seu limite de PE por turno aumenta em 1.", fonte:"Livro Base", comunidade:false, criador:null, icon:"🎓" },
+  { id:"lb-024", nome:"Vítima", descricao:"Em algum momento de sua vida — infância, juventude ou início da vida adulta — você encontrou o paranormal... E a experiência não foi nada boa. Você viu os espíritos dos mortos, foi atacado por uma entidade ou mesmo foi sequestrado para ser sacrificado em um ritual.", pericias:["Reflexos","Vontade"], poder:"Cicatrizes Psicológicas", poderDesc:"Você recebe +1 de Sanidade para cada 5% de NEX.", fonte:"Livro Base", comunidade:false, criador:null, icon:"💔" },
+
+  // ── SOBREVIVENDO AO HORROR ──
+  { id:"sh-001", nome:"Amigo dos Animais", descricao:"Você desenvolveu uma conexão muito forte com outros seres: os animais. Seja por nunca ter se dado muito bem com humanos ou por preferir a companhia de um melhor amigo de quatro patas, você leva sua vida ao lado de um bichano.", pericias:["Adestramento","Percepção"], poder:"Companheiro Animal", poderDesc:"Você consegue entender as intenções e sentimentos de animais, e pode usar Adestramento para mudar a atitude deles. Além disso, você possui um melhor amigo animal. Ele conta como um aliado que fornece +2 em uma perícia a sua escolha. Quando alcança NEX 35%, ele passa a fornecer o bônus de um aliado de um tipo a sua escolha. Quando alcança NEX 70%, ele fornece a habilidade do tipo de aliado escolhido. Se ele morrer, você perde 10 pontos de Sanidade permanentemente.", fonte:"Sobrevivendo ao Horror", comunidade:true, criador:"Gabriela 'Louie' | Arsenal Paranormal", icon:"🐾" },
+  { id:"sh-002", nome:"Astronauta", descricao:"Outrora limitada a membros de algumas agências espaciais estatais, a profissão de explorador espacial se tornou mais acessível. Como um astronauta, você se acostumou à pressão de ser responsável pela vida de seus colegas. E foi na escuridão do espaço que você descobriu que não estamos sozinhos.", pericias:["Ciências","Fortitude"], poder:"Acostumado ao Extremo", poderDesc:"Quando sofre dano de fogo, de frio ou mental, você pode gastar 1 PE para reduzir esse dano em 5. A cada vez que usa esta habilidade novamente na mesma cena, seu custo aumenta em +1 PE.", fonte:"Sobrevivendo ao Horror", comunidade:false, criador:null, icon:"🚀" },
+  { id:"sh-003", nome:"Chef do Outro Lado", descricao:"Você nunca foi muito bom na culinária convencional. Depois de sobreviver ao paranormal, entretanto, descobriu um talento que é considerado um grande tabu até mesmo pelos ocultistas mais experientes: cozinhar e ingerir entidades do Outro Lado.", pericias:["Ocultismo","Profissão (cozinheiro)"], poder:"Fome do Outro Lado", poderDesc:"Você pode usar partes de criaturas do Outro Lado como ingredientes culinários. Pode preparar um prato especial durante um interlúdio; se passar no teste de Profissão (cozinheiro) DT 15+O, o prato fornece RD 10 contra o tipo de dano do elemento da criatura. Se falhar, causa vulnerabilidade. A cada refeição consumida, você perde 1 ponto permanente de Sanidade.", fonte:"Sobrevivendo ao Horror", comunidade:true, criador:"Julie Sathler | Ateliê Secreto", icon:"🍖" },
+  { id:"sh-004", nome:"Colegial", descricao:"Você era um aluno do colegial e tinha uma rotina baseada nos estudos, nas amizades e nos dramas típicos de alguém da sua idade, até que um encontro com o paranormal mudou sua vida. Sua verdadeira força está nos amigos que fizer pelo caminho.", pericias:["Atualidades","Tecnologia"], poder:"Poder da Amizade", poderDesc:"Escolha um personagem para ser seu melhor amigo. Se estiver em alcance médio dele e puderem trocar olhares, você recebe +2 em todos os testes de perícia. Entretanto, se ele morrer, seu total de PE é reduzido em –1 para cada 5% de NEX até o fim da missão.", fonte:"Sobrevivendo ao Horror", comunidade:false, criador:null, icon:"🎒" },
+  { id:"sh-005", nome:"Cosplayer", descricao:"Você é apaixonado pela arte do cosplay e dedicou sua vida a criar a melhor fantasia possível. Confrontado com o paranormal, você colocou sua arte, e sua resiliência, a serviço da Ordem.", pericias:["Artes","Vontade"], poder:"Não É Fantasia, É Cosplay!", poderDesc:"Você pode fazer testes de disfarce usando Artes em vez de Enganação. Além disso, ao fazer um teste de perícia, se estiver usando um cosplay que tem relação com ele, você recebe +2.", fonte:"Sobrevivendo ao Horror", comunidade:true, criador:"Rafael 'Damnu' e Victor Moda | Toca dos Monstros", icon:"🎭" },
+  { id:"sh-006", nome:"Diplomata", descricao:"Você atuava em uma área onde as habilidades sociais e políticas eram ferramentas indispensáveis. Talvez fosse representante comercial de uma empresa, membro de um partido político ou embaixador do governo.", pericias:["Atualidades","Diplomacia"], poder:"Conexões", poderDesc:"Você recebe +2 em Diplomacia. Além disso, se puder contatar um NPC capaz de lhe auxiliar, você pode gastar 10 minutos e 2 PE para substituir um teste de uma perícia relacionada ao conhecimento desse NPC por um teste de Diplomacia.", fonte:"Sobrevivendo ao Horror", comunidade:false, criador:null, icon:"🤝" },
+  { id:"sh-007", nome:"Explorador", descricao:"Você é uma pessoa que se interessa muito por história ou geografia, frequentemente embarcando em trilhas e explorações para enriquecer seus estudos. Suas aventuras tornaram seu corpo mais resistente e capaz de se manter firme mesmo nas situações mais adversas.", pericias:["Fortitude","Sobrevivência"], poder:"Manual do Sobrevivente", poderDesc:"Ao fazer um teste para resistir a armadilhas, clima, doenças, fome, sede, fumaça, sono, sufocamento ou veneno, incluindo de fontes paranormais, você pode gastar 2 PE para receber +5 nesse teste. Em cenas de interlúdio, você considera condições de sono precárias como normais.", fonte:"Sobrevivendo ao Horror", comunidade:true, criador:"Guilherme 'Guirassol' e João Vitor 'Vapor' | Arquivo do Medo", icon:"🧭" },
+  { id:"sh-008", nome:"Experimento", descricao:"Você foi uma cobaia em um experimento físico. Pode ter sido um voluntário em um procedimento experimental legítimo, ou submetido a experimentos científicos ou paranormais contra sua vontade. O evento causou alterações permanentes em seu corpo.", pericias:["Atletismo","Fortitude"], poder:"Mutação", poderDesc:"Você recebe resistência a dano 2 e +2 em uma perícia à sua escolha que seja originalmente baseada em Força, Agilidade ou Vigor. Entretanto, sofre penalidade em Diplomacia.", fonte:"Sobrevivendo ao Horror", comunidade:false, criador:null, icon:"🧬" },
+  { id:"sh-009", nome:"Fanático por Criaturas", descricao:"Você sempre foi obcecado pelo sobrenatural. Desde que pode se lembrar, a ideia de encontrar uma criatura o fascina tanto quanto o assusta. Essa faísca fez você se tornar um 'caçador de monstros'.", pericias:["Investigação","Ocultismo"], poder:"Conhecimento Oculto", poderDesc:"Você pode fazer testes de Ocultismo para identificar criatura a partir de informações como uma imagem, rastros, indícios de sua presença ou outras pistas. Se passar, você descobre as características da criatura. Além disso, quando passa em um teste de Ocultismo para identificar criatura, você recebe +2 em todos os testes contra a criatura até o fim da missão.", fonte:"Sobrevivendo ao Horror", comunidade:true, criador:"Everson 'Akkiel' e Yasmim Furtado | Grimório Paranormal", icon:"👁️" },
+  { id:"sh-010", nome:"Fotógrafo", descricao:"Você é um artista visual que usa câmeras para capturar momentos e transmitir histórias através de imagens estáticas. Movido pela paixão de observar o mundo ao seu redor, buscando ângulos únicos e perspectivas singulares.", pericias:["Artes","Percepção"], poder:"Através da Lente", poderDesc:"Quando faz um teste de Investigação ou de Percepção para adquirir pistas olhando através de uma câmera ou analisando fotos, você pode gastar 2 PE para receber +5 nesse teste (um personagem que se move olhando através de uma lente anda à metade de seu deslocamento).", fonte:"Sobrevivendo ao Horror", comunidade:false, criador:null, icon:"📷" },
+  { id:"sh-011", nome:"Inventor Paranormal", descricao:"A curiosidade e a criatividade fizeram de você uma pessoa que busca constantemente desafiar limites e criar soluções inovadoras, sendo mais de uma vez intitulado como um 'cientista louco'. O Outro Lado inspira você a utilizar o desconhecido em suas invenções.", pericias:["Profissão (engenheiro)","Vontade"], poder:"Invenção Paranormal", poderDesc:"Escolha um ritual de 1º círculo. Você possui um invento paranormal, um item de categoria 0 que ocupa 1 espaço e que permite executar o efeito do ritual escolhido. Para ativar o invento, gasta uma ação padrão e faz um teste de Profissão (engenheiro) com DT 15 +5 para cada ativação na mesma missão. Pode trocar o ritual contido em seu invento no início de cada missão.", fonte:"Sobrevivendo ao Horror", comunidade:true, criador:"Bruno Sargi | C.R.I.S.", icon:"⚙️" },
+  { id:"sh-012", nome:"Jovem Místico", descricao:"Você possui uma profunda conexão com sua espiritualidade, suas crenças ou o próprio universo. Essa conexão faz com que você veja o mundo e viva sua vida de forma diferente e peculiar, tornando-o mais suscetível a um encontro com o paranormal.", pericias:["Ocultismo","Religião"], poder:"A Culpa é das Estrelas", poderDesc:"Escolha um número da sorte entre 1 e 6. No início de cada cena, você pode gastar 1 PE e rolar 1d6. Se o resultado for seu número da sorte, você recebe +2 em testes de perícia até o fim da cena. Caso contrário, na próxima vez que usar esta habilidade, escolha mais um número como número da sorte. Quando rolar um de seus números da sorte, a quantidade de números volta a 1.", fonte:"Sobrevivendo ao Horror", comunidade:true, criador:"Ramon 'PlayRay' e João 'Portill' | A Passagem", icon:"⭐" },
+  { id:"sh-013", nome:"Legista do Turno da Noite", descricao:"Em um trabalho como o seu, é de se esperar que você já tenha visto muita coisa. No entanto, quando o sol se põe, seus colegas vão embora e a luz artificial deixa cantos sombrios do necrotério, talvez você veja mais do que gostaria.", pericias:["Ciências","Medicina"], poder:"Luto Habitual", poderDesc:"Você sofre apenas a metade do dano mental por presenciar uma cena relacionada à rotina de um legista (como presenciar uma morte, ver um cadáver ou encontrar órgãos humanos). Além disso, quando faz um teste de Medicina para primeiros socorros ou necropsia, você pode gastar 2 PE para receber +5 nesse teste.", fonte:"Sobrevivendo ao Horror", comunidade:true, criador:"Ivo 'Eddu' e Ana Beatriz 'Bix' | Arquivos Confidenciais", icon:"🔬" },
+  { id:"sh-014", nome:"Mateiro", descricao:"Você conhece áreas rurais e selvagens. Você pode ser um guia florestal, um biólogo de campo ou simplesmente um entusiasta da vida selvagem. Qualquer que seja sua relação com a natureza, ela foi sua porta para o contato com o Outro Lado.", pericias:["Percepção","Sobrevivência"], poder:"Mapa Celeste", poderDesc:"Desde que possa ver o céu, você sempre sabe as direções dos pontos cardeais e consegue chegar sem se perder em qualquer lugar que já tenha visitado ao menos uma vez. Quando faz um teste de Sobrevivência, você pode gastar 2 PE para rolar o teste novamente e escolher o melhor entre os dois resultados. Em cenas de interlúdio, você considera condições de sono precárias como normais.", fonte:"Sobrevivendo ao Horror", comunidade:false, criador:null, icon:"🌲" },
+  { id:"sh-015", nome:"Mergulhador", descricao:"Seja por profissão ou por hobby, você é um aventureiro subaquático que explora os mistérios e maravilhas do mundo submerso. Trajando seu equipamento de mergulho, você consegue se aventurar a grandes profundidades.", pericias:["Atletismo","Fortitude"], poder:"Fôlego de Nadador", poderDesc:"Você recebe +5 PV e pode prender a respiração por um número de rodadas igual ao dobro do seu Vigor. Além disso, quando passa em um teste de Atletismo para natação, você avança seu deslocamento normal (em vez da metade).", fonte:"Sobrevivendo ao Horror", comunidade:false, criador:null, icon:"🤿" },
+  { id:"sh-016", nome:"Motorista", descricao:"Você é um caminhoneiro, motorista de aplicativo, motoboy, piloto de corrida, motorista de ambulância ou qualquer outro tipo de condutor profissional. Você levava a vida transportando cargas ou passageiros, até o dia em que suas viagens cruzaram o caminho do Outro Lado.", pericias:["Pilotagem","Reflexos"], poder:"Mãos no Volante", poderDesc:"Você não sofre penalidades em testes de ataque por estar em um veículo em movimento e, sempre que estiver pilotando e tiver que fazer um teste de Pilotagem ou resistência, pode gastar 2 PE para receber +5 nesse teste.", fonte:"Sobrevivendo ao Horror", comunidade:false, criador:null, icon:"🚗" },
+  { id:"sh-017", nome:"Nerd Entusiasta", descricao:"Você dedicou muito do seu tempo aprendendo sobre videogames, RPGs de mesa, ficção científica ou qualquer outro assunto considerado 'nerd'. Sua obsessão em pesquisar fundo seus assuntos de interesse chamou a atenção de organizações paranormais.", pericias:["Ciências","Tecnologia"], poder:"O Inteligentão", poderDesc:"O bônus que você recebe ao utilizar a ação de interlúdio ler aumenta em +1 dado (de +1d6 para +2d6).", fonte:"Sobrevivendo ao Horror", comunidade:true, criador:"Daniel Dill e Lukas Castanho | Remate Paranormal", icon:"🎮" },
+  { id:"sh-018", nome:"Profetizado", descricao:"Como qualquer pessoa, você vai morrer. Entretanto, diferente delas, você sabe como isso vai acontecer. De algum jeito, seja por pesadelos, pensamentos intrusivos ou até visões inesperadas, você tem uma premonição clara de como serão seus últimos momentos de vida.", pericias:["Vontade","Uma à sua escolha"], poder:"Luta ou Fuga", poderDesc:"Conhecer os sinais de sua morte o deixa mais confiante, principalmente quando eles não estão presentes. Você recebe +2 em Vontade. Quando surge uma referência a sua premonição, uma onda de adrenalina toma seu corpo. Além do bônus em Vontade, você recebe +2 PE temporários que duram até o fim da cena.", fonte:"Sobrevivendo ao Horror", comunidade:false, criador:null, icon:"🔮" },
+  { id:"sh-019", nome:"Psicólogo", descricao:"Você se especializou no estudo e tratamento das questões mentais do ser humano. Em sua prática profissional, você teve contato com o paranormal e descobriu que algumas aflições mentais possuem origens sombrias e perigosas.", pericias:["Intuição","Profissão (psicólogo)"], poder:"Terapia", poderDesc:"Você pode usar Profissão (psicólogo) como Diplomacia. Além disso, uma vez por rodada, quando você ou um aliado em alcance curto falha em um teste de resistência contra um efeito que causa dano mental, você pode gastar 2 PE para fazer um teste de Profissão (psicólogo) e usar o resultado desse teste no lugar do teste de resistência falho.", fonte:"Sobrevivendo ao Horror", comunidade:true, criador:"Luiz Giovane e Matheus Santana | Missões Ordem", icon:"🧠" },
+  { id:"sh-020", nome:"Repórter Investigativo", descricao:"Você está sempre em busca de histórias significativas, investigando eventos, entrevistando fontes e analisando dados para descobrir a verdade por trás dos acontecimentos. Profissionais do seu ramo costumam ser curiosos, persistentes e éticos em sua busca pela verdade.", pericias:["Atualidades","Investigação"], poder:"Encontrar a Verdade", poderDesc:"Você pode usar Investigação no lugar de Diplomacia ao fazer testes para persuadir e mudar atitude e, quando faz um teste de Investigação, pode gastar 2 PE para receber +5 nesse teste.", fonte:"Sobrevivendo ao Horror", comunidade:false, criador:null, icon:"🎙️" }
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let currentFilter = 'all';
+let currentSearch = '';
+let currentSort = 'nome';
+
+// ─────────────────────────────────────────────
+// CHARTS
+// ─────────────────────────────────────────────
+function initCharts() {
+  const chartDefaults = {
+    plugins: { legend: { labels: { color: '#9a9ab0', font: { size: 12 } } } }
+  };
+
+  // Chart 1 — Fonte
+  new Chart(document.getElementById('chartFonte'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Livro Base', 'Sobrevivendo ao Horror'],
+      datasets: [{ data: [24, 20], backgroundColor: ['#2980b9','#c0392b'], borderColor: '#12121a', borderWidth: 3 }]
+    },
+    options: { ...chartDefaults, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#9a9ab0', padding: 16 } } } }
+  });
+
+  // Chart 2 — Perícias mais concedidas
+  const skillCount = {};
+  ORIGENS.forEach(o => o.pericias.forEach(p => { skillCount[p] = (skillCount[p]||0)+1; }));
+  const sorted = Object.entries(skillCount).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  new Chart(document.getElementById('chartPericias'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(x=>x[0]),
+      datasets: [{ data: sorted.map(x=>x[1]), backgroundColor: '#8e44ad', borderRadius: 6 }]
+    },
+    options: {
+      indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#9a9ab0' }, grid: { color: '#2a2a3a' } },
+        y: { ticks: { color: '#9a9ab0', font: { size: 10 } }, grid: { display: false } }
+      }
+    }
+  });
+
+  // Chart 3 — Comunidade
+  new Chart(document.getElementById('chartComunidade'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Oficiais', 'Comunidade'],
+      datasets: [{ data: [34, 10], backgroundColor: ['#27ae60','#d4a017'], borderColor: '#12121a', borderWidth: 3 }]
+    },
+    options: { ...chartDefaults, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#9a9ab0', padding: 16 } } } }
+  });
+}
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+function getFiltered() {
+  let list = [...ORIGENS];
+  if (currentFilter === 'base') list = list.filter(o => o.fonte === 'Livro Base');
+  else if (currentFilter === 'supl') list = list.filter(o => o.fonte === 'Sobrevivendo ao Horror');
+  else if (currentFilter === 'comm') list = list.filter(o => o.comunidade);
+  if (currentSearch) {
+    const q = currentSearch.toLowerCase();
+    list = list.filter(o =>
+      o.nome.toLowerCase().includes(q) ||
+      o.descricao.toLowerCase().includes(q) ||
+      o.pericias.some(p => p.toLowerCase().includes(q)) ||
+      o.poder.toLowerCase().includes(q) ||
+      o.poderDesc.toLowerCase().includes(q)
+    );
+  }
+  if (currentSort === 'nome') list.sort((a,b) => a.nome.localeCompare(b.nome));
+  else if (currentSort === 'fonte') list.sort((a,b) => a.fonte.localeCompare(b.fonte) || a.nome.localeCompare(b.nome));
+  else if (currentSort === 'poder') list.sort((a,b) => a.poder.localeCompare(b.poder));
+  return list;
+}
+
+function renderCards() {
+  const list = getFiltered();
+  const grid = document.getElementById('cardsGrid');
+  document.getElementById('resultsCount').textContent = `${list.length} resultado${list.length !== 1 ? 's' : ''}`;
+
+  if (list.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>Nenhuma origem encontrada para os filtros aplicados.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(o => {
+    const isBase = o.fonte === 'Livro Base';
+    const sourceBadge = isBase
+      ? `<span class="badge badge-base">Livro Base</span>`
+      : `<span class="badge badge-supl">Sobrevivendo ao Horror</span>`;
+    const commBadge = o.comunidade ? `<span class="badge badge-comm">Comunidade</span>` : '';
+    const skillsHtml = o.pericias.map(p => `<span class="skill-tag">${p}</span>`).join('');
+    const creatorHtml = o.criador ? `<div class="card-creator">✦ Criado por: ${o.criador}</div>` : '';
+
+    return `
+    <div class="origin-card" id="card-${o.id}" onclick="toggleCard('${o.id}')">
+      <div class="card-header">
+        <div class="card-icon ${isBase ? 'icon-base' : 'icon-supl'}">${o.icon}</div>
+        <div class="card-title-wrap">
+          <div class="card-title">${o.nome}</div>
+          <div class="card-badges">${sourceBadge}${commBadge}</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">${o.descricao}</div>
+        <div class="card-skills">${skillsHtml}</div>
+        <div class="card-power">
+          <div class="power-title">Poder de Origem</div>
+          <div class="power-name">${o.poder}</div>
+          <div class="power-desc">${o.poderDesc}</div>
+        </div>
+        ${creatorHtml}
+      </div>
+      <div class="card-footer">
+        <button class="expand-btn">
+          Ver detalhes <span class="expand-icon">▼</span>
+        </button>
+        <button class="copy-btn" onclick="event.stopPropagation();copyOrigin('${o.id}')">📋 Copiar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleCard(id) {
+  const card = document.getElementById('card-' + id);
+  card.classList.toggle('expanded');
+}
+
+// ─────────────────────────────────────────────
+// COPY
+// ─────────────────────────────────────────────
+function copyOrigin(id) {
+  const o = ORIGENS.find(x => x.id === id);
+  if (!o) return;
+  const text = `ORIGEM: ${o.nome}
+Fonte: ${o.fonte}
+Perícias: ${o.pericias.join(', ')}
+Poder: ${o.poder}
+${o.poderDesc}
+---
+${o.descricao}`;
+  navigator.clipboard.writeText(text).then(() => showToast('Origem copiada!'));
+}
+
+function copySql() {
+  const el = document.getElementById('sqlCode');
+  navigator.clipboard.writeText(el.textContent).then(() => showToast('SQL copiado!'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ─────────────────────────────────────────────
+// SQL GENERATION
+// ─────────────────────────────────────────────
+function generateSql() {
+  const rows = ORIGENS.slice(0, 6).map(o => {
+    const pericias = JSON.stringify(o.pericias).replace(/"/g, "'");
+    const desc = o.descricao.replace(/'/g, "''").substring(0, 80) + '...';
+    const poderDesc = o.poderDesc.replace(/'/g, "''").substring(0, 80) + '...';
+    const fonte = o.fonte.replace(/'/g, "''");
+    const criador = o.criador ? `'${o.criador.replace(/'/g,"''")}'` : 'NULL';
+    return `  ('${o.id}', '${o.nome.replace(/'/g,"''")}', '${desc}', '${pericias}', '${o.poder.replace(/'/g,"''")}', '${poderDesc}', '${fonte}', ${o.comunidade ? 'TRUE' : 'FALSE'}, ${criador})`;
+  });
+
+  return `-- ============================================================
+-- Tabela: origens
+-- Ordem Paranormal RPG — Livro Base + Sobrevivendo ao Horror
+-- Total: 44 origens (24 LB + 20 SaH)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS origens (
+  id                 VARCHAR(10)  PRIMARY KEY,
+  nome               VARCHAR(100) NOT NULL,
+  descricao          TEXT         NOT NULL,
+  pericias_concedidas JSON        NOT NULL,
+  poder_nome         VARCHAR(100),
+  poder_descricao    TEXT,
+  fonte              VARCHAR(50)  NOT NULL,
+  origem_comunidade  BOOLEAN      DEFAULT FALSE,
+  criador            VARCHAR(150)
+);
+
+-- Inserindo primeiras 6 origens (amostra):
+INSERT INTO origens
+  (id, nome, descricao, pericias_concedidas, poder_nome, poder_descricao, fonte, origem_comunidade, criador)
+VALUES
+${rows.join(',\n')};
+
+-- ... (44 registros totais disponíveis no JSON exportado)`;
+}
+
+// ─────────────────────────────────────────────
+// SCHEMA TOGGLE
+// ─────────────────────────────────────────────
+function toggleSection(bodyId, header) {
+  const body = document.getElementById(bodyId);
+  const arrow = header.querySelector('span:last-child, #schemaArrow, #sqlArrow');
+  body.classList.toggle('open');
+  if (arrow) arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+}
+
+// ─────────────────────────────────────────────
+// EVENT LISTENERS
+// ─────────────────────────────────────────────
+document.getElementById('searchInput').addEventListener('input', e => {
+  currentSearch = e.target.value;
+  renderCards();
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderCards();
+  });
+});
+
+document.getElementById('sortSelect').addEventListener('change', e => {
+  currentSort = e.target.value;
+  renderCards();
+});
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  initCharts();
+  renderCards();
+  document.getElementById('sqlCode').textContent = generateSql();
+});
+</script>
+</body>
+</html>
