@@ -76,6 +76,18 @@ const ATTR_KEYS: Record<string, keyof CharLike> = {
   PRE: "presenca",
 };
 
+const ATTR_FULL_TO_CODE: Record<string, string> = {
+  "Força": "FOR",
+  "Agilidade": "AGI",
+  "Intelecto": "INT",
+  "Vigor": "VIG",
+  "Presença": "PRE",
+};
+
+function toAttrCode(atributo: string): string {
+  return ATTR_FULL_TO_CODE[atributo] ?? atributo;
+}
+
 const ATTR_LABEL: Record<string, string> = {
   FOR: "Força",
   AGI: "Agilidade",
@@ -187,8 +199,8 @@ function RollResultCard({ rolagem }: { rolagem: CampanhaRolagem }) {
               {rollerName(rolagem)}
             </span>
             {rolagem.atributo && (
-              <Badge variant="outline" className={`text-[10px] font-mono ${ATTR_BADGE[rolagem.atributo] ?? "border-border/50 text-muted-foreground"}`}>
-                {rolagem.atributo}
+              <Badge variant="outline" className={`text-[10px] font-mono ${ATTR_BADGE[toAttrCode(rolagem.atributo ?? "")] ?? "border-border/50 text-muted-foreground"}`}>
+                {toAttrCode(rolagem.atributo ?? "")}
               </Badge>
             )}
             {rolagem.tipo === "dano" && (
@@ -265,7 +277,7 @@ function HistoryRow({ rolagem }: { rolagem: CampanhaRolagem }) {
             <span className="text-xs text-muted-foreground/70 truncate">— {rolagem.label}</span>
           )}
           {rolagem.atributo && !isDano && (
-            <span className={`text-[10px] font-mono px-1 rounded-sm border ${ATTR_BADGE[rolagem.atributo] ?? ""}`}>{rolagem.atributo}</span>
+            <span className={`text-[10px] font-mono px-1 rounded-sm border ${ATTR_BADGE[toAttrCode(rolagem.atributo ?? "")] ?? ""}`}>{toAttrCode(rolagem.atributo ?? "")}</span>
           )}
         </div>
         <div className="flex items-center gap-1 mt-0.5 flex-wrap">
@@ -368,7 +380,7 @@ export default function RolagensTab({ campanhaId, amMestre }: { campanhaId: stri
 
   const periciaAttrVal = useMemo(() => {
     if (!selectedPericia) return 1;
-    return getCharAttrValue(selectedChar, selectedPericia.atributoBase as string);
+    return getCharAttrValue(selectedChar, toAttrCode(selectedPericia.atributoBase as string));
   }, [selectedPericia, selectedChar]);
 
   const periciaBonusTotal = GRAU_BONUS[periciaGrau] + periciaOutroBonus;
@@ -405,7 +417,7 @@ export default function RolagensTab({ campanhaId, amMestre }: { campanhaId: stri
           tipo: "pericia",
           rolandoComo: charName || undefined,
           label: selectedPericia.nome,
-          atributo: selectedPericia.atributoBase as string,
+          atributo: toAttrCode(selectedPericia.atributoBase as string),
           qtdDadosBase: periciaAttrVal,
           bonusPericia: periciaBonusTotal,
           modificadoresO,
@@ -506,13 +518,13 @@ export default function RolagensTab({ campanhaId, amMestre }: { campanhaId: stri
               {selectedPericia ? (
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 bg-secondary/20 border border-border/40 rounded-sm px-3 py-2">
-                    <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-sm border ${ATTR_BADGE[selectedPericia.atributoBase as string] ?? ""}`}>
-                      {selectedPericia.atributoBase}
+                    <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-sm border ${ATTR_BADGE[toAttrCode(selectedPericia.atributoBase as string)] ?? ""}`}>
+                      {toAttrCode(selectedPericia.atributoBase as string)}
                     </span>
                     <span className="font-display text-sm text-foreground tracking-wide">{selectedPericia.nome}</span>
                     {selectedChar && (
                       <span className="font-mono text-xs text-muted-foreground ml-auto">
-                        {ATTR_LABEL[selectedPericia.atributoBase as string]} = <strong className="text-foreground">{periciaAttrVal}</strong>
+                        {ATTR_LABEL[toAttrCode(selectedPericia.atributoBase as string)]} = <strong className="text-foreground">{periciaAttrVal}</strong>
                       </span>
                     )}
                     <button
@@ -584,7 +596,7 @@ export default function RolagensTab({ campanhaId, amMestre }: { campanhaId: stri
                   <div className="max-h-64 overflow-y-auto space-y-0.5 pr-1">
                     {filteredPericias.map((p) => {
                       const grau = getGrau(p, selectedChar?.pericias as string[] | undefined, grauMap);
-                      const attrVal = getCharAttrValue(selectedChar, p.atributoBase as string);
+                      const attrVal = getCharAttrValue(selectedChar, toAttrCode(p.atributoBase as string));
                       const trained = grau !== "Destreinado";
                       return (
                         <button
@@ -592,8 +604,8 @@ export default function RolagensTab({ campanhaId, amMestre }: { campanhaId: stri
                           onClick={() => handleSelectPericia(p)}
                           className="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm hover:bg-secondary/30 transition-colors text-left group"
                         >
-                          <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-sm border shrink-0 ${ATTR_BADGE[p.atributoBase as string] ?? ""}`}>
-                            {p.atributoBase}
+                          <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-sm border shrink-0 ${ATTR_BADGE[toAttrCode(p.atributoBase as string)] ?? ""}`}>
+                            {toAttrCode(p.atributoBase as string)}
                           </span>
                           <span className="text-sm font-sans text-foreground flex-1">{p.nome}</span>
                           {selectedChar && (
