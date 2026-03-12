@@ -324,3 +324,19 @@ export interface CreateItemBody {
   preco?: number;
   requisitos?: CreateItemBodyRequisitos;
 }
+
+export interface TrilhaHabilidade {
+  nex: string;
+  nome: string;
+  descricao: string;
+}
+
+export interface Trilha {
+  id: string;
+  classeId: string;
+  classeNome: string;
+  nome: string;
+  fonte: string;
+  habilidades: TrilhaHabilidade[];
+  createdAt?: string;
+}

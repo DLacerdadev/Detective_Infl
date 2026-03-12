@@ -35,6 +35,7 @@ import type {
   Pericia,
   Ritual,
   RpgClass,
+  Trilha,
   UpdateCharacterBody,
   UpdateUserRoleBody,
 } from "./api.schemas";
@@ -2597,3 +2598,41 @@ export const useUpdateUserRole = <
 > => {
   return useMutation(getUpdateUserRoleMutationOptions(options));
 };
+
+// ── Trilhas ──────────────────────────────────────────────────────────────────
+
+export const getListTrilhasUrl = () => `/api/trilhas`;
+
+export const listTrilhas = async (options?: RequestInit): Promise<Trilha[]> => {
+  return customFetch<Trilha[]>(getListTrilhasUrl(), { ...options, method: "GET" });
+};
+
+export const getListTrilhasQueryOptions = <
+  TData = Awaited<ReturnType<typeof listTrilhas>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<Awaited<ReturnType<typeof listTrilhas>>, TError, TData>;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? ["listTrilhas"];
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listTrilhas>>> = () =>
+    listTrilhas(requestOptions);
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listTrilhas>>,
+    TError,
+    TData
+  >;
+};
+
+export function useListTrilhas<
+  TData = Awaited<ReturnType<typeof listTrilhas>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<Awaited<ReturnType<typeof listTrilhas>>, TError, TData>;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListTrilhasQueryOptions(options);
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  return { ...query, queryKey: queryOptions.queryKey };
+}

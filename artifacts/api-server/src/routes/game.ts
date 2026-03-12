@@ -1,5 +1,5 @@
 import { Router, type IRouter, type Request, type Response } from "express";
-import { db, classesTable, origensTable, periciasTable, rituaisTable, itensTable, usersTable } from "@workspace/db";
+import { db, classesTable, origensTable, periciasTable, trilhasTable, rituaisTable, itensTable, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 
 const router: IRouter = Router();
@@ -87,6 +87,23 @@ router.delete("/pericias/:id", async (req: Request, res: Response) => {
   if (!isAdmin(req)) { res.status(403).json({ error: "Forbidden" }); return; }
   await db.delete(periciasTable).where(eq(periciasTable.id, req.params.id));
   res.status(204).send();
+});
+
+router.get("/trilhas", async (_req: Request, res: Response) => {
+  const rows = await db
+    .select({
+      id: trilhasTable.id,
+      classeId: trilhasTable.classeId,
+      classeNome: classesTable.nome,
+      nome: trilhasTable.nome,
+      fonte: trilhasTable.fonte,
+      habilidades: trilhasTable.habilidades,
+      createdAt: trilhasTable.createdAt,
+    })
+    .from(trilhasTable)
+    .innerJoin(classesTable, eq(trilhasTable.classeId, classesTable.id))
+    .orderBy(classesTable.nome, trilhasTable.fonte, trilhasTable.nome);
+  res.json(rows);
 });
 
 router.get("/rituals", async (_req: Request, res: Response) => {
