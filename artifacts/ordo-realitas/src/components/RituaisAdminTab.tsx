@@ -72,11 +72,11 @@ const CIRC_BADGE: Record<number, string> = {
   4: "bg-red-900/50 text-red-300 border-red-700",
 };
 const CIRC_LABEL: Record<number, string> = { 1: "I", 2: "II", 3: "III", 4: "IV" };
-const CIRC_CONFIG: Record<number, { active: string; border: string; label: string }> = {
-  1: { active: "bg-green-900/50 text-green-200",  border: "border-green-600",  label: "1º" },
-  2: { active: "bg-blue-900/50 text-blue-200",    border: "border-blue-600",   label: "2º" },
-  3: { active: "bg-violet-900/50 text-violet-200",border: "border-violet-600", label: "3º" },
-  4: { active: "bg-red-900/50 text-red-200",      border: "border-red-600",    label: "4º" },
+const CIRC_CONFIG: Record<number, { active: string; border: string; label: string; pe: number }> = {
+  1: { active: "bg-green-900/50 text-green-200",  border: "border-green-600",  label: "1º", pe: 1  },
+  2: { active: "bg-blue-900/50 text-blue-200",    border: "border-blue-600",   label: "2º", pe: 3  },
+  3: { active: "bg-violet-900/50 text-violet-200",border: "border-violet-600", label: "3º", pe: 6  },
+  4: { active: "bg-red-900/50 text-red-200",      border: "border-red-600",    label: "4º", pe: 10 },
 };
 
 function FieldGroup({ label, children }: { label: string; children: React.ReactNode }) {
@@ -186,7 +186,7 @@ function RitualFormDialog({
                     <button
                       key={c}
                       type="button"
-                      onClick={() => set("circulo", c)}
+                      onClick={() => { set("circulo", c); set("custoPe", cfg.pe); }}
                       className={[
                         "flex-1 py-2 rounded border text-sm font-display tracking-wide transition-all",
                         selected
@@ -194,7 +194,8 @@ function RitualFormDialog({
                           : "bg-secondary/20 border-border text-muted-foreground hover:bg-secondary/40",
                       ].join(" ")}
                     >
-                      {cfg.label}
+                      <span className="block leading-tight">{cfg.label}</span>
+                      <span className="block text-[10px] opacity-70 font-mono tracking-normal">{cfg.pe} PE</span>
                     </button>
                   );
                 })}
