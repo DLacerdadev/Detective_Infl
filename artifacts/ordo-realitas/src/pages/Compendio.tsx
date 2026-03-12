@@ -4,7 +4,8 @@ import { OrigensTab } from "@/components/OrigensTab";
 import { PericiasTab } from "@/components/PericiasTab";
 import { TrilhasTab } from "@/components/TrilhasTab";
 import { RituaisTab } from "@/components/RituaisTab";
-import { BookOpen, Brain, Sword, ScrollText, GitBranch, Sparkles } from "lucide-react";
+import { HabilidadesCompendioTab } from "@/components/HabilidadesCompendioTab";
+import { BookOpen, Brain, Sword, ScrollText, GitBranch, Sparkles, Zap } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // ── types ────────────────────────────────────────────────
@@ -432,6 +433,10 @@ export default function Compendio() {
             <Sparkles className="h-3.5 w-3.5" />
             RITUAIS
           </TabsTrigger>
+          <TabsTrigger value="habilidades" className="gap-2">
+            <Zap className="h-3.5 w-3.5" />
+            HABILIDADES
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="classes">
@@ -452,6 +457,10 @@ export default function Compendio() {
 
         <TabsContent value="rituais">
           <RituaisTab />
+        </TabsContent>
+
+        <TabsContent value="habilidades">
+          <HabilidadesCompendioTab />
         </TabsContent>
       </Tabs>
     </div>
