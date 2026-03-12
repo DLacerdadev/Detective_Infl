@@ -83,7 +83,14 @@ Manages all static game data:
 - `campanha_membros` — Campaign members with `papel` (mestre/jogador), unique per campanha+user
 - `campanha_rolagens` — Dice rolls per campaign: server-side roll engine, persisted history, supports pericia/atributo/dano types
 - `campanha_personagens` — Characters (agents) linked to campaigns. Unique per campanha+personagem. Members can add their own characters; mestre can add/remove any. Foreign keys cascade on delete.
-- `itens` — Equipment and items
+- `itens` — Equipment with full weapon/armor stats:
+  - `tipo`: ARMA | PROTECAO | MUNICAO | GERAL
+  - `subtipo`: weapon sub-types (CORPO_LEVE, CORPO_UMA_MAO, CORPO_DUAS_MAOS, DISPARO_DUAS_MAOS, FOGO_LEVE, FOGO_UMA_MAO, FOGO_DUAS_MAOS, PESADA, ARREMESSO) and general sub-types (ACESSORIO, EXPLOSIVO, OPERACIONAL, MEDICAMENTO, PARANORMAL)
+  - `proficiencia`: SIMPLES | TATICA | PESADA
+  - `dano`, `critico`, `alcance`, `tipoAtaque` — weapon combat stats
+  - `defesa` — armor defense bonus
+  - `propriedades` — JSONB array (agil, automatica, area, arremesso, forca_dano, versatil, etc.)
+  - `fonte`: LIVRO_BASE | SOBREVIVENDO_AO_HORROR
 
 ### Seeded Data
 - 4 classes: Combatente, Especialista, Ocultista, Sobrevivente (with full NEX progression)
@@ -91,6 +98,8 @@ Manages all static game data:
 - 46 origens (26 Livro Base + 20 Sobrevivendo ao Horror)
 - 28 perícias
 - **160 rituais** (Sangue:38, Morte:37, Conhecimento:34, Energia:36, Medo:14, Variável:1) from `lib/db/src/data/rituais.json`
+- **117 itens** (45 armas + 3 proteções + 6 munições + 63 gerais) from `lib/db/src/seed-equipamentos.sql`
+  - 70 from Livro Base, 47 from Sobrevivendo ao Horror
 
 ### Game System (Ordem Paranormal)
 - **Attributes**: Forca, Agilidade, Intelecto, Vigor, Presença (1-5)

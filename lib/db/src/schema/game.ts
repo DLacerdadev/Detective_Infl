@@ -78,10 +78,27 @@ export const rituaisTable = pgTable("rituais", {
 export const itensTable = pgTable("itens", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   nome: text("nome").notNull(),
-  tipo: text("tipo").notNull().default("Utilitario"),
+  // ARMA | PROTECAO | MUNICAO | GERAL
+  tipo: text("tipo").notNull().default("GERAL"),
+  // Weapon sub-type: CORPO_LEVE | CORPO_UMA_MAO | CORPO_DUAS_MAOS | DISPARO_DUAS_MAOS | FOGO_LEVE | FOGO_UMA_MAO | FOGO_DUAS_MAOS | PESADA | ARREMESSO
+  // General sub-type: ACESSORIO | EXPLOSIVO | OPERACIONAL | MEDICAMENTO | PARANORMAL
+  subtipo: text("subtipo"),
+  // SIMPLES | TATICA | PESADA (weapons only)
+  proficiencia: text("proficiencia"),
   descricao: text("descricao"),
   espacos: real("espacos").default(1),
+  // 0 | I | II | III | IV
   categoria: text("categoria"),
+  // Weapon stats
+  dano: text("dano"),
+  critico: text("critico"),
+  alcance: text("alcance"),
+  tipoAtaque: text("tipo_ataque"),
+  // Protection stats
+  defesa: integer("defesa"),
+  // ágil | automática | área | arremesso | força_dano
+  propriedades: jsonb("propriedades").$type<string[]>().default([]),
+  fonte: text("fonte").notNull().default("LIVRO_BASE"),
   peso: real("peso"),
   preco: integer("preco").default(0),
   requisitos: jsonb("requisitos"),

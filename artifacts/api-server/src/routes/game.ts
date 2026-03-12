@@ -1,6 +1,6 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { db, classesTable, origensTable, periciasTable, trilhasTable, rituaisTable, itensTable, usersTable, habilidadesTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 const router: IRouter = Router();
 
@@ -163,8 +163,16 @@ router.delete("/rituals/:id", async (req: Request, res: Response) => {
   res.status(204).send();
 });
 
-router.get("/items", async (_req: Request, res: Response) => {
-  const rows = await db.select().from(itensTable).orderBy(itensTable.tipo, itensTable.nome);
+router.get("/items", async (req: Request, res: Response) => {
+  const { tipo, subtipo, proficiencia, fonte } = req.query as Record<string, string | undefined>;
+  const conditions = [];
+  if (tipo) conditions.push(eq(itensTable.tipo, tipo));
+  if (subtipo) conditions.push(eq(itensTable.subtipo as any, subtipo));
+  if (proficiencia) conditions.push(eq(itensTable.proficiencia as any, proficiencia));
+  if (fonte) conditions.push(eq(itensTable.fonte, fonte));
+  const rows = conditions.length
+    ? await db.select().from(itensTable).where(and(...conditions)).orderBy(itensTable.nome)
+    : await db.select().from(itensTable).orderBy(itensTable.tipo, itensTable.nome);
   res.json(rows.map(mapItem));
 });
 
@@ -289,9 +297,18 @@ function mapItem(row: Record<string, unknown>) {
     id: row.id,
     nome: row.nome,
     tipo: row.tipo,
+    subtipo: row.subtipo,
+    proficiencia: row.proficiencia,
     descricao: row.descricao,
     espacos: row.espacos,
     categoria: row.categoria,
+    dano: row.dano,
+    critico: row.critico,
+    alcance: row.alcance,
+    tipoAtaque: row.tipoAtaque,
+    defesa: row.defesa,
+    propriedades: row.propriedades ?? [],
+    fonte: row.fonte,
     peso: row.peso,
     preco: row.preco,
     requisitos: row.requisitos,

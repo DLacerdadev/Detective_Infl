@@ -114,3 +114,48 @@ export function useDeleteTrilha() {
       apiFetch<void>(`/api/trilhas/${id}`, { method: "DELETE" }),
   });
 }
+
+// ── Itens ──────────────────────────────────────────────────────────────────
+
+export interface ItemCompendio {
+  id: string;
+  nome: string;
+  tipo: string;
+  subtipo: string | null;
+  proficiencia: string | null;
+  descricao: string | null;
+  espacos: number | null;
+  categoria: string | null;
+  dano: string | null;
+  critico: string | null;
+  alcance: string | null;
+  tipoAtaque: string | null;
+  defesa: number | null;
+  propriedades: string[];
+  fonte: string;
+}
+
+export type ItensFilter = {
+  tipo?: string;
+  subtipo?: string;
+  proficiencia?: string;
+  fonte?: string;
+};
+
+export function getListItensQueryKey(filter?: ItensFilter) {
+  return ["itens", filter ?? {}] as const;
+}
+
+export function useListItens(filter?: ItensFilter) {
+  const params = new URLSearchParams();
+  if (filter?.tipo)         params.set("tipo", filter.tipo);
+  if (filter?.subtipo)      params.set("subtipo", filter.subtipo);
+  if (filter?.proficiencia) params.set("proficiencia", filter.proficiencia);
+  if (filter?.fonte)        params.set("fonte", filter.fonte);
+  const qs = params.toString();
+  return useQuery<ItemCompendio[]>({
+    queryKey: getListItensQueryKey(filter),
+    queryFn: () => apiFetch<ItemCompendio[]>(`/api/items${qs ? `?${qs}` : ""}`),
+    staleTime: 1000 * 60 * 10,
+  });
+}
