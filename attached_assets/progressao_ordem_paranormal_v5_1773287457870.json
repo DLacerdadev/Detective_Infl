@@ -1,0 +1,389 @@
+{
+  "classes": [
+    {
+      "nome": "Combatente",
+      "fonte": "Livro Base",
+      "pv_inicial": 20,
+      "pv_por_nivel": 4,
+      "pe_inicial": 2,
+      "pe_por_nivel": 2,
+      "san_inicial": 12,
+      "san_por_nivel": 3,
+      "habilidades_base": [
+        {"nex": "5%", "nome": "Ataque Especial (2 PE, +5)", "descricao": "Você pode gastar 2 PE para receber +5 em testes de ataque ou rolagens de dano com um ataque."},
+        {"nex": "10%", "nome": "Habilidade de Trilha", "descricao": "Você recebe a primeira habilidade da trilha escolhida."},
+        {"nex": "15%", "nome": "Poder de Combatente", "descricao": "Você recebe um poder de combatente à sua escolha."},
+        {"nex": "20%", "nome": "Aumento de Atributo", "descricao": "Aumente um atributo a sua escolha em +1 (máximo 5)."},
+        {"nex": "25%", "nome": "Ataque Especial (3 PE, +10)", "descricao": "O bônus do seu Ataque Especial aumenta para +10 e o custo para 3 PE."},
+        {"nex": "30%", "nome": "Poder de Combatente", "descricao": "Você recebe um poder de combatente à sua escolha."},
+        {"nex": "35%", "nome": "Grau de Treinamento", "descricao": "Escolha um número de perícias treinadas igual a 2 + Int. Seu grau de treinamento nessas perícias aumenta para veterano."},
+        {"nex": "40%", "nome": "Habilidade de Trilha", "descricao": "Você recebe a segunda habilidade da trilha escolhida."},
+        {"nex": "45%", "nome": "Poder de Combatente", "descricao": "Você recebe um poder de combatente à sua escolha."},
+        {"nex": "50%", "nome": "Aumento de Atributo, Versatilidade", "descricao": "Aumente um atributo em +1. Escolha entre um poder de combatente ou o primeiro poder de uma trilha que não a sua."},
+        {"nex": "55%", "nome": "Ataque Especial (4 PE, +15)", "descricao": "O bônus do seu Ataque Especial aumenta para +15 e o custo para 4 PE."},
+        {"nex": "60%", "nome": "Poder de Combatente", "descricao": "Você recebe um poder de combatente à sua escolha."},
+        {"nex": "65%", "nome": "Habilidade de Trilha", "descricao": "Você recebe a terceira habilidade da trilha escolhida."},
+        {"nex": "70%", "nome": "Grau de Treinamento", "descricao": "Escolha um número de perícias treinadas igual a 2 + Int. Seu grau de treinamento nessas perícias aumenta em um nível (até expert)."},
+        {"nex": "75%", "nome": "Poder de Combatente", "descricao": "Você recebe um poder de combatente à sua escolha."},
+        {"nex": "80%", "nome": "Aumento de Atributo", "descricao": "Aumente um atributo a sua escolha em +1 (máximo 5)."},
+        {"nex": "85%", "nome": "Ataque Especial (5 PE, +20)", "descricao": "O bônus do seu Ataque Especial aumenta para +20 e o custo para 5 PE."},
+        {"nex": "90%", "nome": "Poder de Combatente", "descricao": "Você recebe um poder de combatente à sua escolha."},
+        {"nex": "95%", "nome": "Aumento de Atributo", "descricao": "Aumente um atributo a sua escolha em +1 (máximo 5)."},
+        {"nex": "99%", "nome": "Habilidade de Trilha", "descricao": "Você recebe a quarta habilidade da trilha escolhida."}
+      ],
+      "trilhas": [
+        {
+          "nome": "Aniquilador",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "A Favorita", "descricao": "Escolha uma arma favorita; sua categoria é reduzida em I."},
+            {"nex": "40%", "nome": "Técnica Secreta", "descricao": "Categoria da arma favorita reduzida em II. Gaste 2 PE para efeitos Amplo ou Destruidor."},
+            {"nex": "65%", "nome": "Técnica Sublime", "descricao": "Adiciona efeitos Letal (+2 margem ameaça) e Perfurante (ignora 5 RD) à Técnica Secreta."},
+            {"nex": "99%", "nome": "Máquina de Matar", "descricao": "Categoria reduzida em III, +2 na margem de ameaça e +1 dado de dano."}
+          ]
+        },
+        {
+          "nome": "Comandante de Campo",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Inspirar Confiança", "descricao": "Gaste reação e 2 PE para fazer um aliado em alcance curto rolar novamente um teste."},
+            {"nex": "40%", "nome": "Estrategista", "descricao": "Gaste ação padrão e 1 PE por aliado para dar uma ação de movimento adicional no próximo turno deles."},
+            {"nex": "65%", "nome": "Brecha na Guarda", "descricao": "Gaste reação e 2 PE para permitir ataque adicional contra inimigo que sofreu dano de aliado. Alcance de habilidades aumenta para Médio."},
+            {"nex": "99%", "nome": "Oficial Comandante", "descricao": "Gaste ação padrão e 5 PE para dar ação padrão adicional a todos os aliados em alcance médio."}
+          ]
+        },
+        {
+          "nome": "Guerreiro",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Técnica Letal", "descricao": "Recebe +2 na margem de ameaça com todos os ataques corpo a corpo."},
+            {"nex": "40%", "nome": "Revidar", "descricao": "Sempre que bloquear, gaste reação e 2 PE para fazer um ataque corpo a corpo no agressor."},
+            {"nex": "65%", "nome": "Força Opressora", "descricao": "Gaste 1 PE para realizar manobra derrubar ou empurrar como ação livre após acerto corpo a corpo."},
+            {"nex": "99%", "nome": "Potência Máxima", "descricao": "Bônus numéricos do Ataque Especial são dobrados para armas corpo a corpo."}
+          ]
+        },
+        {
+          "nome": "Operações Especiais",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Iniciativa Aprimorada", "descricao": "+5 em Iniciativa e ação de movimento adicional na primeira rodada."},
+            {"nex": "40%", "nome": "Ataque Extra", "descricao": "Uma vez por rodada, gaste 2 PE para fazer um ataque adicional."},
+            {"nex": "65%", "nome": "Surto de Adrenalina", "descricao": "Uma vez por rodada, gaste 5 PE para realizar ação padrão ou de movimento adicional."},
+            {"nex": "99%", "nome": "Sempre Alerta", "descricao": "Recebe uma ação padrão adicional no início de cada cena de combate."}
+          ]
+        },
+        {
+          "nome": "Tropa de Choque",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Casca Grossa", "descricao": "+1 PV para cada 5% de NEX e soma Vigor na RD de bloqueio."},
+            {"nex": "40%", "nome": "Cai Dentro", "descricao": "Gaste reação e 1 PE para forçar inimigo a atacar você em vez de aliado (Vontade DT Vig evita)."},
+            {"nex": "65%", "nome": "Duro de Matar", "descricao": "Gaste reação e 2 PE para reduzir dano não paranormal à metade. NEX 85% afeta dano paranormal."},
+            {"nex": "99%", "nome": "Inquebrável", "descricao": "Machucado: +5 Defesa e RD 5. Morrendo: não fica indefeso e pode agir."}
+          ]
+        },
+        {
+          "nome": "Agente Secreto",
+          "fonte": "Sobrevivendo ao Horror",
+          "habilidades": [
+            {"nex": "10%", "nome": "Carteirada", "descricao": "Treinado em Diplomacia ou Enganação. Recebe documentos com privilégios jurídicos especiais."},
+            {"nex": "40%", "nome": "O Sorriso", "descricao": "+2 em Diplomacia e Enganação. Gaste 2 PE para repetir teste de uma dessas perícias."},
+            {"nex": "65%", "nome": "Método Investigativo", "descricao": "Urgência de investigação aumenta em 1 rodada. Gaste 2 PE para anular evento de investigação."},
+            {"nex": "99%", "nome": "Multifacetado", "descricao": "Gaste 5 Sanidade para receber habilidades de até NEX 65% de outra trilha de combatente ou especialista até o fim da cena."}
+          ]
+        },
+        {
+          "nome": "Caçador",
+          "fonte": "Sobrevivendo ao Horror",
+          "habilidades": [
+            {"nex": "10%", "nome": "Rastrear o Paranormal", "descricao": "Treinado em Sobrevivência. Usa Sobrevivência no lugar de Ocultismo para identificar criaturas e Investigação/Percepção para rastros paranormais."},
+            {"nex": "40%", "nome": "Estudar Fraquezas", "descricao": "Gaste ação de interlúdio estudando pista de um ser para receber informação útil e +1 em testes contra ele."},
+            {"nex": "65%", "nome": "Atacar das Sombras", "descricao": "Pode se mover em deslocamento normal em Furtividade. Penalidade por atacar com arma silenciosa reduzida para -0."},
+            {"nex": "99%", "nome": "Estudar a Presa", "descricao": "Pode transformar um ser em sua 'presa'. Recebe +0 em testes, +1 na margem/crítico e RD 5 contra ele."}
+          ]
+        },
+        {
+          "nome": "Monstruoso",
+          "fonte": "Sobrevivendo ao Horror",
+          "habilidades": [
+            {"nex": "10%", "nome": "Ser Amaldiçoado", "descricao": "Treinado em Ocultismo. Escolha um elemento para etapa ritualística diária para receber resistências e bônus específicos."},
+            {"nex": "40%", "nome": "Ser Macabro", "descricao": "RD do elemento aumenta para 10. Recebe habilidades adicionais (ex: recuperar PV com Força ou usar Int como atributo de esforço)."},
+            {"nex": "65%", "nome": "Ser Assustador", "descricao": "RD aumenta para 15. Presença reduz em 1. Recebe arma natural de mordida ou bônus massivos em testes."},
+            {"nex": "99%", "nome": "Ser Aterrorizante", "descricao": "RD aumenta para 20. Torna-se criatura paranormal. Efeitos da etapa ritualística tornam-se permanentes. Aprende rituais poderosos."}
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "Especialista",
+      "fonte": "Livro Base",
+      "pv_inicial": 16,
+      "pv_por_nivel": 3,
+      "pe_inicial": 3,
+      "pe_por_nivel": 3,
+      "san_inicial": 16,
+      "san_por_nivel": 4,
+      "habilidades_base": [
+        {"nex": "5%", "nome": "Eclético, Perito (2 PE, +1d6)", "descricao": "Gaste 2 PE para ser treinado em perícia. Escolha 2 perícias para somar +1d6 por 2 PE."},
+        {"nex": "10%", "nome": "Habilidade de Trilha", "descricao": "Você recebe a primeira habilidade da trilha escolhida."},
+        {"nex": "15%", "nome": "Poder de Especialista", "descricao": "Você recebe um poder de especialista à sua escolha."},
+        {"nex": "20%", "nome": "Aumento de Atributo", "descricao": "Aumente um atributo a sua escolha em +1 (máximo 5)."},
+        {"nex": "25%", "nome": "Perito (3 PE, +1d8)", "descricao": "O bônus do seu Perito aumenta para +1d8 e o custo para 3 PE."},
+        {"nex": "30%", "nome": "Poder de Especialista", "descricao": "Você recebe um poder de especialista à sua escolha."},
+        {"nex": "35%", "nome": "Grau de Treinamento", "descricao": "Escolha um número de perícias treinadas igual a 5 + Int. Seu grau de treinamento nessas perícias aumenta para veterano."},
+        {"nex": "40%", "nome": "Engenhosidade (Veterano), Habilidade de Trilha", "descricao": "Eclético pode dar bônus de veterano por +2 PE. Recebe a segunda habilidade da trilha."},
+        {"nex": "45%", "nome": "Poder de Especialista", "descricao": "Você recebe um poder de especialista à sua escolha."},
+        {"nex": "50%", "nome": "Aumento de Atributo, Versatilidade", "descricao": "Aumente um atributo em +1. Escolha entre um poder de especialista ou o primeiro poder de uma trilha que não a sua."},
+        {"nex": "55%", "nome": "Perito (4 PE, +1d10)", "descricao": "O bônus do seu Perito aumenta para +1d10 e o custo para 4 PE."},
+        {"nex": "60%", "nome": "Poder de Especialista", "descricao": "Você recebe um poder de especialista à sua escolha."},
+        {"nex": "65%", "nome": "Habilidade de Trilha", "descricao": "Você recebe a terceira habilidade da trilha escolhida."},
+        {"nex": "70%", "nome": "Grau de Treinamento", "descricao": "Escolha um número de perícias treinadas igual a 5 + Int. Seu grau de treinamento nessas perícias aumenta em um nível (até expert)."},
+        {"nex": "75%", "nome": "Engenhosidade (Expert), Poder de Especialista", "descricao": "Eclético pode dar bônus de expert por +4 PE. Recebe um poder de especialista."},
+        {"nex": "80%", "nome": "Aumento de Atributo", "descricao": "Aumente um atributo a sua escolha em +1 (máximo 5)."},
+        {"nex": "85%", "nome": "Perito (5 PE, +1d12)", "descricao": "O bônus do seu Perito aumenta para +1d12 e o custo para 5 PE."},
+        {"nex": "90%", "nome": "Poder de Especialista", "descricao": "Você recebe um poder de especialista à sua escolha."},
+        {"nex": "95%", "nome": "Aumento de Atributo", "descricao": "Aumente um atributo a sua escolha em +1 (máximo 5)."},
+        {"nex": "99%", "nome": "Habilidade de Trilha", "descricao": "Você recebe a quarta habilidade da trilha escolhida."}
+      ],
+      "trilhas": [
+        {
+          "nome": "Atirador de Elite",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Mira de Elite", "descricao": "Proficiência com armas de fogo de balas longas e soma Intelecto no dano."},
+            {"nex": "40%", "nome": "Disparo Letal", "descricao": "Ao Mirar, gaste 1 PE para +2 na margem de ameaça até o fim do próximo turno."},
+            {"nex": "65%", "nome": "Disparo Impactante", "descricao": "Gaste 2 PE para realizar manobra (derrubar, desarmar, empurrar, quebrar) em vez de dano."},
+            {"nex": "99%", "nome": "Atirar para Matar", "descricao": "Acerto crítico com arma de fogo causa dano máximo."}
+          ]
+        },
+        {
+          "nome": "Infiltrador",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Ataque Furtivo (+1d6)", "descricao": "Gaste 1 PE para +1d6 de dano contra alvos desprevenidos ou flanqueados."},
+            {"nex": "40%", "nome": "Gatuno, Ataque Furtivo (+2d6)", "descricao": "+5 em Atletismo e Crime. Ataque Furtivo aumenta para +2d6."},
+            {"nex": "65%", "nome": "Assassinar, Ataque Furtivo (+3d6)", "descricao": "Gaste ação de movimento e 3 PE para analisar alvo; dobra dados de Ataque Furtivo. Aumenta para +3d6."},
+            {"nex": "99%", "nome": "Sombra Fugaz, Ataque Furtivo (+4d6)", "descricao": "Gaste 3 PE para ignorar penalidade de Furtividade após atacar. Aumenta para +4d6."}
+          ]
+        },
+        {
+          "nome": "Médico de Campo",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Paramédico", "descricao": "Gaste ação padrão e 2 PE para curar 2d10 PV."},
+            {"nex": "40%", "nome": "Equipe de Trauma", "descricao": "Gaste ação padrão e 2 PE para remover condição negativa de aliado adjacente."},
+            {"nex": "65%", "nome": "Resgate", "descricao": "Aproxima-se de aliado machucado como ação livre; concede +5 na Defesa ao curar."},
+            {"nex": "99%", "nome": "Reanimação", "descricao": "Uma vez por cena, gaste ação completa e 10 PE para ressuscitar aliado morto na mesma cena."}
+          ]
+        },
+        {
+          "nome": "Negociador",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Eloquência", "descricao": "Gaste ação completa e 1 PE/alvo para fascinar alvos."},
+            {"nex": "40%", "nome": "Discurso Motivador", "descricao": "Gaste ação padrão e 4 PE para dar +5 em testes de perícia a aliados em alcance curto."},
+            {"nex": "65%", "nome": "Eu Conheço um Cara", "descricao": "Uma vez por missão, aciona rede de contatos para obter informação ou item de categoria até III."},
+            {"nex": "99%", "nome": "Truque de Mestre", "descricao": "Gaste 5 PE para simular efeito de qualquer habilidade de aliado vista na cena."}
+          ]
+        },
+        {
+          "nome": "Técnico",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Inventário Otimizado", "descricao": "Soma Intelecto à Força para capacidade de carga."},
+            {"nex": "40%", "nome": "Remendão", "descricao": "Gaste ação completa e 1 PE para remover condição quebrado. Itens gerais têm categoria reduzida em I."},
+            {"nex": "65%", "nome": "Improvisar", "descricao": "Gaste ação completa e 2 PE (+2/categoria) para criar versão funcional de item geral."},
+            {"nex": "99%", "nome": "Preparado para Tudo", "descricao": "Gaste ação de movimento e 3 PE/categoria para 'encontrar' qualquer item na bolsa."}
+          ]
+        },
+        {
+          "nome": "Bibliotecário",
+          "fonte": "Sobrevivendo ao Horror",
+          "habilidades": [
+            {"nex": "10%", "nome": "Conhecimento Prático", "descricao": "Gaste 2 PE para mudar o atributo-base de uma perícia para Intelecto."},
+            {"nex": "40%", "nome": "Leitor Contumaz", "descricao": "Bônus de ler aumenta para 1d8. Pode gastar 2 PE para aumentar para 2d8."},
+            {"nex": "65%", "nome": "Rato de Biblioteca", "descricao": "Em local com livros, gaste rodada e 2 PE para benefícios de ler ou revisar caso."},
+            {"nex": "99%", "nome": "A Força do Saber", "descricao": "Intelecto aumenta em +1 e soma no total de PE. Muda atributo de uma perícia para Int permanentemente."}
+          ]
+        },
+        {
+          "nome": "Perseverante",
+          "fonte": "Sobrevivendo ao Horror",
+          "habilidades": [
+            {"nex": "10%", "nome": "Soluções Improvisadas", "descricao": "Gaste 2 PE para rolar novamente 1 dado de um teste recém-realizado."},
+            {"nex": "40%", "nome": "Fuga Obstinada", "descricao": "+5 em testes para fugir. Em perseguição como presa, pode acumular até 4 falhas."},
+            {"nex": "65%", "nome": "Determinação Inquestionável", "descricao": "Uma vez por cena, gaste 5 PE e ação padrão para remover condição de medo, mental ou paralisia."},
+            {"nex": "99%", "nome": "Só Mais um Passo...", "descricao": "Uma vez por rodada, se cair a 0 PV, gaste 5 PE para ficar com 1 PV (exceto dano massivo)."}
+          ]
+        },
+        {
+          "nome": "Muambeiro",
+          "fonte": "Sobrevivendo ao Horror",
+          "habilidades": [
+            {"nex": "10%", "nome": "Mascate", "descricao": "Treinado em Profissão (armeiro, engenheiro ou químico) e +5 na capacidade de carga."},
+            {"nex": "40%", "nome": "Fabricação Própria", "descricao": "Leva metade do tempo para fabricar itens mundanos. Fabrica dois consumíveis por ação."},
+            {"nex": "65%", "nome": "Laboratório de Campo", "descricao": "+5 em Profissão escolhida. Pode fabricar e consertar itens paranormais em campo."},
+            {"nex": "99%", "nome": "Achado Conveniente", "descricao": "Gaste ação completa e 5 PE para 'produzir' item de categoria até III até o fim da cena."}
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "Ocultista",
+      "fonte": "Livro Base",
+      "pv_inicial": 12,
+      "pv_por_nivel": 2,
+      "pe_inicial": 4,
+      "pe_por_nivel": 4,
+      "san_inicial": 20,
+      "san_por_nivel": 5,
+      "habilidades_base": [
+        {"nex": "5%", "nome": "Escolhido pelo Outro Lado (1º círculo)", "descricao": "Pode lançar rituais de 1º círculo. Começa com 3 rituais."},
+        {"nex": "10%", "nome": "Habilidade de Trilha", "descricao": "Você recebe a primeira habilidade da trilha escolhida."},
+        {"nex": "15%", "nome": "Poder de Ocultista", "descricao": "Você recebe um poder de ocultista à sua escolha."},
+        {"nex": "20%", "nome": "Aumento de Atributo", "descricao": "Aumente um atributo a sua escolha em +1 (máximo 5)."},
+        {"nex": "25%", "nome": "Escolhido pelo Outro Lado (2º círculo)", "descricao": "Pode lançar rituais de 2º círculo."},
+        {"nex": "30%", "nome": "Poder de Ocultista", "descricao": "Você recebe um poder de ocultista à sua escolha."},
+        {"nex": "35%", "nome": "Grau de Treinamento", "descricao": "Escolha um número de perícias treinadas igual a 3 + Int. Seu grau de treinamento nessas perícias aumenta para veterano."},
+        {"nex": "40%", "nome": "Habilidade de Trilha", "descricao": "Você recebe a segunda habilidade da trilha escolhida."},
+        {"nex": "45%", "nome": "Poder de Ocultista", "descricao": "Você recebe um poder de ocultista à sua escolha."},
+        {"nex": "50%", "nome": "Aumento de Atributo, Versatilidade", "descricao": "Aumente um atributo em +1. Escolha entre um poder de ocultista ou o primeiro poder de uma trilha que não a sua."},
+        {"nex": "55%", "nome": "Escolhido pelo Outro Lado (3º círculo)", "descricao": "Pode lançar rituais de 3º círculo."},
+        {"nex": "60%", "nome": "Poder de Ocultista", "descricao": "Você recebe um poder de ocultista à sua escolha."},
+        {"nex": "65%", "nome": "Habilidade de Trilha", "descricao": "Você recebe a terceira habilidade da trilha escolhida."},
+        {"nex": "70%", "nome": "Grau de Treinamento", "descricao": "Escolha um número de perícias treinadas igual a 3 + Int. Seu grau de treinamento nessas perícias aumenta em um nível (até expert)."},
+        {"nex": "75%", "nome": "Poder de Ocultista", "descricao": "Você recebe um poder de ocultista à sua escolha."},
+        {"nex": "80%", "nome": "Aumento de Atributo", "descricao": "Aumente um atributo a sua escolha em +1 (máximo 5)."},
+        {"nex": "85%", "nome": "Escolhido pelo Outro Lado (4º círculo)", "descricao": "Pode lançar rituais de 4º círculo."},
+        {"nex": "90%", "nome": "Poder de Ocultista", "descricao": "Você recebe um poder de ocultista à sua escolha."},
+        {"nex": "95%", "nome": "Aumento de Atributo", "descricao": "Aumente um atributo a sua escolha em +1 (máximo 5)."},
+        {"nex": "99%", "nome": "Habilidade de Trilha", "descricao": "Você recebe a quarta habilidade da trilha escolhida."}
+      ],
+      "trilhas": [
+        {
+          "nome": "Conduíte",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Ampliar Ritual", "descricao": "Gaste +2 PE para aumentar alcance em um passo ou dobrar área de efeito."},
+            {"nex": "40%", "nome": "Acelerar Ritual", "descricao": "Uma vez por rodada, gaste +4 PE para conjurar ritual como ação livre."},
+            {"nex": "65%", "nome": "Anular Ritual", "descricao": "Gaste PE igual ao custo do ritual alvo e vença teste oposto de Ocultismo para anulá-lo."},
+            {"nex": "99%", "nome": "Canalizar o Medo", "descricao": "Aprende o ritual Canalizar o Medo."}
+          ]
+        },
+        {
+          "nome": "Flagelador",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Poder do Flagelo", "descricao": "Pode pagar custo de PE com PV (2 PV por 1 PE)."},
+            {"nex": "40%", "nome": "Abraçar a Dor", "descricao": "Sempre que sofrer dano não paranormal, gaste reação e 2 PE para reduzir à metade."},
+            {"nex": "65%", "nome": "Absorver Agonia", "descricao": "Sempre que reduz inimigo a 0 PV com ritual, recupera PE igual ao círculo do ritual."},
+            {"nex": "99%", "nome": "Medo Tangível", "descricao": "Aprende o ritual Medo Tangível."}
+          ]
+        },
+        {
+          "nome": "Graduado",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Saber Ampliado", "descricao": "Aprende um ritual adicional por círculo. Não conta no limite de rituais."},
+            {"nex": "40%", "nome": "Grimório Ritualístico", "descricao": "Aprende rituais extras (igual Int). Precisa folhear grimório para conjurá-los."},
+            {"nex": "65%", "nome": "Rituais Eficientes", "descricao": "A DT para resistir aos seus rituais aumenta em +5."},
+            {"nex": "99%", "nome": "Conhecendo o Medo", "descricao": "Aprende o ritual Conhecendo o Medo."}
+          ]
+        },
+        {
+          "nome": "Intuitivo",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Mente Sã", "descricao": "Recebe +5 em testes de resistência contra efeitos paranormais."},
+            {"nex": "40%", "nome": "Presença Poderosa", "descricao": "Adiciona Presença ao limite de PE por turno apenas para conjurar rituais."},
+            {"nex": "65%", "nome": "Inabalável", "descricao": "RD mental e paranormal 10. Se passar em teste de Vontade, não sofre dano."},
+            {"nex": "99%", "nome": "Presença do Medo", "descricao": "Aprende o ritual Presença do Medo."}
+          ]
+        },
+        {
+          "nome": "Lâmina Paranormal",
+          "fonte": "Livro Base",
+          "habilidades": [
+            {"nex": "10%", "nome": "Lâmina Maldita", "descricao": "Aprende Amaldiçoar Arma. Pode usar Ocultismo para ataques com a arma amaldiçoada."},
+            {"nex": "40%", "nome": "Gladiador Paranormal", "descricao": "Acerto corpo a corpo concede 2 PE temporários."},
+            {"nex": "65%", "nome": "Conjuração Marcial", "descricao": "Ao lançar ritual, gaste 2 PE para fazer um ataque corpo a corpo como ação livre."},
+            {"nex": "99%", "nome": "Lâmina do Medo", "descricao": "Aprende o ritual Lâmina do Medo."}
+          ]
+        },
+        {
+          "nome": "Exorcista",
+          "fonte": "Sobrevivendo ao Horror",
+          "habilidades": [
+            {"nex": "10%", "nome": "Revelação do Mal", "descricao": "Treinado em Religião. Pode usar Religião no lugar de Investigação e Percepção para traços paranormais."},
+            {"nex": "40%", "nome": "Poder da Fé", "descricao": "Veterano em Religião. Gaste 2 PE para repetir teste de resistência usando Religião."},
+            {"nex": "65%", "nome": "Parareligiosidade", "descricao": "Gaste +2 PE no ritual para adicionar efeito de um catalisador ritualístico à escolha."},
+            {"nex": "99%", "nome": "Chagas da Resistência", "descricao": "Se Sanidade cair a 0, gaste 10 PV para ficar com 1 SAN."}
+          ]
+        },
+        {
+          "nome": "Possuído",
+          "fonte": "Sobrevivendo ao Horror",
+          "habilidades": [
+            {"nex": "10%", "nome": "Poder Não Desejado", "descricao": "Recebe Transcender em vez de poder de classe. Ganha Pontos de Possessão (PP) para curar PV ou PE."},
+            {"nex": "40%", "nome": "As Sombras Dentro de Mim", "descricao": "Recuperação de PP aumenta. Gaste 2 PE para +5 em Acrobacia, Atletismo e Furtividade."},
+            {"nex": "65%", "nome": "Ele Me Ensina", "descricao": "Escolha entre Transcender ou o primeiro poder de uma trilha de ocultista que não a sua."},
+            {"nex": "99%", "nome": "Tornamo-nos Um", "descricao": "Recebe um 'Presente' poderoso baseado no elemento de afinidade (Sangue, Morte, Conhecimento ou Energia)."}
+          ]
+        },
+        {
+          "nome": "Parapsicólogo",
+          "fonte": "Sobrevivendo ao Horror",
+          "habilidades": [
+            {"nex": "10%", "nome": "Terapia", "descricao": "Usa Profissão (psicólogo) como Diplomacia. Gaste 2 PE para usar Profissão no lugar de teste de resistência mental falho."},
+            {"nex": "40%", "nome": "Palavras-chave", "descricao": "Ao acalmar, gaste PE para recuperar Sanidade do alvo (1 por 1)."},
+            {"nex": "65%", "nome": "Reprogramação Mental", "descricao": "Gaste 5 PE e ação de interlúdio para dar um poder temporário a um aliado voluntário."},
+            {"nex": "99%", "nome": "A Sanidade Está Lá Fora", "descricao": "Gaste ação de movimento e 5 PE para remover todas as condições de medo ou mentais de alvo adjacente."}
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "Sobrevivente",
+      "fonte": "Sobrevivendo ao Horror",
+      "pv_inicial": 8,
+      "pv_por_nivel": 2,
+      "pe_inicial": 2,
+      "pe_por_nivel": 1,
+      "san_inicial": 8,
+      "san_por_nivel": 2,
+      "habilidades_base": [
+        {"nex": "Estágio 1", "nome": "Empenho", "descricao": "Gaste 1 PE para receber +2 em um teste de perícia."},
+        {"nex": "Estágio 2", "nome": "Habilidade de Trilha", "descricao": "Recebe a primeira habilidade da trilha de sobrevivente."},
+        {"nex": "Estágio 3", "nome": "Aumento de Atributo", "descricao": "Aumenta um atributo em +1 (máximo 3)."},
+        {"nex": "Estágio 4", "nome": "Habilidade de Trilha", "descricao": "Recebe a segunda habilidade da trilha de sobrevivente."},
+        {"nex": "Estágio 5", "nome": "Cicatrizado", "descricao": "Sacrifique 1 PV/PE permanentemente para ignorar dano mental ou reduzir dano físico à metade."}
+      ],
+      "trilhas": [
+        {
+          "nome": "Durão",
+          "fonte": "Sobrevivendo ao Horror",
+          "habilidades": [
+            {"nex": "Estágio 2", "nome": "Durão", "descricao": "Recebe +4 PV imediatos e +2 PV no próximo estágio."},
+            {"nex": "Estágio 4", "nome": "Pancada Forte", "descricao": "Gaste 1 PE para receber +5 no teste de ataque."}
+          ]
+        },
+        {
+          "nome": "Esperto",
+          "fonte": "Sobrevivendo ao Horror",
+          "habilidades": [
+            {"nex": "Estágio 2", "nome": "Esperto", "descricao": "Torna-se treinado em uma perícia adicional."},
+            {"nex": "Estágio 4", "nome": "Entendido", "descricao": "Escolha 2 perícias; gaste 1 PE para somar +1d4 no teste."}
+          ]
+        },
+        {
+          "nome": "Esotérico",
+          "fonte": "Sobrevivendo ao Horror",
+          "habilidades": [
+            {"nex": "Estágio 2", "nome": "Esotérico", "descricao": "Gaste ação padrão e 1 PE para sentir energias paranormais em alcance curto."},
+            {"nex": "Estágio 4", "nome": "Iniciado", "descricao": "Aprende e pode conjurar um ritual de 1º círculo."}
+          ]
+        }
+      ]
+    }
+  ]
+}

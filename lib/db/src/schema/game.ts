@@ -4,6 +4,12 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { usersTable } from "./auth";
 
+export type HabilidadeProgressao = {
+  nex: string;
+  nome: string;
+  descricao: string;
+};
+
 export const classesTable = pgTable("classes", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   nome: text("nome").notNull(),
@@ -15,6 +21,7 @@ export const classesTable = pgTable("classes", {
   sanInicial: integer("san_inicial").notNull().default(12),
   sanPorNivel: integer("san_por_nivel").notNull().default(4),
   periciasTreindasBase: integer("pericias_treindas_base").notNull().default(3),
+  habilidadesBase: jsonb("habilidades_base").$type<HabilidadeProgressao[]>().default([]),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -35,6 +42,15 @@ export const periciasTable = pgTable("pericias", {
   nome: text("nome").notNull(),
   atributoBase: text("atributo_base").notNull(),
   somenteTrainada: boolean("somente_trainada").notNull().default(false),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const trilhasTable = pgTable("trilhas", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  classeId: varchar("classe_id").notNull().references(() => classesTable.id, { onDelete: "cascade" }),
+  nome: text("nome").notNull(),
+  fonte: text("fonte").notNull().default("Livro Base"),
+  habilidades: jsonb("habilidades").$type<HabilidadeProgressao[]>().default([]),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -72,6 +88,7 @@ export const personagensTable = pgTable("personagens", {
   nome: text("nome").notNull(),
   classeId: varchar("classe_id").references(() => classesTable.id),
   origemId: varchar("origem_id").references(() => origensTable.id),
+  trilhaId: varchar("trilha_id").references(() => trilhasTable.id),
   nivel: integer("nivel").notNull().default(1),
   nex: integer("nex").notNull().default(0),
   patente: text("patente").default("Recruta"),
@@ -98,6 +115,7 @@ export const personagensTable = pgTable("personagens", {
 export const insertClasseSchema = createInsertSchema(classesTable).omit({ id: true, createdAt: true });
 export const insertOrigemSchema = createInsertSchema(origensTable).omit({ id: true, createdAt: true });
 export const insertPericiaSchema = createInsertSchema(periciasTable).omit({ id: true, createdAt: true });
+export const insertTrilhaSchema = createInsertSchema(trilhasTable).omit({ id: true, createdAt: true });
 export const insertRitualSchema = createInsertSchema(rituaisTable).omit({ id: true, createdAt: true });
 export const insertItemSchema = createInsertSchema(itensTable).omit({ id: true, createdAt: true });
 export const insertPersonagemSchema = createInsertSchema(personagensTable).omit({ id: true, createdAt: true, updatedAt: true });
@@ -105,6 +123,7 @@ export const insertPersonagemSchema = createInsertSchema(personagensTable).omit(
 export type Classe = typeof classesTable.$inferSelect;
 export type Origem = typeof origensTable.$inferSelect;
 export type Pericia = typeof periciasTable.$inferSelect;
+export type Trilha = typeof trilhasTable.$inferSelect;
 export type Ritual = typeof rituaisTable.$inferSelect;
 export type Item = typeof itensTable.$inferSelect;
 export type Personagem = typeof personagensTable.$inferSelect;
