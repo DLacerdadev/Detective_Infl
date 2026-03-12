@@ -81,6 +81,7 @@ Manages all static game data:
 - `rituais` — Paranormal rituals (`descricao`=efeito, `discente`, `verdadeiro`, `dados`, `dadosDiscente`, `dadosVerdadeiro`, `fonte`)
 - `campanhas` — RPG campaigns with `codigoConvite` (invite code)
 - `campanha_membros` — Campaign members with `papel` (mestre/jogador), unique per campanha+user
+- `campanha_rolagens` — Dice rolls per campaign: server-side roll engine, persisted history, supports pericia/atributo/dano types
 - `itens` — Equipment and items
 
 ### Seeded Data
