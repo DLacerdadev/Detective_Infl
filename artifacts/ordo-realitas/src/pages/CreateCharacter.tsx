@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { useListClasses, useListOrigins, useListPericias } from "@workspace/api-client-react";
+import { useListClasses, useListOrigins } from "@workspace/api-client-react";
 import { useCreateCharacterMut } from "@/hooks/use-api-mutations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,97 +12,200 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
+import { Search, Lock, CheckCircle2, Circle } from "lucide-react";
 
-// Form schemas based on API definitions
+// ── static pericias data ──────────────────────────────────────────────────
+type PericiaStatic = {
+  id: string;
+  nome: string;
+  atributo: "FOR" | "AGI" | "INT" | "PRE" | "VIG";
+  somenteTrainada: boolean;
+};
+
+const PERICIAS_LISTA: PericiaStatic[] = [
+  { id: "per-001", nome: "Acrobacia",   atributo: "AGI", somenteTrainada: false },
+  { id: "per-002", nome: "Adestramento",atributo: "PRE", somenteTrainada: true  },
+  { id: "per-003", nome: "Artes",       atributo: "PRE", somenteTrainada: true  },
+  { id: "per-004", nome: "Atletismo",   atributo: "FOR", somenteTrainada: false },
+  { id: "per-005", nome: "Atualidades", atributo: "INT", somenteTrainada: false },
+  { id: "per-006", nome: "Ciências",    atributo: "INT", somenteTrainada: true  },
+  { id: "per-007", nome: "Crime",       atributo: "AGI", somenteTrainada: true  },
+  { id: "per-008", nome: "Diplomacia",  atributo: "PRE", somenteTrainada: false },
+  { id: "per-009", nome: "Enganação",   atributo: "PRE", somenteTrainada: false },
+  { id: "per-010", nome: "Fortitude",   atributo: "VIG", somenteTrainada: false },
+  { id: "per-011", nome: "Furtividade", atributo: "AGI", somenteTrainada: false },
+  { id: "per-012", nome: "Iniciativa",  atributo: "AGI", somenteTrainada: false },
+  { id: "per-013", nome: "Intimidação", atributo: "PRE", somenteTrainada: false },
+  { id: "per-014", nome: "Intuição",    atributo: "INT", somenteTrainada: false },
+  { id: "per-015", nome: "Investigação",atributo: "INT", somenteTrainada: false },
+  { id: "per-016", nome: "Luta",        atributo: "FOR", somenteTrainada: false },
+  { id: "per-017", nome: "Medicina",    atributo: "INT", somenteTrainada: false },
+  { id: "per-018", nome: "Ocultismo",   atributo: "INT", somenteTrainada: true  },
+  { id: "per-019", nome: "Percepção",   atributo: "PRE", somenteTrainada: false },
+  { id: "per-020", nome: "Pilotagem",   atributo: "AGI", somenteTrainada: true  },
+  { id: "per-021", nome: "Pontaria",    atributo: "AGI", somenteTrainada: false },
+  { id: "per-022", nome: "Profissão",   atributo: "INT", somenteTrainada: true  },
+  { id: "per-023", nome: "Reflexos",    atributo: "AGI", somenteTrainada: false },
+  { id: "per-024", nome: "Religião",    atributo: "PRE", somenteTrainada: true  },
+  { id: "per-025", nome: "Sobrevivência",atributo: "INT", somenteTrainada: false },
+  { id: "per-026", nome: "Tática",      atributo: "INT", somenteTrainada: true  },
+  { id: "per-027", nome: "Tecnologia",  atributo: "INT", somenteTrainada: true  },
+  { id: "per-028", nome: "Vontade",     atributo: "PRE", somenteTrainada: false },
+];
+
+const ATR_COLOR: Record<string, string> = {
+  FOR: "bg-red-500 text-white",
+  AGI: "bg-blue-500 text-white",
+  INT: "bg-amber-500 text-background",
+  PRE: "bg-purple-500 text-white",
+  VIG: "bg-green-600 text-white",
+};
+
+// ── form schema ────────────────────────────────────────────────────────────
 const characterSchema = z.object({
-  nome: z.string().min(2, "Nome muito curto"),
-  historia: z.string().optional(),
-  classeId: z.string().min(1, "Selecione uma classe"),
-  origemId: z.string().min(1, "Selecione uma origem"),
-  forca: z.number().min(0).max(3),
-  agilidade: z.number().min(0).max(3),
-  intelecto: z.number().min(0).max(3),
-  vigor: z.number().min(0).max(3),
-  presenca: z.number().min(0).max(3),
-  pericias: z.array(z.string()).optional(),
+  nome:       z.string().min(2, "Nome muito curto"),
+  historia:   z.string().optional(),
+  classeId:   z.string().min(1, "Selecione uma classe"),
+  origemId:   z.string().min(1, "Selecione uma origem"),
+  forca:      z.number().min(0).max(3),
+  agilidade:  z.number().min(0).max(3),
+  intelecto:  z.number().min(0).max(3),
+  vigor:      z.number().min(0).max(3),
+  presenca:   z.number().min(0).max(3),
+  pericias:   z.array(z.string()).default([]),
 });
 
 type FormData = z.infer<typeof characterSchema>;
 
+// ── component ──────────────────────────────────────────────────────────────
 export default function CreateCharacter() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [step, setStep] = useState(1);
-  
+  const [periciaSearch, setPericiaSearch] = useState("");
+
   const { data: classes } = useListClasses();
   const { data: origins } = useListOrigins();
-  const { data: pericias } = useListPericias();
   const createMut = useCreateCharacterMut();
 
   const form = useForm<FormData>({
     resolver: zodResolver(characterSchema),
     defaultValues: {
-      nome: "",
-      historia: "",
-      classeId: "",
-      origemId: "",
-      forca: 1,
-      agilidade: 1,
-      intelecto: 1,
-      vigor: 1,
-      presenca: 1,
+      nome: "", historia: "", classeId: "", origemId: "",
+      forca: 1, agilidade: 1, intelecto: 1, vigor: 1, presenca: 1,
       pericias: [],
     },
   });
 
-  const onSubmit = async (data: FormData) => {
-    try {
-      const result = await createMut.mutateAsync({ data });
-      toast({ title: "Dossiê Criado", description: "Agente registrado com sucesso." });
-      setLocation(`/characters/${result.id}`);
-    } catch (e) {
-      toast({ title: "Erro", description: "Falha ao registrar agente.", variant: "destructive" });
+  // ── watched values ─────────────────────────────────────────────────────
+  const watchedClasseId  = form.watch("classeId");
+  const watchedOrigemId  = form.watch("origemId");
+  const watchedPericias  = form.watch("pericias");
+  const watchedIntelecto = form.watch("intelecto");
+
+  const selectedClass  = (classes as any[])?.find((c) => c.id === watchedClasseId);
+  const selectedOrigin = (origins as any[])?.find((o) => o.id === watchedOrigemId);
+
+  // Péricias automáticas concedidas pela origem
+  const periciasDaOrigem: string[] = selectedOrigin?.periciasConcedidas ?? [];
+
+  // Limite de escolhas livres = base da classe + intelecto
+  const limiteEscolhas = (selectedClass?.periciasTreindasBase ?? 3) + watchedIntelecto;
+
+  // Péricias escolhidas pelo usuário (excluindo as da origem)
+  const periciasManuais = watchedPericias.filter(
+    (p) => !periciasDaOrigem.map((n) => n.toLowerCase()).includes(p.toLowerCase())
+  );
+
+  // Péricias que aparecem no grid (todas, exceto as da origem)
+  const periciasFiltradas = useMemo(() => {
+    const q = periciaSearch.toLowerCase();
+    return PERICIAS_LISTA.filter((p) => {
+      const naoEhDaOrigem = !periciasDaOrigem.map((n) => n.toLowerCase()).includes(p.nome.toLowerCase());
+      const matchSearch = !q || p.nome.toLowerCase().includes(q) || p.atributo.toLowerCase().includes(q);
+      return naoEhDaOrigem && matchSearch;
+    });
+  }, [periciaSearch, periciasDaOrigem]);
+
+  const togglePericia = (nome: string) => {
+    const current = form.getValues("pericias");
+    const isDaOrigem = periciasDaOrigem.map((n) => n.toLowerCase()).includes(nome.toLowerCase());
+    if (isDaOrigem) return;
+
+    const isSelected = current.includes(nome);
+    if (isSelected) {
+      form.setValue("pericias", current.filter((p) => p !== nome));
+    } else {
+      if (periciasManuais.length >= limiteEscolhas) return;
+      form.setValue("pericias", [...current, nome]);
     }
   };
 
+  // ── atributos ──────────────────────────────────────────────────────────
+  const attrPointsTotal = 4;
+  const currentTotal =
+    form.watch("forca") + form.watch("agilidade") + form.watch("intelecto") +
+    form.watch("vigor") + form.watch("presenca");
+  const pointsRemaining = attrPointsTotal - (currentTotal - 5);
+
+  // ── navigation ─────────────────────────────────────────────────────────
   const nextStep = async () => {
     let valid = false;
     if (step === 1) valid = await form.trigger(["nome"]);
     if (step === 2) valid = await form.trigger(["classeId"]);
     if (step === 3) valid = await form.trigger(["origemId"]);
     if (step === 4) valid = await form.trigger(["forca", "agilidade", "intelecto", "vigor", "presenca"]);
-    
+    if (step === 4 && valid && pointsRemaining < 0) valid = false;
     if (valid) setStep((s) => s + 1);
   };
 
-  const attrPointsTotal = 4; // Base starting points to distribute beyond the 1 in each
-  const currentTotal = 
-    form.watch("forca") + 
-    form.watch("agilidade") + 
-    form.watch("intelecto") + 
-    form.watch("vigor") + 
-    form.watch("presenca");
-  const pointsRemaining = attrPointsTotal - (currentTotal - 5); // -5 because each starts at 1
+  const onSubmit = async (data: FormData) => {
+    // Ensure origin péricias are included
+    const allPericias = Array.from(
+      new Set([...periciasDaOrigem, ...data.pericias])
+    );
+    try {
+      const result = await createMut.mutateAsync({ data: { ...data, pericias: allPericias } });
+      toast({ title: "Dossiê Criado", description: "Agente registrado com sucesso." });
+      setLocation(`/characters/${result.id}`);
+    } catch {
+      toast({ title: "Erro", description: "Falha ao registrar agente.", variant: "destructive" });
+    }
+  };
+
+  const TOTAL_STEPS = 5;
 
   return (
     <div className="container max-w-3xl mx-auto px-4 py-12">
       <div className="mb-8">
         <h1 className="text-3xl font-display text-foreground mb-2">NOVO RECRUTAMENTO</h1>
         <div className="flex gap-2">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className={`h-2 flex-1 rounded-sm ${step >= i ? 'bg-primary' : 'bg-secondary'}`} />
+          {Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1).map((i) => (
+            <div key={i} className={`h-2 flex-1 rounded-sm transition-colors ${step >= i ? "bg-primary" : "bg-secondary"}`} />
+          ))}
+        </div>
+        <div className="flex justify-between mt-1">
+          {["Identificação", "Classe", "Origem", "Atributos", "Perícias"].map((label, i) => (
+            <span
+              key={label}
+              className={`text-[10px] font-mono uppercase tracking-widest transition-colors ${step === i + 1 ? "text-primary" : "text-muted-foreground/50"}`}
+              style={{ width: `${100 / TOTAL_STEPS}%`, textAlign: i === 0 ? "left" : i === TOTAL_STEPS - 1 ? "right" : "center" }}
+            >
+              {label}
+            </span>
           ))}
         </div>
       </div>
 
       <Card className="glass-panel p-8 relative overflow-hidden">
-        {/* Decorative background element */}
         <div className="absolute top-0 right-0 -mr-16 -mt-16 text-muted/10 pointer-events-none">
-          <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
         </div>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="relative z-10">
           <AnimatePresence mode="wait">
+
+            {/* ── STEP 1: Identificação ─────────────────────────────── */}
             {step === 1 && (
               <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                 <h2 className="text-xl font-display text-primary border-b border-border/50 pb-2">I. IDENTIFICAÇÃO</h2>
@@ -118,15 +221,16 @@ export default function CreateCharacter() {
               </motion.div>
             )}
 
+            {/* ── STEP 2: Classe ────────────────────────────────────── */}
             {step === 2 && (
               <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                 <h2 className="text-xl font-display text-primary border-b border-border/50 pb-2">II. ESPECIALIDADE (CLASSE)</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {classes?.map((c) => (
-                    <div 
+                  {(classes as any[])?.map((c) => (
+                    <div
                       key={c.id}
                       onClick={() => form.setValue("classeId", c.id)}
-                      className={`cursor-pointer p-4 border rounded-sm transition-all ${form.watch("classeId") === c.id ? 'border-primary bg-primary/10 shadow-[0_0_10px_rgba(220,38,38,0.2)]' : 'border-border bg-secondary/30 hover:border-primary/50'}`}
+                      className={`cursor-pointer p-4 border rounded-sm transition-all ${watchedClasseId === c.id ? "border-primary bg-primary/10 shadow-[0_0_10px_rgba(220,38,38,0.2)]" : "border-border bg-secondary/30 hover:border-primary/50"}`}
                     >
                       <h3 className="font-display font-bold text-lg mb-2 text-foreground">{c.nome}</h3>
                       <p className="text-sm text-muted-foreground font-sans line-clamp-3">{c.descricao || "Sem descrição"}</p>
@@ -137,18 +241,26 @@ export default function CreateCharacter() {
               </motion.div>
             )}
 
+            {/* ── STEP 3: Origem ────────────────────────────────────── */}
             {step === 3 && (
               <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                 <h2 className="text-xl font-display text-primary border-b border-border/50 pb-2">III. ORIGEM</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[50vh] overflow-y-auto pr-2">
-                  {origins?.map((o) => (
-                    <div 
+                  {(origins as any[])?.map((o) => (
+                    <div
                       key={o.id}
                       onClick={() => form.setValue("origemId", o.id)}
-                      className={`cursor-pointer p-4 border rounded-sm transition-all ${form.watch("origemId") === o.id ? 'border-primary bg-primary/10 shadow-[0_0_10px_rgba(220,38,38,0.2)]' : 'border-border bg-secondary/30 hover:border-primary/50'}`}
+                      className={`cursor-pointer p-4 border rounded-sm transition-all ${watchedOrigemId === o.id ? "border-primary bg-primary/10 shadow-[0_0_10px_rgba(220,38,38,0.2)]" : "border-border bg-secondary/30 hover:border-primary/50"}`}
                     >
                       <h3 className="font-display font-bold text-lg text-foreground">{o.nome}</h3>
                       <p className="text-sm text-muted-foreground font-sans mt-1">{o.poderConcedido}</p>
+                      {o.periciasConcedidas?.length > 0 && (
+                        <div className="flex gap-1.5 mt-2 flex-wrap">
+                          {o.periciasConcedidas.map((p: string) => (
+                            <span key={p} className="text-[10px] font-mono bg-blue-500/15 border border-blue-500/25 text-blue-400 rounded-sm px-1.5 py-0.5">{p}</span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -156,121 +268,163 @@ export default function CreateCharacter() {
               </motion.div>
             )}
 
+            {/* ── STEP 4: Atributos ─────────────────────────────────── */}
             {step === 4 && (
               <motion.div key="step4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                 <div className="flex justify-between items-end border-b border-border/50 pb-2">
                   <h2 className="text-xl font-display text-primary">IV. ATRIBUTOS</h2>
-                  <div className={`font-display text-sm px-3 py-1 rounded-sm ${pointsRemaining === 0 ? 'bg-green-900/30 text-green-500 border border-green-800' : pointsRemaining < 0 ? 'bg-destructive/30 text-destructive border border-destructive/50' : 'bg-secondary text-foreground border border-border'}`}>
-                    {pointsRemaining < 0 ? `${Math.abs(pointsRemaining)} PONTO${Math.abs(pointsRemaining) > 1 ? 'S' : ''} A MAIS` : `${pointsRemaining} PONTO${pointsRemaining !== 1 ? 'S' : ''} RESTANTE${pointsRemaining !== 1 ? 'S' : ''}`}
+                  <div className={`font-display text-sm px-3 py-1 rounded-sm ${pointsRemaining === 0 ? "bg-green-900/30 text-green-500 border border-green-800" : pointsRemaining < 0 ? "bg-destructive/30 text-destructive border border-destructive/50" : "bg-secondary text-foreground border border-border"}`}>
+                    {pointsRemaining < 0 ? `${Math.abs(pointsRemaining)} PONTO${Math.abs(pointsRemaining) > 1 ? "S" : ""} A MAIS` : `${pointsRemaining} PONTO${pointsRemaining !== 1 ? "S" : ""} RESTANTE${pointsRemaining !== 1 ? "S" : ""}`}
                   </div>
                 </div>
-
-                {/* Rules box */}
                 <div className="bg-amber-950/20 border border-amber-800/30 rounded-sm px-4 py-3 text-xs text-amber-200/70 font-mono space-y-1 leading-relaxed">
                   <p>• Todos os atributos começam em <strong className="text-amber-300">1</strong>. Você tem <strong className="text-amber-300">4 pontos</strong> para distribuir.</p>
                   <p>• Reduza um atributo para <strong className="text-amber-300">0</strong> para receber <strong className="text-amber-300">+1 ponto</strong> adicional.</p>
                   <p>• Valor máximo inicial por atributo: <strong className="text-amber-300">3</strong>.</p>
                 </div>
-                
                 <div className="w-full max-w-md mx-auto space-y-4 bg-background/50 p-6 rounded-sm border border-border">
                   {([
-                    { key: 'forca', label: 'FORÇA' },
-                    { key: 'agilidade', label: 'AGILIDADE' },
-                    { key: 'intelecto', label: 'INTELECTO' },
-                    { key: 'vigor', label: 'VIGOR' },
-                    { key: 'presenca', label: 'PRESENÇA' },
+                    { key: "forca",     label: "FORÇA" },
+                    { key: "agilidade", label: "AGILIDADE" },
+                    { key: "intelecto", label: "INTELECTO" },
+                    { key: "vigor",     label: "VIGOR" },
+                    { key: "presenca",  label: "PRESENÇA" },
                   ] as const).map(({ key, label }) => {
                     const val = form.watch(key);
                     const isZero = val === 0;
-                    const isMax = val === 3;
+                    const isMax  = val === 3;
                     return (
                       <div key={key} className="flex items-center justify-between">
-                        <Label className={`w-36 text-base font-display tracking-widest ${isZero ? 'text-destructive/70' : 'text-foreground'}`}>
+                        <Label className={`w-36 text-base font-display tracking-widest ${isZero ? "text-destructive/70" : "text-foreground"}`}>
                           {label}
                           {isZero && <span className="ml-2 text-[10px] text-amber-400 font-sans normal-case tracking-normal">+1 pt</span>}
                         </Label>
                         <div className="flex items-center space-x-4">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8 rounded-full"
-                            disabled={val <= 0}
-                            onClick={() => form.setValue(key, Math.max(0, val - 1))}
-                          >−</Button>
-                          <span className={`w-8 text-center font-display text-2xl ${isZero ? 'text-destructive' : isMax ? 'text-amber-400' : 'text-primary'}`}>
-                            {val}
-                          </span>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8 rounded-full"
-                            disabled={isMax || pointsRemaining <= 0}
-                            onClick={() => form.setValue(key, Math.min(3, val + 1))}
-                          >+</Button>
+                          <Button type="button" variant="outline" size="icon" className="h-8 w-8 rounded-full" disabled={val <= 0} onClick={() => form.setValue(key, Math.max(0, val - 1))}>−</Button>
+                          <span className={`w-8 text-center font-display text-2xl ${isZero ? "text-destructive" : isMax ? "text-amber-400" : "text-primary"}`}>{val}</span>
+                          <Button type="button" variant="outline" size="icon" className="h-8 w-8 rounded-full" disabled={isMax || pointsRemaining <= 0} onClick={() => form.setValue(key, Math.min(3, val + 1))}>+</Button>
                         </div>
-                        {/* Bar indicator */}
                         <div className="flex gap-1 ml-4">
                           {[1, 2, 3].map((pip) => (
-                            <div
-                              key={pip}
-                              className={`h-3 w-3 rounded-sm border transition-colors ${
-                                pip <= val
-                                  ? pip === 3 ? 'bg-amber-500 border-amber-400' : 'bg-primary border-primary/80'
-                                  : 'bg-secondary border-border/50'
-                              }`}
-                            />
+                            <div key={pip} className={`h-3 w-3 rounded-sm border transition-colors ${pip <= val ? pip === 3 ? "bg-amber-500 border-amber-400" : "bg-primary border-primary/80" : "bg-secondary border-border/50"}`} />
                           ))}
                         </div>
                       </div>
                     );
                   })}
                 </div>
-
-                {pointsRemaining < 0 && <p className="text-destructive text-sm text-center font-mono">Distribua menos {Math.abs(pointsRemaining)} ponto{Math.abs(pointsRemaining) > 1 ? 's' : ''}.</p>}
+                {pointsRemaining < 0 && <p className="text-destructive text-sm text-center font-mono">Distribua menos {Math.abs(pointsRemaining)} ponto{Math.abs(pointsRemaining) > 1 ? "s" : ""}.</p>}
                 {pointsRemaining > 0 && <p className="text-amber-400/70 text-xs text-center font-mono">Você ainda tem pontos para distribuir — não é obrigatório usá-los.</p>}
               </motion.div>
             )}
 
+            {/* ── STEP 5: Perícias ──────────────────────────────────── */}
             {step === 5 && (
-              <motion.div key="step5" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
-                <h2 className="text-xl font-display text-primary border-b border-border/50 pb-2">V. PERÍCIAS TREINADAS</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-[50vh] overflow-y-auto pr-2">
-                  {pericias?.map((p) => {
-                    const isSelected = form.watch("pericias")?.includes(p.id);
+              <motion.div key="step5" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
+                <div className="flex items-end justify-between border-b border-border/50 pb-2">
+                  <h2 className="text-xl font-display text-primary">V. PERÍCIAS TREINADAS</h2>
+                  <div className={`font-display text-sm px-3 py-1 rounded-sm border ${periciasManuais.length >= limiteEscolhas ? "bg-green-900/30 text-green-500 border-green-800" : "bg-secondary text-foreground border-border"}`}>
+                    {periciasManuais.length}/{limiteEscolhas} ESCOLHIDAS
+                  </div>
+                </div>
+
+                {/* info box */}
+                <div className="bg-amber-950/20 border border-amber-800/30 rounded-sm px-4 py-3 text-xs text-amber-200/70 font-mono space-y-1 leading-relaxed">
+                  <p>• Sua origem concede <strong className="text-amber-300">automaticamente</strong> as perícias listadas abaixo.</p>
+                  <p>• Escolha até <strong className="text-amber-300">{limiteEscolhas}</strong> péricias adicionais ({selectedClass?.periciasTreindasBase ?? 3} da classe + {watchedIntelecto} de Intelecto).</p>
+                  <p>• Péricias marcadas como <span className="text-red-400">Somente Treinada</span> só podem ser usadas se escolhidas aqui.</p>
+                </div>
+
+                {/* péricias da origem — locked */}
+                {periciasDaOrigem.length > 0 && (
+                  <div>
+                    <p className="text-[10px] font-display uppercase tracking-widest text-muted-foreground mb-2">
+                      Concedidas pela origem — {selectedOrigin?.nome}
+                    </p>
+                    <div className="flex gap-2 flex-wrap">
+                      {periciasDaOrigem.map((nome) => {
+                        const p = PERICIAS_LISTA.find((x) => x.nome.toLowerCase() === nome.toLowerCase());
+                        return (
+                          <div key={nome} className="flex items-center gap-1.5 bg-blue-500/15 border border-blue-500/35 rounded-sm px-3 py-1.5">
+                            <Lock className="h-3 w-3 text-blue-400 shrink-0" />
+                            <span className="text-sm font-semibold text-blue-400">{nome}</span>
+                            {p && (
+                              <span className={`text-[9px] font-bold rounded-sm px-1 py-0.5 ml-1 ${ATR_COLOR[p.atributo]}`}>{p.atributo}</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* search */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="Filtrar perícias..."
+                    value={periciaSearch}
+                    onChange={(e) => setPericiaSearch(e.target.value)}
+                    className="w-full bg-background border border-border/60 rounded-sm py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary/60 transition-colors font-mono"
+                  />
+                </div>
+
+                {/* grid de seleção */}
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-[40vh] overflow-y-auto pr-1">
+                  {periciasFiltradas.map((p) => {
+                    const isSelected = watchedPericias.includes(p.nome);
+                    const isDisabled = !isSelected && periciasManuais.length >= limiteEscolhas;
                     return (
-                      <div 
+                      <div
                         key={p.id}
-                        onClick={() => {
-                          const current = form.getValues("pericias") || [];
-                          if (isSelected) {
-                            form.setValue("pericias", current.filter(id => id !== p.id));
-                          } else {
-                            form.setValue("pericias", [...current, p.id]);
-                          }
-                        }}
-                        className={`cursor-pointer p-3 border rounded-sm flex justify-between items-center transition-all ${isSelected ? 'border-primary bg-primary/20 text-primary-foreground' : 'border-border bg-secondary/30 text-muted-foreground'}`}
+                        onClick={() => !isDisabled && togglePericia(p.nome)}
+                        className={`cursor-pointer p-3 border rounded-sm flex items-center gap-2 transition-all select-none ${
+                          isSelected
+                            ? "border-primary bg-primary/15 text-foreground"
+                            : isDisabled
+                            ? "border-border/30 bg-secondary/10 text-muted-foreground/40 cursor-not-allowed"
+                            : "border-border/60 bg-secondary/20 text-muted-foreground hover:border-primary/50 hover:text-foreground"
+                        }`}
                       >
-                        <span className="font-sans text-sm font-semibold">{p.nome}</span>
-                        <span className="text-xs opacity-50 font-display">{p.atributoBase}</span>
+                        <div className="shrink-0">
+                          {isSelected
+                            ? <CheckCircle2 className="h-4 w-4 text-primary" />
+                            : <Circle className="h-4 w-4 opacity-40" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-semibold leading-tight truncate">{p.nome}</div>
+                          {p.somenteTrainada && (
+                            <div className="text-[9px] text-red-400/70 font-mono mt-0.5">Somente treinada</div>
+                          )}
+                        </div>
+                        <span className={`text-[9px] font-bold rounded-sm px-1.5 py-0.5 shrink-0 ${ATR_COLOR[p.atributo]}`}>{p.atributo}</span>
                       </div>
                     );
                   })}
+                  {periciasFiltradas.length === 0 && (
+                    <div className="col-span-3 text-center py-6 text-muted-foreground font-mono text-sm">Nenhuma perícia encontrada.</div>
+                  )}
                 </div>
               </motion.div>
             )}
+
           </AnimatePresence>
 
+          {/* ── navigation ─────────────────────────────────────────── */}
           <div className="flex justify-between mt-8 pt-6 border-t border-border/50">
             {step > 1 ? (
-              <Button type="button" variant="outline" onClick={() => setStep(s => s - 1)}>VOLTAR</Button>
+              <Button type="button" variant="outline" onClick={() => setStep((s) => s - 1)}>VOLTAR</Button>
             ) : <div />}
-            
-            {step < 5 ? (
+
+            {step < TOTAL_STEPS ? (
               <Button type="button" onClick={nextStep}>AVANÇAR</Button>
             ) : (
-              <Button type="submit" disabled={createMut.isPending || pointsRemaining < 0} className="animate-pulse hover:animate-none">
+              <Button
+                type="submit"
+                disabled={createMut.isPending}
+                className="animate-pulse hover:animate-none"
+              >
                 {createMut.isPending ? "REGISTRANDO..." : "FINALIZAR DOSSIÊ"}
               </Button>
             )}
