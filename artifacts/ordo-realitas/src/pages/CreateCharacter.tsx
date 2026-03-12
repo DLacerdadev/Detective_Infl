@@ -160,6 +160,8 @@ export default function CreateCharacter() {
   };
 
   const onSubmit = async (data: FormData) => {
+    // Guard: only submit on the last step
+    if (step !== TOTAL_STEPS) return;
     // Ensure origin péricias are included
     const allPericias = Array.from(
       new Set([...periciasDaOrigem, ...data.pericias])
@@ -202,7 +204,11 @@ export default function CreateCharacter() {
           <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
         </div>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="relative z-10">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          onKeyDown={(e) => { if (e.key === "Enter") e.preventDefault(); }}
+          className="relative z-10"
+        >
           <AnimatePresence mode="wait">
 
             {/* ── STEP 1: Identificação ─────────────────────────────── */}
