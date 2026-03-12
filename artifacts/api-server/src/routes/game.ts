@@ -277,4 +277,26 @@ router.get("/habilidades", async (_req: Request, res: Response) => {
   res.json(rows);
 });
 
+router.post("/habilidades", async (req: Request, res: Response) => {
+  if (!isAdmin(req)) { res.status(403).json({ error: "Forbidden" }); return; }
+  const { nome, categoria, classe, descricao, fonte = "LIVRO_BASE", nex } = req.body;
+  if (!nome || !categoria || !classe) { res.status(400).json({ error: "nome, categoria e classe são obrigatórios" }); return; }
+  const [row] = await db.insert(habilidadesTable).values({ nome, categoria, classe, descricao, fonte, nex: nex ?? null }).returning();
+  res.status(201).json(row);
+});
+
+router.put("/habilidades/:id", async (req: Request, res: Response) => {
+  if (!isAdmin(req)) { res.status(403).json({ error: "Forbidden" }); return; }
+  const { nome, categoria, classe, descricao, fonte, nex } = req.body;
+  const [row] = await db.update(habilidadesTable).set({ nome, categoria, classe, descricao, fonte, nex: nex ?? null }).where(eq(habilidadesTable.id, req.params.id)).returning();
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  res.json(row);
+});
+
+router.delete("/habilidades/:id", async (req: Request, res: Response) => {
+  if (!isAdmin(req)) { res.status(403).json({ error: "Forbidden" }); return; }
+  await db.delete(habilidadesTable).where(eq(habilidadesTable.id, req.params.id));
+  res.status(204).send();
+});
+
 export default router;

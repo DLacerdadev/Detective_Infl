@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { ShieldAlert } from "lucide-react";
 import { OrigensTab } from "@/components/OrigensTab";
 import { RituaisAdminTab } from "@/components/RituaisAdminTab";
+import { HabilidadesAdminTab } from "@/components/HabilidadesAdminTab";
 
 function GenericTable({ title, data, columns }: { title: string; data: any[] | undefined; columns: { key: string; label: string }[] }) {
   if (!data) return <div className="p-4 text-muted-foreground animate-pulse font-mono text-sm">Carregando...</div>;
@@ -68,6 +69,7 @@ export default function Admin() {
           <TabsTrigger value="classes">CLASSES</TabsTrigger>
           <TabsTrigger value="pericias">PERÍCIAS</TabsTrigger>
           <TabsTrigger value="rituais">RITUAIS</TabsTrigger>
+          <TabsTrigger value="habilidades">HABILIDADES</TabsTrigger>
         </TabsList>
 
         <TabsContent value="origens">
@@ -101,6 +103,10 @@ export default function Admin() {
 
         <TabsContent value="rituais">
           <RituaisAdminTab />
+        </TabsContent>
+
+        <TabsContent value="habilidades">
+          <HabilidadesAdminTab />
         </TabsContent>
       </Tabs>
     </div>
