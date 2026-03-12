@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Skull, Shield, Zap, FileText, Backpack } from "lucide-react";
 import { useState } from "react";
 import { useUpdateCharacterMut } from "@/hooks/use-api-mutations";
+import CharacterPericiasTab from "@/components/CharacterPericiasTab";
 
 export default function CharacterSheet() {
   const [, params] = useRoute("/characters/:id");
@@ -74,6 +75,7 @@ export default function CharacterSheet() {
         <Tabs defaultValue="principal" className="relative z-10">
           <TabsList className="bg-transparent border-gray-900/30 border-b w-full justify-start rounded-none h-auto p-0 mb-6 flex-wrap">
             <TabsTrigger value="principal" className="data-[state=active]:bg-gray-900/10 data-[state=active]:shadow-none rounded-t-sm rounded-b-none border-t border-l border-r border-transparent data-[state=active]:border-gray-900/30 font-bold text-gray-900">PRINCIPAL</TabsTrigger>
+            <TabsTrigger value="pericias" className="data-[state=active]:bg-gray-900/10 data-[state=active]:shadow-none rounded-t-sm rounded-b-none border-t border-l border-r border-transparent data-[state=active]:border-gray-900/30 font-bold text-gray-900">PERÍCIAS</TabsTrigger>
             <TabsTrigger value="inventario" className="data-[state=active]:bg-gray-900/10 data-[state=active]:shadow-none rounded-t-sm rounded-b-none border-t border-l border-r border-transparent data-[state=active]:border-gray-900/30 font-bold text-gray-900">INVENTÁRIO</TabsTrigger>
             <TabsTrigger value="rituais" className="data-[state=active]:bg-gray-900/10 data-[state=active]:shadow-none rounded-t-sm rounded-b-none border-t border-l border-r border-transparent data-[state=active]:border-gray-900/30 font-bold text-gray-900">RITUAIS</TabsTrigger>
             <TabsTrigger value="historia" className="data-[state=active]:bg-gray-900/10 data-[state=active]:shadow-none rounded-t-sm rounded-b-none border-t border-l border-r border-transparent data-[state=active]:border-gray-900/30 font-bold text-gray-900">HISTÓRICO</TabsTrigger>
@@ -135,6 +137,19 @@ export default function CharacterSheet() {
               </div>
             </div>
 
+          </TabsContent>
+
+          <TabsContent value="pericias">
+            <CharacterPericiasTab
+              charId={char.id}
+              pericias={(char.pericias as string[]) ?? []}
+              nex={char.nex ?? 5}
+              forca={char.forca}
+              agilidade={char.agilidade}
+              intelecto={char.intelecto}
+              vigor={char.vigor}
+              presenca={char.presenca}
+            />
           </TabsContent>
 
           <TabsContent value="inventario" className="min-h-[300px]">
