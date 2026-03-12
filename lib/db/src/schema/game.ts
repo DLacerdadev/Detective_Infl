@@ -68,6 +68,9 @@ export const rituaisTable = pgTable("rituais", {
   descricao: text("descricao"),
   discente: text("discente"),
   verdadeiro: text("verdadeiro"),
+  dados: text("dados"),
+  dadosDiscente: text("dados_discente"),
+  dadosVerdadeiro: text("dados_verdadeiro"),
   fonte: text("fonte"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

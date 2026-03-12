@@ -34,6 +34,9 @@ type Ritual = {
   descricao?: string | null;
   discente?: string | null;
   verdadeiro?: string | null;
+  dados?: string | null;
+  dadosDiscente?: string | null;
+  dadosVerdadeiro?: string | null;
   fonte?: string | null;
 };
 
@@ -43,6 +46,7 @@ const EMPTY_FORM: RitualForm = {
   nome: "", elemento: "Sangue", circulo: 1,
   execucao: "", alcance: "", alvo: "", duracao: "", resistencia: "",
   custoPe: 0, descricao: "", discente: "", verdadeiro: "",
+  dados: "", dadosDiscente: "", dadosVerdadeiro: "",
   fonte: "Livro Base",
 };
 
@@ -119,6 +123,9 @@ function RitualFormDialog({
       descricao: form.descricao || undefined,
       discente: form.discente || null,
       verdadeiro: form.verdadeiro || null,
+      dados: form.dados || null,
+      dadosDiscente: form.dadosDiscente || null,
+      dadosVerdadeiro: form.dadosVerdadeiro || null,
       fonte: form.fonte || "Livro Base",
     } as any;
 
@@ -269,26 +276,50 @@ function RitualFormDialog({
             <p className="text-[10px] font-display uppercase tracking-widest text-muted-foreground mb-3">Texto do Ritual</p>
           </div>
 
-          {/* Efeito */}
-          <FieldGroup label="Efeito (descrição base)">
+          {/* Efeito base */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label className="text-[10px] font-display uppercase tracking-widest text-muted-foreground">Efeito (descrição base)</Label>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-display uppercase tracking-widest text-muted-foreground">Dados</span>
+                <Input value={form.dados ?? ""} onChange={e => set("dados", e.target.value)}
+                  placeholder="ex: 3d4+3" className={inputCls + " w-28 h-7 text-xs font-mono"} />
+              </div>
+            </div>
             <Textarea value={form.descricao ?? ""} onChange={e => set("descricao", e.target.value)}
               placeholder="Descreva o efeito do ritual..." rows={3}
               className={inputCls + " resize-none"} />
-          </FieldGroup>
+          </div>
 
           {/* Discente */}
-          <FieldGroup label="Discente (versão aprimorada — opcional)">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label className="text-[10px] font-display uppercase tracking-widest text-blue-400/80">Discente (versão aprimorada — opcional)</Label>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-display uppercase tracking-widest text-blue-400/60">Dados</span>
+                <Input value={form.dadosDiscente ?? ""} onChange={e => set("dadosDiscente", e.target.value)}
+                  placeholder="ex: 4d4+4" className={inputCls + " w-28 h-7 text-xs font-mono border-blue-800/50 focus-visible:ring-blue-500"} />
+              </div>
+            </div>
             <Textarea value={form.discente ?? ""} onChange={e => set("discente", e.target.value)}
               placeholder="(+X PE): ..." rows={2}
               className={inputCls + " resize-none border-blue-800/50 focus-visible:ring-blue-500"} />
-          </FieldGroup>
+          </div>
 
           {/* Verdadeiro */}
-          <FieldGroup label="Verdadeiro (versão poderosa — opcional)">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label className="text-[10px] font-display uppercase tracking-widest text-red-400/80">Verdadeiro (versão poderosa — opcional)</Label>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-display uppercase tracking-widest text-red-400/60">Dados</span>
+                <Input value={form.dadosVerdadeiro ?? ""} onChange={e => set("dadosVerdadeiro", e.target.value)}
+                  placeholder="ex: 6d4+6" className={inputCls + " w-28 h-7 text-xs font-mono border-red-800/50 focus-visible:ring-red-500"} />
+              </div>
+            </div>
             <Textarea value={form.verdadeiro ?? ""} onChange={e => set("verdadeiro", e.target.value)}
               placeholder="(+X PE): ... Requer Xº círculo e afinidade." rows={2}
               className={inputCls + " resize-none border-red-800/50 focus-visible:ring-red-500"} />
-          </FieldGroup>
+          </div>
         </div>
 
         <DialogFooter className="gap-2">

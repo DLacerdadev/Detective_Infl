@@ -78,7 +78,7 @@ Manages all static game data:
 - `trilhas` — Class advancement paths with per-NEX `habilidades` (JSONB)
 - `origens` — Character origins/backgrounds
 - `pericias` — Skills
-- `rituais` — Paranormal rituals (`descricao`=efeito, `discente`, `verdadeiro`, `fonte`)
+- `rituais` — Paranormal rituals (`descricao`=efeito, `discente`, `verdadeiro`, `dados`, `dadosDiscente`, `dadosVerdadeiro`, `fonte`)
 - `itens` — Equipment and items
 
 ### Seeded Data

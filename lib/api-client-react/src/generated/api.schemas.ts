@@ -236,6 +236,9 @@ export interface Ritual {
   descricao?: string;
   discente?: string | null;
   verdadeiro?: string | null;
+  dados?: string | null;
+  dadosDiscente?: string | null;
+  dadosVerdadeiro?: string | null;
   fonte?: string | null;
   createdAt?: string;
 }
@@ -262,6 +265,12 @@ export interface CreateRitualBody {
   resistencia?: string;
   custoPe?: number;
   descricao?: string;
+  discente?: string | null;
+  verdadeiro?: string | null;
+  dados?: string | null;
+  dadosDiscente?: string | null;
+  dadosVerdadeiro?: string | null;
+  fonte?: string | null;
 }
 
 export type ItemTipo = (typeof ItemTipo)[keyof typeof ItemTipo];

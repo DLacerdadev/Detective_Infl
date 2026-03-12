@@ -113,16 +113,16 @@ router.get("/rituals", async (_req: Request, res: Response) => {
 
 router.post("/rituals", async (req: Request, res: Response) => {
   if (!isAdmin(req)) { res.status(403).json({ error: "Forbidden" }); return; }
-  const { nome, elemento, circulo = 1, execucao, alcance, alvo, duracao, resistencia, custoPe = 0, descricao, discente, verdadeiro, fonte } = req.body;
+  const { nome, elemento, circulo = 1, execucao, alcance, alvo, duracao, resistencia, custoPe = 0, descricao, discente, verdadeiro, dados, dadosDiscente, dadosVerdadeiro, fonte } = req.body;
   if (!nome || !elemento) { res.status(400).json({ error: "nome and elemento required" }); return; }
-  const [row] = await db.insert(rituaisTable).values({ nome, elemento, circulo, execucao, alcance, alvo, duracao, resistencia, custoPe, descricao, discente, verdadeiro, fonte }).returning();
+  const [row] = await db.insert(rituaisTable).values({ nome, elemento, circulo, execucao, alcance, alvo, duracao, resistencia, custoPe, descricao, discente, verdadeiro, dados, dadosDiscente, dadosVerdadeiro, fonte }).returning();
   res.status(201).json(mapRitual(row));
 });
 
 router.put("/rituals/:id", async (req: Request, res: Response) => {
   if (!isAdmin(req)) { res.status(403).json({ error: "Forbidden" }); return; }
-  const { nome, elemento, circulo, execucao, alcance, alvo, duracao, resistencia, custoPe, descricao, discente, verdadeiro, fonte } = req.body;
-  const [row] = await db.update(rituaisTable).set({ nome, elemento, circulo, execucao, alcance, alvo, duracao, resistencia, custoPe, descricao, discente, verdadeiro, fonte }).where(eq(rituaisTable.id, req.params.id)).returning();
+  const { nome, elemento, circulo, execucao, alcance, alvo, duracao, resistencia, custoPe, descricao, discente, verdadeiro, dados, dadosDiscente, dadosVerdadeiro, fonte } = req.body;
+  const [row] = await db.update(rituaisTable).set({ nome, elemento, circulo, execucao, alcance, alvo, duracao, resistencia, custoPe, descricao, discente, verdadeiro, dados, dadosDiscente, dadosVerdadeiro, fonte }).where(eq(rituaisTable.id, req.params.id)).returning();
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   res.json(mapRitual(row));
 });
@@ -246,6 +246,9 @@ function mapRitual(row: Record<string, unknown>) {
     descricao: row.descricao,
     discente: row.discente,
     verdadeiro: row.verdadeiro,
+    dados: row.dados,
+    dadosDiscente: row.dadosDiscente,
+    dadosVerdadeiro: row.dadosVerdadeiro,
     fonte: row.fonte,
     createdAt: row.createdAt,
   };

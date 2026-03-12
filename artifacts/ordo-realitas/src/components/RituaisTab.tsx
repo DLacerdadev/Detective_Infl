@@ -94,21 +94,42 @@ function RitualCard({ ritual }: { ritual: Ritual }) {
 
           {ritual.descricao && (
             <div>
-              <div className="text-[9px] uppercase tracking-widest text-muted-foreground mb-1">Efeito</div>
+              <div className="flex items-center gap-2 mb-1">
+                <div className="text-[9px] uppercase tracking-widest text-muted-foreground">Efeito</div>
+                {(ritual as any).dados && (
+                  <span className="font-mono text-[11px] bg-muted/40 border border-border/60 rounded px-1.5 py-0.5 text-foreground/80 tracking-wide">
+                    🎲 {(ritual as any).dados}
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-foreground/90 leading-relaxed">{ritual.descricao}</p>
             </div>
           )}
 
           {ritual.discente && (
             <div className="border-l-2 border-blue-500/60 pl-3">
-              <div className="text-[9px] uppercase tracking-widest text-blue-400 mb-0.5 font-bold">Discente</div>
+              <div className="flex items-center gap-2 mb-0.5">
+                <div className="text-[9px] uppercase tracking-widest text-blue-400 font-bold">Discente</div>
+                {(ritual as any).dadosDiscente && (
+                  <span className="font-mono text-[11px] bg-blue-950/40 border border-blue-700/50 rounded px-1.5 py-0.5 text-blue-300 tracking-wide">
+                    🎲 {(ritual as any).dadosDiscente}
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-foreground/80 leading-relaxed">{ritual.discente}</p>
             </div>
           )}
 
           {ritual.verdadeiro && (
             <div className="border-l-2 border-primary/70 pl-3">
-              <div className="text-[9px] uppercase tracking-widest text-primary mb-0.5 font-bold">Verdadeiro</div>
+              <div className="flex items-center gap-2 mb-0.5">
+                <div className="text-[9px] uppercase tracking-widest text-primary font-bold">Verdadeiro</div>
+                {(ritual as any).dadosVerdadeiro && (
+                  <span className="font-mono text-[11px] bg-red-950/40 border border-red-700/50 rounded px-1.5 py-0.5 text-red-300 tracking-wide">
+                    🎲 {(ritual as any).dadosVerdadeiro}
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-foreground/80 leading-relaxed">{ritual.verdadeiro}</p>
             </div>
           )}
