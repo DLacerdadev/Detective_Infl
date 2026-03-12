@@ -1,5 +1,5 @@
 import { Router, type IRouter, type Request, type Response } from "express";
-import { db, classesTable, origensTable, periciasTable, trilhasTable, rituaisTable, itensTable, usersTable } from "@workspace/db";
+import { db, classesTable, origensTable, periciasTable, trilhasTable, rituaisTable, itensTable, usersTable, habilidadesTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 
 const router: IRouter = Router();
@@ -268,5 +268,13 @@ function mapItem(row: Record<string, unknown>) {
     createdAt: row.createdAt,
   };
 }
+
+router.get("/habilidades", async (_req: Request, res: Response) => {
+  const rows = await db
+    .select()
+    .from(habilidadesTable)
+    .orderBy(habilidadesTable.classe, habilidadesTable.categoria, habilidadesTable.nome);
+  res.json(rows);
+});
 
 export default router;

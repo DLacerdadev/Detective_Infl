@@ -1,67 +1,80 @@
 import { useState, useMemo } from "react";
-import { useListClasses } from "@workspace/api-client-react";
-import { Search, X } from "lucide-react";
+import { useListHabilidades, type HabilidadeCompendio } from "@workspace/api-client-react";
+import { Search, X, AlertTriangle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-type HabilidadeProgressao = {
-  nex: string;
-  nome: string;
-  descricao: string;
+// ── categorias ───────────────────────────────────────────
+const CATEGORIA_LABELS: Record<string, string> = {
+  HABILIDADE_CLASSE: "Habilidade de Classe",
+  PODER_CLASSE:      "Poder de Classe",
+  PODER_GERAL:       "Poder Geral",
+  TRILHA:            "Trilha",
+  ORIGEM:            "Origem",
 };
 
-type DbClasse = {
-  id: string;
-  nome: string;
-  habilidadesBase?: HabilidadeProgressao[];
+const CATEGORIA_COLORS: Record<string, string> = {
+  HABILIDADE_CLASSE: "bg-amber-500/15 text-amber-400 border-amber-500/40",
+  PODER_CLASSE:      "bg-primary/15 text-primary border-primary/40",
+  PODER_GERAL:       "bg-green-500/15 text-green-400 border-green-500/40",
+  TRILHA:            "bg-violet-500/15 text-violet-400 border-violet-500/40",
+  ORIGEM:            "bg-blue-500/15 text-blue-400 border-blue-500/40",
 };
 
-type FlatHabilidade = HabilidadeProgressao & { classe: string };
-
-const GENERIC_PATTERNS = [
-  "habilidade de trilha",
-  "poder de ",
-  "aumento de atributo",
-  "grau de treinamento",
-  "versatilidade",
-  "engenhosidade",
-];
-
-function isGeneric(nome: string) {
-  const lower = nome.toLowerCase();
-  return GENERIC_PATTERNS.some((p) => lower.startsWith(p) || lower === p.trim());
-}
-
-const CLASS_FILTERS = ["Todas", "Combatente", "Especialista", "Ocultista", "Sobrevivente"];
-
-const CLASS_COLORS: Record<string, { badge: string; border: string }> = {
-  Combatente:   { badge: "bg-primary/15 text-primary border-primary/40",          border: "border-l-primary" },
-  Especialista: { badge: "bg-blue-500/15 text-blue-400 border-blue-500/40",        border: "border-l-blue-400" },
-  Ocultista:    { badge: "bg-violet-500/15 text-violet-400 border-violet-500/40",  border: "border-l-violet-400" },
-  Sobrevivente: { badge: "bg-amber-500/15 text-amber-400 border-amber-500/40",     border: "border-l-amber-400" },
+// ── classe ───────────────────────────────────────────────
+const CLASSE_COLORS: Record<string, { badge: string; border: string }> = {
+  COMBATENTE:   { badge: "bg-primary/15 text-primary border-primary/40",          border: "border-l-primary" },
+  ESPECIALISTA: { badge: "bg-blue-500/15 text-blue-400 border-blue-500/40",       border: "border-l-blue-400" },
+  OCULTISTA:    { badge: "bg-violet-500/15 text-violet-400 border-violet-500/40", border: "border-l-violet-400" },
+  SOBREVIVENTE: { badge: "bg-amber-500/15 text-amber-400 border-amber-500/40",    border: "border-l-amber-400" },
+  GERAL:        { badge: "bg-green-500/15 text-green-400 border-green-500/40",    border: "border-l-green-400" },
 };
 
-function HabilidadeCard({ hab }: { hab: FlatHabilidade }) {
-  const generic = isGeneric(hab.nome);
-  const colors = CLASS_COLORS[hab.classe] ?? CLASS_COLORS["Combatente"];
+// ── filters ──────────────────────────────────────────────
+const CLASSE_FILTERS = ["Todas", "COMBATENTE", "ESPECIALISTA", "OCULTISTA", "SOBREVIVENTE", "GERAL"];
+const CLASSE_LABELS: Record<string, string> = {
+  Todas: "Todas",
+  COMBATENTE: "Combatente",
+  ESPECIALISTA: "Especialista",
+  OCULTISTA: "Ocultista",
+  SOBREVIVENTE: "Sobrevivente",
+  GERAL: "Geral",
+};
+
+const CATEGORIA_FILTERS = ["Todas", "HABILIDADE_CLASSE", "PODER_CLASSE", "PODER_GERAL", "TRILHA", "ORIGEM"];
+
+// ── card ─────────────────────────────────────────────────
+function HabilidadeCard({ hab }: { hab: HabilidadeCompendio }) {
+  const classeColor = CLASSE_COLORS[hab.classe] ?? CLASSE_COLORS["GERAL"];
+  const catColor    = CATEGORIA_COLORS[hab.categoria] ?? "bg-muted/30 text-muted-foreground border-border";
 
   return (
-    <div
-      className={`bg-card/60 rounded-sm border-l-[3px] pl-4 pr-4 py-3 transition-opacity ${
-        generic ? "opacity-50" : "opacity-100"
-      } ${colors.border}`}
-    >
-      <div className="flex flex-wrap items-center gap-2 mb-1.5">
-        <span
-          className={`text-[9px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded-sm border ${colors.badge}`}
-        >
-          {hab.classe}
+    <div className={`bg-card/60 rounded-sm border-l-[3px] pl-4 pr-4 py-3 ${classeColor.border}`}>
+      <div className="flex flex-wrap items-center gap-2 mb-2">
+        {/* classe badge */}
+        <span className={`text-[9px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded-sm border ${classeColor.badge}`}>
+          {CLASSE_LABELS[hab.classe] ?? hab.classe}
         </span>
-        <span className="text-[9px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded-sm border border-border/50 text-muted-foreground">
-          NEX {hab.nex}
+        {/* categoria badge */}
+        <span className={`text-[9px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded-sm border ${catColor}`}>
+          {CATEGORIA_LABELS[hab.categoria] ?? hab.categoria}
         </span>
-        {generic && (
-          <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground/50">
-            genérico
+        {/* nex badge */}
+        {hab.nex != null && (
+          <span className="text-[9px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded-sm border border-border/50 text-muted-foreground">
+            NEX {hab.nex}%
+          </span>
+        )}
+        {/* supl badge */}
+        {hab.fonte === "SOBREVIVENDO_AO_HORROR" && (
+          <span className="text-[9px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded-sm border border-primary/35 bg-primary/10 text-primary">
+            SUPL
+          </span>
+        )}
+        {/* alterada badge */}
+        {hab.alterada && (
+          <span className="flex items-center gap-1 text-[9px] font-mono uppercase tracking-widest text-yellow-500">
+            <AlertTriangle className="w-2.5 h-2.5" />
+            ALTERADA
           </span>
         )}
       </div>
@@ -71,41 +84,27 @@ function HabilidadeCard({ hab }: { hab: FlatHabilidade }) {
   );
 }
 
+// ── main component ────────────────────────────────────────
 export function HabilidadesCompendioTab() {
-  const { data: classes, isLoading } = useListClasses();
-  const [activeClasse, setActiveClasse] = useState("Todas");
+  const { data: habilidades, isLoading } = useListHabilidades();
+  const [activeClasse,    setActiveClasse]    = useState("Todas");
+  const [activeCategoria, setActiveCategoria] = useState("Todas");
   const [search, setSearch] = useState("");
 
-  const allHabilidades = useMemo<FlatHabilidade[]>(() => {
-    if (!classes) return [];
-    const flat: FlatHabilidade[] = [];
-    (classes as DbClasse[]).forEach((c) => {
-      (c.habilidadesBase ?? []).forEach((h) => {
-        flat.push({ ...h, classe: c.nome });
-      });
-    });
-    return flat;
-  }, [classes]);
-
-  const filtered = useMemo(() => {
-    let list = allHabilidades;
-    if (activeClasse !== "Todas") {
-      list = list.filter((h) => h.classe === activeClasse);
-    }
+  const filtered = useMemo<HabilidadeCompendio[]>(() => {
+    let list = habilidades ?? [];
+    if (activeClasse !== "Todas")    list = list.filter((h) => h.classe    === activeClasse);
+    if (activeCategoria !== "Todas") list = list.filter((h) => h.categoria === activeCategoria);
     if (search.trim()) {
       const q = search.trim().toLowerCase();
       list = list.filter(
         (h) =>
           h.nome.toLowerCase().includes(q) ||
-          h.descricao.toLowerCase().includes(q) ||
-          h.nex.toLowerCase().includes(q),
+          (h.descricao ?? "").toLowerCase().includes(q),
       );
     }
     return list;
-  }, [allHabilidades, activeClasse, search]);
-
-  const named   = filtered.filter((h) => !isGeneric(h.nome));
-  const generic = filtered.filter((h) =>  isGeneric(h.nome));
+  }, [habilidades, activeClasse, activeCategoria, search]);
 
   if (isLoading) {
     return (
@@ -115,76 +114,84 @@ export function HabilidadesCompendioTab() {
     );
   }
 
-  return (
-    <div>
-      {/* filters + search */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <div className="flex gap-0 border border-border/60 rounded-sm overflow-hidden shrink-0">
-          {CLASS_FILTERS.map((f) => (
-            <button
-              key={f}
-              onClick={() => setActiveClasse(f)}
-              className={`px-4 py-2 text-xs font-semibold border-r border-border/60 last:border-r-0 transition-colors duration-150 ${
-                activeClasse === f
-                  ? "bg-primary/15 text-primary"
-                  : "text-muted-foreground hover:text-foreground hover:bg-card/60"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
+  if (!habilidades?.length) {
+    return (
+      <div className="text-center py-16 text-muted-foreground font-mono text-sm">
+        Nenhuma habilidade encontrada no banco de dados.
+      </div>
+    );
+  }
 
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar por nome, descrição ou NEX…"
-            className="pl-9 h-9 bg-card/60 border-border/60 text-sm"
-          />
-          {search && (
-            <button
-              onClick={() => setSearch("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          )}
-        </div>
+  return (
+    <div className="space-y-4">
+      {/* classe filter */}
+      <div className="flex flex-wrap gap-1">
+        {CLASSE_FILTERS.map((f) => (
+          <button
+            key={f}
+            onClick={() => setActiveClasse(f)}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-sm border transition-colors duration-150 ${
+              activeClasse === f
+                ? "bg-primary/15 text-primary border-primary/50"
+                : "text-muted-foreground border-border/50 hover:text-foreground hover:bg-card/60"
+            }`}
+          >
+            {CLASSE_LABELS[f] ?? f}
+          </button>
+        ))}
       </div>
 
-      {/* result count */}
-      <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-4">
-        {named.length} habilidade{named.length !== 1 ? "s" : ""} encontrada{named.length !== 1 ? "s" : ""}
-        {generic.length > 0 && ` · ${generic.length} genérica${generic.length !== 1 ? "s" : ""}`}
+      {/* categoria filter */}
+      <div className="flex flex-wrap gap-1">
+        {CATEGORIA_FILTERS.map((f) => (
+          <button
+            key={f}
+            onClick={() => setActiveCategoria(f)}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-sm border transition-colors duration-150 ${
+              activeCategoria === f
+                ? "bg-card text-foreground border-border"
+                : "text-muted-foreground border-border/40 hover:text-foreground hover:bg-card/40"
+            }`}
+          >
+            {f === "Todas" ? "Todas as Categorias" : (CATEGORIA_LABELS[f] ?? f)}
+          </button>
+        ))}
+      </div>
+
+      {/* search */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+        <Input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar por nome ou descrição…"
+          className="pl-9 h-9 bg-card/60 border-border/60 text-sm"
+        />
+        {search && (
+          <button
+            onClick={() => setSearch("")}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        )}
+      </div>
+
+      {/* count */}
+      <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+        {filtered.length} habilidade{filtered.length !== 1 ? "s" : ""} encontrada{filtered.length !== 1 ? "s" : ""}
+        {" "}· {habilidades.length} total no banco
       </p>
 
+      {/* list */}
       {filtered.length === 0 ? (
-        <div className="text-center py-16 text-muted-foreground font-mono text-sm">
-          Nenhuma habilidade encontrada.
+        <div className="text-center py-12 text-muted-foreground font-mono text-sm">
+          Nenhuma habilidade encontrada com esses filtros.
         </div>
       ) : (
         <div className="space-y-2">
-          {/* named abilities first */}
-          {named.map((h, i) => (
-            <HabilidadeCard key={`${h.classe}-${h.nex}-${i}`} hab={h} />
-          ))}
-
-          {/* divider if both sections present */}
-          {named.length > 0 && generic.length > 0 && (
-            <div className="flex items-center gap-3 py-2">
-              <div className="flex-1 border-t border-border/30" />
-              <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground/50">
-                Progressão genérica
-              </span>
-              <div className="flex-1 border-t border-border/30" />
-            </div>
-          )}
-
-          {/* generic entries below */}
-          {generic.map((h, i) => (
-            <HabilidadeCard key={`${h.classe}-${h.nex}-gen-${i}`} hab={h} />
+          {filtered.map((h) => (
+            <HabilidadeCard key={h.id} hab={h} />
           ))}
         </div>
       )}

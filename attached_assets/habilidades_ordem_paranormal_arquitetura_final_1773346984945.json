@@ -1,0 +1,512 @@
+[
+    {
+        "id": "d9b561ba-a784-4215-804d-ea18ccac8ac7",
+        "nome": "Ataque Especial",
+        "categoria": "HABILIDADE_CLASSE",
+        "classe": "COMBATENTE",
+        "descricao": "Gasta PE para bônus em ataque ou dano.",
+        "fonte": "LIVRO_BASE",
+        "alterada": false,
+        "nex": 5
+    },
+    {
+        "id": "5a52d3cd-58a4-4652-aaf0-87c9aa1ad00e",
+        "nome": "Especialista",
+        "categoria": "HABILIDADE_CLASSE",
+        "classe": "ESPECIALISTA",
+        "descricao": "Bônus em perícias escolhidas.",
+        "fonte": "LIVRO_BASE",
+        "alterada": false,
+        "nex": 5
+    },
+    {
+        "id": "b540ac7e-4c98-49a5-a375-c0a4b4b64740",
+        "nome": "Eclético",
+        "categoria": "HABILIDADE_CLASSE",
+        "classe": "ESPECIALISTA",
+        "descricao": "Usa perícia não treinada gastando PE.",
+        "fonte": "LIVRO_BASE",
+        "alterada": false,
+        "nex": 10
+    },
+    {
+        "id": "9a9d1587-8cd0-4a76-aaa9-c65d990a66a6",
+        "nome": "Escolhido pelo Outro Lado",
+        "categoria": "HABILIDADE_CLASSE",
+        "classe": "OCULTISTA",
+        "descricao": "Começa com 3 rituais.",
+        "fonte": "LIVRO_BASE",
+        "alterada": false,
+        "nex": 5
+    },
+    {
+        "id": "7f249b6e-9168-44c3-90b2-b07e15ae433b",
+        "nome": "Artista Marcial",
+        "categoria": "PODER_GERAL",
+        "classe": "GERAL",
+        "descricao": "Poder geral disponível para todas as classes.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "c5372bce-e0b1-491c-af4f-1efe3d570418",
+        "nome": "Combater com Duas Armas",
+        "categoria": "PODER_GERAL",
+        "classe": "GERAL",
+        "descricao": "Poder geral disponível para todas as classes.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "ccbcf35a-2373-4566-aeda-22ff06c1a479",
+        "nome": "Combate Defensivo",
+        "categoria": "PODER_GERAL",
+        "classe": "GERAL",
+        "descricao": "Poder geral disponível para todas as classes.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "4a284932-0aac-4d86-8632-df79d5affd17",
+        "nome": "Escudo Veloz",
+        "categoria": "PODER_GERAL",
+        "classe": "GERAL",
+        "descricao": "Poder geral disponível para todas as classes.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "e2e2ed2d-3cd4-4ea8-8ad1-b88c2db13a42",
+        "nome": "Mestre em Arma",
+        "categoria": "PODER_GERAL",
+        "classe": "GERAL",
+        "descricao": "Poder geral disponível para todas as classes.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "72b4688f-68d7-4e62-887b-7646bc348e54",
+        "nome": "Saque Rápido",
+        "categoria": "PODER_GERAL",
+        "classe": "GERAL",
+        "descricao": "Poder geral disponível para todas as classes.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "2eae88b0-903e-493c-8e0e-189b2adbd132",
+        "nome": "Tiro de Cobertura",
+        "categoria": "PODER_GERAL",
+        "classe": "GERAL",
+        "descricao": "Poder geral disponível para todas as classes.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "6704692e-bb8e-4597-acec-8acfc04d3109",
+        "nome": "Amigo dos Animais",
+        "categoria": "ORIGEM",
+        "classe": "GERAL",
+        "descricao": "Origem: Amigo dos Animais.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "404ba403-8a7f-4431-82b8-369ce130b919",
+        "nome": "Cientista",
+        "categoria": "ORIGEM",
+        "classe": "GERAL",
+        "descricao": "Origem: Cientista.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "f7846aac-b571-47e7-8458-ee41a886779e",
+        "nome": "Colegial",
+        "categoria": "ORIGEM",
+        "classe": "GERAL",
+        "descricao": "Origem: Colegial.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "ce96c084-bc0d-46d7-a12a-6fd49a8d565b",
+        "nome": "Cozinheiro",
+        "categoria": "ORIGEM",
+        "classe": "GERAL",
+        "descricao": "Origem: Cozinheiro.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "275114da-13e6-4c62-9082-ae4982c54431",
+        "nome": "Dublê",
+        "categoria": "ORIGEM",
+        "classe": "GERAL",
+        "descricao": "Origem: Dublê.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "daeb596b-e4a8-4855-9f67-a6328cb0e80c",
+        "nome": "Experimento",
+        "categoria": "ORIGEM",
+        "classe": "GERAL",
+        "descricao": "Origem: Experimento.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "2969a014-9d54-4326-b6a3-f69e40b2abda",
+        "nome": "Fazendeiro",
+        "categoria": "ORIGEM",
+        "classe": "GERAL",
+        "descricao": "Origem: Fazendeiro.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "0650d8df-0957-428f-afa9-8301f36fdd4a",
+        "nome": "Herdeiro",
+        "categoria": "ORIGEM",
+        "classe": "GERAL",
+        "descricao": "Origem: Herdeiro.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "ce2213d5-f4cd-4042-a058-d3604b89d9c0",
+        "nome": "Mergulhador",
+        "categoria": "ORIGEM",
+        "classe": "GERAL",
+        "descricao": "Origem: Mergulhador.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "4f413691-01ce-4f6d-b10f-b06f3e2dbb07",
+        "nome": "Político",
+        "categoria": "ORIGEM",
+        "classe": "GERAL",
+        "descricao": "Origem: Político.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "a5650113-dc33-42cc-8bbd-8d40998c8fcd",
+        "nome": "Apego Angustiado",
+        "categoria": "PODER_CLASSE",
+        "classe": "COMBATENTE",
+        "descricao": "Poder de classe focado em sobrevivência.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "f77b85fa-a3ae-4af4-8489-f0be4816ad4e",
+        "nome": "Caminho para Forca",
+        "categoria": "PODER_CLASSE",
+        "classe": "COMBATENTE",
+        "descricao": "Poder de classe focado em sobrevivência.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "50fd0f7b-2b68-43ba-b5c6-72f33ab6e00c",
+        "nome": "Ciente das Cicatrizes",
+        "categoria": "PODER_CLASSE",
+        "classe": "COMBATENTE",
+        "descricao": "Poder de classe focado em sobrevivência.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "2f2b745e-2e94-4779-baa4-d67e7f9ad894",
+        "nome": "Correria Desesperada",
+        "categoria": "PODER_CLASSE",
+        "classe": "COMBATENTE",
+        "descricao": "Poder de classe focado em sobrevivência.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "d9bdfd4d-d4b8-4057-ad42-caf2d27637b5",
+        "nome": "Engolir o Choro",
+        "categoria": "PODER_CLASSE",
+        "classe": "COMBATENTE",
+        "descricao": "Poder de classe focado em sobrevivência.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "27b2b72f-d612-4ab8-bedd-dbae7c6d59e2",
+        "nome": "Instinto de Fuga",
+        "categoria": "PODER_CLASSE",
+        "classe": "COMBATENTE",
+        "descricao": "Poder de classe focado em sobrevivência.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "3acb2e82-b790-4d6d-9ae7-db5627e97c5e",
+        "nome": "Mochileiro",
+        "categoria": "PODER_CLASSE",
+        "classe": "COMBATENTE",
+        "descricao": "Poder de classe focado em sobrevivência.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "24ec1fc3-e809-41b7-a50c-385e09150273",
+        "nome": "Paranoia Defensiva",
+        "categoria": "PODER_CLASSE",
+        "classe": "COMBATENTE",
+        "descricao": "Poder de classe focado em sobrevivência.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "6a26bd77-865d-4f2c-82c6-201c89177848",
+        "nome": "Sacrificar os Joelhos",
+        "categoria": "PODER_CLASSE",
+        "classe": "COMBATENTE",
+        "descricao": "Poder de classe focado em sobrevivência.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "37413ee1-4646-4282-8e8a-7e3215115dad",
+        "nome": "Sem Tempo, Irmão",
+        "categoria": "PODER_CLASSE",
+        "classe": "COMBATENTE",
+        "descricao": "Poder de classe focado em sobrevivência.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "e2083589-21c2-4097-b57c-64ef74c5b41f",
+        "nome": "Valentão",
+        "categoria": "PODER_CLASSE",
+        "classe": "COMBATENTE",
+        "descricao": "Poder de classe focado em sobrevivência.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "d8c15636-c214-4819-90c2-01520dbfe61c",
+        "nome": "Alerta de Perigo",
+        "categoria": "PODER_CLASSE",
+        "classe": "ESPECIALISTA",
+        "descricao": "Poder de classe focado em utilidade.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "f9c23798-918b-45a8-bc24-8854ed3229b4",
+        "nome": "Analista de Campo",
+        "categoria": "PODER_CLASSE",
+        "classe": "ESPECIALISTA",
+        "descricao": "Poder de classe focado em utilidade.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "92a16ab5-35a4-4632-8f66-933b6e81b98c",
+        "nome": "Autossuficiente",
+        "categoria": "PODER_CLASSE",
+        "classe": "ESPECIALISTA",
+        "descricao": "Poder de classe focado em utilidade.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "f0a04f15-3f24-4d85-be97-f5559d5d3ba1",
+        "nome": "Deduzir",
+        "categoria": "PODER_CLASSE",
+        "classe": "ESPECIALISTA",
+        "descricao": "Poder de classe focado em utilidade.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "6393d6b9-b259-4dd9-b5bf-aec4d8808e8f",
+        "nome": "Improvisador",
+        "categoria": "PODER_CLASSE",
+        "classe": "ESPECIALISTA",
+        "descricao": "Poder de classe focado em utilidade.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "bd829cc3-b90d-473f-aa22-de1bfb3ff202",
+        "nome": "Ligeiro",
+        "categoria": "PODER_CLASSE",
+        "classe": "ESPECIALISTA",
+        "descricao": "Poder de classe focado em utilidade.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "798e57df-b239-4158-9b2a-244de7df5613",
+        "nome": "Planejamento Estratégico",
+        "categoria": "PODER_CLASSE",
+        "classe": "ESPECIALISTA",
+        "descricao": "Poder de classe focado em utilidade.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "64c34f96-81f6-4e4e-8d3b-3bab3fd58eb8",
+        "nome": "Conexão Paranormal",
+        "categoria": "PODER_CLASSE",
+        "classe": "OCULTISTA",
+        "descricao": "Poder de classe focado em rituais e paranormal.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "c73c7549-5c25-4e9a-8fb8-93e8625cf85e",
+        "nome": "Estudo Intensivo",
+        "categoria": "PODER_CLASSE",
+        "classe": "OCULTISTA",
+        "descricao": "Poder de classe focado em rituais e paranormal.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "19944ecc-a93a-4dae-a0ed-b0255c478e18",
+        "nome": "Mente Aberta",
+        "categoria": "PODER_CLASSE",
+        "classe": "OCULTISTA",
+        "descricao": "Poder de classe focado em rituais e paranormal.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "cf1ec786-edfe-4790-aefb-a5e4e0534b1f",
+        "nome": "Ritualista Veloz",
+        "categoria": "PODER_CLASSE",
+        "classe": "OCULTISTA",
+        "descricao": "Poder de classe focado em rituais e paranormal.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "9b0b02a3-0c84-4cae-ad05-064801b1c3a2",
+        "nome": "Sensitivo",
+        "categoria": "PODER_CLASSE",
+        "classe": "OCULTISTA",
+        "descricao": "Poder de classe focado em rituais e paranormal.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "7ca9f04a-7019-4413-a6eb-a96545d398df",
+        "nome": "Agente do Governo",
+        "categoria": "TRILHA",
+        "classe": "ESPECIALISTA",
+        "descricao": "Trilha de ESPECIALISTA.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "89b343f2-26d0-4240-8822-7ddb5c04a57f",
+        "nome": "Monstruoso",
+        "categoria": "TRILHA",
+        "classe": "COMBATENTE",
+        "descricao": "Trilha de COMBATENTE.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "34cbd92d-262c-490a-9132-f0e8ff5dfc98",
+        "nome": "Flagelador",
+        "categoria": "TRILHA",
+        "classe": "OCULTISTA",
+        "descricao": "Trilha de OCULTISTA.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "8aeb9a6b-e087-460b-8406-2d95addee5c3",
+        "nome": "Sobrevivente",
+        "categoria": "TRILHA",
+        "classe": "SOBREVIVENTE",
+        "descricao": "Trilha de SOBREVIVENTE.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": false,
+        "nex": null
+    },
+    {
+        "id": "a3b2ce1b-0bb4-4297-80cf-81aea2619b19",
+        "nome": "Infiltrador",
+        "categoria": "TRILHA",
+        "classe": "ESPECIALISTA",
+        "descricao": "ALTERADO: Agora interage com a mecânica de Visibilidade.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": true,
+        "nex": null
+    },
+    {
+        "id": "bba04be6-5819-4f8b-bc2a-52cadef77ad5",
+        "nome": "Atirador de Elite",
+        "categoria": "TRILHA",
+        "classe": "ESPECIALISTA",
+        "descricao": "ALTERADO: Ajustes na precisão e bônus de dano.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": true,
+        "nex": null
+    },
+    {
+        "id": "3c370bb1-144e-43d4-8601-5e408cd615c8",
+        "nome": "Guerreiro",
+        "categoria": "TRILHA",
+        "classe": "COMBATENTE",
+        "descricao": "ALTERADO: Ajustes em manobras de combate.",
+        "fonte": "SOBREVIVENDO_AO_HORROR",
+        "alterada": true,
+        "nex": null
+    }
+]

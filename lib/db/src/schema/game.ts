@@ -118,6 +118,18 @@ export const personagensTable = pgTable("personagens", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
 
+export const habilidadesTable = pgTable("habilidades", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  nome: text("nome").notNull(),
+  categoria: text("categoria").notNull(),
+  classe: text("classe").notNull().default("GERAL"),
+  descricao: text("descricao"),
+  fonte: text("fonte").notNull().default("LIVRO_BASE"),
+  alterada: boolean("alterada").notNull().default(false),
+  nex: integer("nex"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const insertClasseSchema = createInsertSchema(classesTable).omit({ id: true, createdAt: true });
 export const insertOrigemSchema = createInsertSchema(origensTable).omit({ id: true, createdAt: true });
 export const insertPericiaSchema = createInsertSchema(periciasTable).omit({ id: true, createdAt: true });
@@ -133,4 +145,5 @@ export type Trilha = typeof trilhasTable.$inferSelect;
 export type Ritual = typeof rituaisTable.$inferSelect;
 export type Item = typeof itensTable.$inferSelect;
 export type Personagem = typeof personagensTable.$inferSelect;
+export type Habilidade = typeof habilidadesTable.$inferSelect;
 export type InsertPersonagem = z.infer<typeof insertPersonagemSchema>;
