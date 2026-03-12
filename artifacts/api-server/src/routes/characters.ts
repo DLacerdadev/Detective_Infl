@@ -1,6 +1,9 @@
 import { Router, type IRouter, type Request, type Response } from "express";
-import { db, personagensTable, classesTable, origensTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import {
+  db, personagensTable, classesTable, origensTable,
+  campanhaPersonagensTable, campanhasTable, campanhaMembrosTable,
+} from "@workspace/db";
+import { eq, and } from "drizzle-orm";
 
 const router: IRouter = Router();
 
@@ -206,5 +209,31 @@ function mapCharacter(char: Record<string, unknown>) {
     updatedAt: char.updatedAt,
   };
 }
+
+router.get("/characters/:id/campanhas", async (req: Request, res: Response) => {
+  if (!req.isAuthenticated()) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const char = await db.query.personagensTable.findFirst({
+    where: eq(personagensTable.id, req.params.id),
+  });
+  if (!char || char.userId !== req.user.id) {
+    res.status(403).json({ error: "Forbidden" }); return;
+  }
+
+  const result = await db.select({
+    id: campanhasTable.id,
+    nome: campanhasTable.nome,
+    meuPapel: campanhaMembrosTable.papel,
+  })
+    .from(campanhaPersonagensTable)
+    .innerJoin(campanhasTable, eq(campanhaPersonagensTable.campanhaId, campanhasTable.id))
+    .innerJoin(campanhaMembrosTable, and(
+      eq(campanhaMembrosTable.campanhaId, campanhasTable.id),
+      eq(campanhaMembrosTable.userId, req.user.id),
+    ))
+    .where(eq(campanhaPersonagensTable.personagemId, req.params.id));
+
+  res.json(result);
+});
 
 export default router;

@@ -217,6 +217,31 @@ export function useRemoverPersonagemDaCampanha(campanhaId: string) {
   });
 }
 
+export interface CharacterCampanha {
+  id: string;
+  nome: string;
+  meuPapel: string;
+}
+
+export const characterCampanhasKey = (charId: string) => ["characters", charId, "campanhas"] as const;
+
+export function useCharacterCampanhas(charId: string) {
+  return useQuery<CharacterCampanha[]>({
+    queryKey: characterCampanhasKey(charId),
+    queryFn: () => apiFetch(`/api/characters/${charId}/campanhas`),
+    enabled: !!charId,
+  });
+}
+
+export function useRolarEmCampanha() {
+  const qc = useQueryClient();
+  return useMutation<CampanhaRolagem, Error, { campanhaId: string } & (RolarPericiaBody | RolarDanoBody)>({
+    mutationFn: ({ campanhaId, ...body }) =>
+      apiFetch(`/api/campanhas/${campanhaId}/rolagens`, { method: "POST", body: JSON.stringify(body) }),
+    onSuccess: (data) => qc.invalidateQueries({ queryKey: rolagensKey(data.campanhaId) }),
+  });
+}
+
 export const rolagensKey = (campanhaId: string) => ["campanhas", campanhaId, "rolagens"] as const;
 
 export function useListRolagens(campanhaId: string) {
