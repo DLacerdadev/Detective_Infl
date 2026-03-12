@@ -143,12 +143,6 @@ export default function CharacterSheet() {
             <CharacterPericiasTab
               charId={char.id}
               pericias={(char.pericias as string[]) ?? []}
-              nex={char.nex ?? 5}
-              forca={char.forca}
-              agilidade={char.agilidade}
-              intelecto={char.intelecto}
-              vigor={char.vigor}
-              presenca={char.presenca}
             />
           </TabsContent>
 

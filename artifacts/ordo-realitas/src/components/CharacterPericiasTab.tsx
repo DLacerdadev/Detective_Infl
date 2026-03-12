@@ -3,6 +3,7 @@ import { Search, CheckCircle2, Circle, ChevronUp, ChevronDown } from "lucide-rea
 
 // ── types ─────────────────────────────────────────────────────────────────
 type Atributo = "FOR" | "AGI" | "INT" | "PRE" | "VIG";
+type GrauTreinamento = "Destreinado" | "Treinado" | "Veterano" | "Expert";
 
 type PericiaRow = {
   id: string;
@@ -11,7 +12,17 @@ type PericiaRow = {
   somenteTrainada: boolean;
 };
 
-// ── static data ───────────────────────────────────────────────────────────
+// ── grau → bônus ──────────────────────────────────────────────────────────
+const GRAU_BONUS: Record<GrauTreinamento, number> = {
+  Destreinado:  0,
+  Treinado:    +5,
+  Veterano:   +10,
+  Expert:     +15,
+};
+
+const GRAUS: GrauTreinamento[] = ["Destreinado", "Treinado", "Veterano", "Expert"];
+
+// ── static péricia data ───────────────────────────────────────────────────
 const PERICIAS: PericiaRow[] = [
   { id: "per-001", nome: "Acrobacia",     atributo: "AGI", somenteTrainada: false },
   { id: "per-002", nome: "Adestramento",  atributo: "PRE", somenteTrainada: true  },
@@ -43,67 +54,45 @@ const PERICIAS: PericiaRow[] = [
   { id: "per-028", nome: "Vontade",       atributo: "PRE", somenteTrainada: false },
 ];
 
-// ── NEX → training bonus ──────────────────────────────────────────────────
-function getBonusTreinamento(nex: number): number {
-  if (nex < 15) return 2;
-  if (nex < 30) return 3;
-  if (nex < 45) return 4;
-  if (nex < 60) return 5;
-  if (nex < 75) return 6;
-  if (nex < 90) return 7;
-  return 8;
-}
-
-// ── normalize for comparison (remove accents, lowercase) ──────────────────
+// ── helpers ───────────────────────────────────────────────────────────────
 function norm(s: string) {
   return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
-// ── attribute display helpers ─────────────────────────────────────────────
-const ATR_BG: Record<Atributo, string> = {
-  FOR: "bg-red-200 text-red-900 border-red-300",
-  AGI: "bg-blue-200 text-blue-900 border-blue-300",
+const ATR_BADGE: Record<Atributo, string> = {
+  FOR: "bg-red-200   text-red-900   border-red-300",
+  AGI: "bg-blue-200  text-blue-900  border-blue-300",
   INT: "bg-amber-200 text-amber-900 border-amber-300",
   PRE: "bg-purple-200 text-purple-900 border-purple-300",
   VIG: "bg-green-200 text-green-900 border-green-300",
 };
 
-const ATR_HEADER: Record<Atributo, string> = {
-  FOR: "bg-red-100 text-red-800",
-  AGI: "bg-blue-100 text-blue-800",
-  INT: "bg-amber-100 text-amber-800",
-  PRE: "bg-purple-100 text-purple-800",
-  VIG: "bg-green-100 text-green-800",
+const GRAU_STYLE: Record<GrauTreinamento, string> = {
+  Destreinado: "text-gray-900/35",
+  Treinado:    "text-green-800 font-bold",
+  Veterano:    "text-blue-800  font-bold",
+  Expert:      "text-amber-800 font-bold",
 };
 
-const ATR_LABELS: Record<Atributo, string> = {
-  FOR: "Força",
-  AGI: "Agilidade",
-  INT: "Intelecto",
-  PRE: "Presença",
-  VIG: "Vigor",
+const GRAU_BONUS_STYLE: Record<GrauTreinamento, string> = {
+  Destreinado: "text-gray-900/30",
+  Treinado:    "text-green-800",
+  Veterano:    "text-blue-800",
+  Expert:      "text-amber-800",
 };
 
 // ── props ─────────────────────────────────────────────────────────────────
 type Props = {
   charId: string;
-  pericias: string[];   // names of trained péricias from DB
-  nex: number;
-  forca: number;
-  agilidade: number;
-  intelecto: number;
-  vigor: number;
-  presenca: number;
+  pericias: string[];
 };
 
 // ── component ─────────────────────────────────────────────────────────────
-export default function CharacterPericiasTab({
-  charId, pericias, nex, forca, agilidade, intelecto, vigor, presenca,
-}: Props) {
-  const storageKey = `char-${charId}-pericias-outro`;
+export default function CharacterPericiasTab({ charId, pericias }: Props) {
+  const storageKey = `char-${charId}-pericias-v2`;
 
-  // "Outro" bonus per péricia, persisted in localStorage
-  const [outroMap, setOutroMap] = useState<Record<string, number>>(() => {
+  // graus saved per péricia id (defaults to Destreinado or Treinado based on char.pericias)
+  const [grauMap, setGrauMap] = useState<Record<string, GrauTreinamento>>(() => {
     try {
       const raw = localStorage.getItem(storageKey);
       return raw ? JSON.parse(raw) : {};
@@ -112,68 +101,89 @@ export default function CharacterPericiasTab({
     }
   });
 
+  // "outro" bonus per péricia id
+  const outroStorageKey = `char-${charId}-pericias-outro-v2`;
+  const [outroMap, setOutroMap] = useState<Record<string, number>>(() => {
+    try {
+      const raw = localStorage.getItem(outroStorageKey);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  });
+
   useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(outroMap));
-  }, [outroMap, storageKey]);
+    localStorage.setItem(storageKey, JSON.stringify(grauMap));
+  }, [grauMap, storageKey]);
+
+  useEffect(() => {
+    localStorage.setItem(outroStorageKey, JSON.stringify(outroMap));
+  }, [outroMap, outroStorageKey]);
+
+  const trainedSet = useMemo(() => new Set(pericias.map(norm)), [pericias]);
+
+  // Get effective grau: uses grauMap if set, otherwise derives from trainedSet
+  const getGrau = (p: PericiaRow): GrauTreinamento => {
+    if (grauMap[p.id]) return grauMap[p.id];
+    return trainedSet.has(norm(p.nome)) ? "Treinado" : "Destreinado";
+  };
+
+  const setGrau = (id: string, grau: GrauTreinamento) => {
+    setGrauMap((prev) => ({ ...prev, [id]: grau }));
+  };
 
   const setOutro = (id: string, val: number) => {
     setOutroMap((prev) => ({ ...prev, [id]: val }));
   };
 
   // Filters
-  const [search, setSearch]         = useState("");
-  const [filterAttr, setFilterAttr] = useState<Atributo | "TODAS">("TODAS");
-  const [soTreinadas, setSoTreinadas] = useState(false);
+  const [search,       setSearch]       = useState("");
+  const [filterAttr,   setFilterAttr]   = useState<Atributo | "TODAS">("TODAS");
+  const [soTreinadas,  setSoTreinadas]  = useState(false);
 
-  // Helpers
-  const trainedSet = useMemo(
-    () => new Set(pericias.map(norm)),
-    [pericias]
-  );
-
-  const attrValue: Record<Atributo, number> = {
-    FOR: forca,
-    AGI: agilidade,
-    INT: intelecto,
-    PRE: presenca,
-    VIG: vigor,
-  };
-
-  const bonusTreinamento = getBonusTreinamento(nex);
-
-  // Filtered + sorted list
   const rows = useMemo(() => {
     const q = norm(search);
     return PERICIAS.filter((p) => {
+      const grau = getGrau(p);
       if (filterAttr !== "TODAS" && p.atributo !== filterAttr) return false;
-      if (soTreinadas && !trainedSet.has(norm(p.nome))) return false;
+      if (soTreinadas && grau === "Destreinado") return false;
       if (q && !norm(p.nome).includes(q)) return false;
       return true;
     });
-  }, [search, filterAttr, soTreinadas, trainedSet]);
+  }, [search, filterAttr, soTreinadas, grauMap, trainedSet]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Summary stats
-  const totalTreinadas = PERICIAS.filter((p) => trainedSet.has(norm(p.nome))).length;
+  const countByGrau = useMemo(() => {
+    const acc: Record<GrauTreinamento, number> = { Destreinado: 0, Treinado: 0, Veterano: 0, Expert: 0 };
+    for (const p of PERICIAS) {
+      acc[getGrau(p)]++;
+    }
+    return acc;
+  }, [grauMap, trainedSet]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const totalTreinadas = PERICIAS.length - countByGrau.Destreinado;
 
   return (
     <div className="space-y-4">
-      {/* summary bar */}
-      <div className="flex flex-wrap gap-3 items-center">
+
+      {/* ── summary ─────────────────────────────────────────────── */}
+      <div className="flex flex-wrap gap-3">
+        {(["Treinado", "Veterano", "Expert"] as GrauTreinamento[]).map((g) => (
+          <div key={g} className="border-2 border-gray-900/20 rounded-sm px-4 py-2 bg-white/30 text-center min-w-28">
+            <div className={`font-display font-bold text-2xl ${GRAU_BONUS_STYLE[g]}`}>
+              {countByGrau[g]}
+            </div>
+            <div className="font-display text-[10px] tracking-widest text-gray-900/60 uppercase">{g}</div>
+            <div className="font-mono text-xs text-gray-900/40">{g === "Treinado" ? "+5" : g === "Veterano" ? "+10" : "+15"}</div>
+          </div>
+        ))}
         <div className="border-2 border-gray-900/20 rounded-sm px-4 py-2 bg-white/30 text-center min-w-28">
           <div className="font-display font-bold text-2xl text-gray-900">{totalTreinadas}</div>
-          <div className="font-display text-[10px] tracking-widest text-gray-900/60">TREINADAS</div>
-        </div>
-        <div className="border-2 border-gray-900/20 rounded-sm px-4 py-2 bg-white/30 text-center min-w-28">
-          <div className="font-display font-bold text-2xl text-gray-900">{PERICIAS.length - totalTreinadas}</div>
-          <div className="font-display text-[10px] tracking-widest text-gray-900/60">NÃO TREINADAS</div>
-        </div>
-        <div className="border-2 border-gray-900/20 rounded-sm px-4 py-2 bg-white/30 text-center min-w-28">
-          <div className="font-display font-bold text-2xl text-gray-900">+{bonusTreinamento}</div>
-          <div className="font-display text-[10px] tracking-widest text-gray-900/60">BÔN. TREINO (NEX {nex}%)</div>
+          <div className="font-display text-[10px] tracking-widest text-gray-900/60">TOTAL TREINADAS</div>
         </div>
       </div>
 
-      {/* filters */}
+      {/* ── filters ─────────────────────────────────────────────── */}
       <div className="flex flex-wrap gap-2 items-center">
         <div className="relative flex-1 min-w-48">
           <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-900/40 pointer-events-none" />
@@ -186,7 +196,6 @@ export default function CharacterPericiasTab({
           />
         </div>
 
-        {/* attr filter buttons */}
         <div className="flex gap-1 flex-wrap">
           {(["TODAS", "FOR", "AGI", "INT", "PRE", "VIG"] as const).map((a) => (
             <button
@@ -197,7 +206,7 @@ export default function CharacterPericiasTab({
                 filterAttr === a
                   ? a === "TODAS"
                     ? "bg-gray-900 text-white border-gray-900"
-                    : `${ATR_BG[a as Atributo]} border-current`
+                    : `${ATR_BADGE[a as Atributo]} border-current`
                   : "bg-white/30 text-gray-900/60 border-gray-900/20 hover:border-gray-900/40"
               }`}
             >
@@ -220,91 +229,108 @@ export default function CharacterPericiasTab({
         </button>
       </div>
 
-      {/* table */}
+      {/* ── table ───────────────────────────────────────────────── */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm border-collapse">
           <thead>
             <tr className="border-b-2 border-gray-900/30">
-              <th className="text-left py-2 px-3 font-display text-xs tracking-widest text-gray-900/60 w-8"></th>
-              <th className="text-left py-2 px-3 font-display text-xs tracking-widest text-gray-900/60">PERÍCIA</th>
-              <th className="text-center py-2 px-3 font-display text-xs tracking-widest text-gray-900/60 w-16">ATR</th>
-              <th className="text-center py-2 px-3 font-display text-xs tracking-widest text-gray-900/60 w-20">MOD ATR</th>
-              <th className="text-center py-2 px-3 font-display text-xs tracking-widest text-gray-900/60 w-24">TREINO</th>
-              <th className="text-center py-2 px-3 font-display text-xs tracking-widest text-gray-900/60 w-24">OUTRO</th>
-              <th className="text-center py-2 px-3 font-display text-xs tracking-widest text-gray-900/60 w-20">TOTAL</th>
+              <th className="text-left py-2 px-2 font-display text-[10px] tracking-widest text-gray-900/50">PERÍCIA</th>
+              <th className="text-center py-2 px-2 font-display text-[10px] tracking-widest text-gray-900/50 w-12">ATR</th>
+              <th className="text-center py-2 px-2 font-display text-[10px] tracking-widest text-gray-900/50 w-40">GRAU DE TREINAMENTO</th>
+              <th className="text-center py-2 px-2 font-display text-[10px] tracking-widest text-gray-900/50 w-20">BÔNUS</th>
+              <th className="text-center py-2 px-2 font-display text-[10px] tracking-widest text-gray-900/50 w-24">OUTRO</th>
+              <th className="text-center py-2 px-2 font-display text-[10px] tracking-widest text-gray-900/50 w-20">TOTAL</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((p, idx) => {
-              const treinada     = trainedSet.has(norm(p.nome));
-              const modAtributo  = attrValue[p.atributo];
-              const modTreino    = treinada ? bonusTreinamento : 0;
-              const outro        = outroMap[p.id] ?? 0;
-              const total        = modAtributo + modTreino + outro;
-              const isEven       = idx % 2 === 0;
+              const grau    = getGrau(p);
+              const bonus   = GRAU_BONUS[grau];
+              const outro   = outroMap[p.id] ?? 0;
+              const total   = bonus + outro;
+              const trained = grau !== "Destreinado";
+              const isEven  = idx % 2 === 0;
 
               return (
                 <tr
                   key={p.id}
                   className={`border-b border-gray-900/10 transition-colors hover:bg-gray-900/5 ${isEven ? "bg-white/20" : "bg-white/5"}`}
                 >
-                  {/* trained icon */}
-                  <td className="py-2 px-3 text-center">
-                    {treinada
-                      ? <CheckCircle2 className="h-4 w-4 text-green-700 inline-block" />
-                      : <Circle className="h-4 w-4 text-gray-900/20 inline-block" />}
-                  </td>
-
                   {/* name */}
-                  <td className="py-2 px-3">
-                    <span className={`font-display font-bold text-gray-900 ${treinada ? "" : "opacity-60"}`}>
-                      {p.nome}
-                    </span>
-                    {p.somenteTrainada && !treinada && (
-                      <span className="ml-2 text-[9px] font-mono text-red-700/60 uppercase tracking-wider">só treinada</span>
-                    )}
+                  <td className="py-2 px-2">
+                    <div className="flex items-center gap-2">
+                      {trained
+                        ? <CheckCircle2 className="h-4 w-4 text-green-700 shrink-0" />
+                        : <Circle       className="h-4 w-4 text-gray-900/20 shrink-0" />}
+                      <span className={`font-display font-bold ${trained ? "text-gray-900" : "text-gray-900/50"}`}>
+                        {p.nome}
+                      </span>
+                      {p.somenteTrainada && !trained && (
+                        <span className="text-[9px] font-mono text-red-700/50 uppercase tracking-wider hidden md:inline">
+                          só treinada
+                        </span>
+                      )}
+                    </div>
                   </td>
 
-                  {/* attribute badge */}
-                  <td className="py-2 px-3 text-center">
-                    <span className={`text-[10px] font-bold rounded-sm px-1.5 py-0.5 border ${ATR_BG[p.atributo]}`}>
+                  {/* atributo badge */}
+                  <td className="py-2 px-2 text-center">
+                    <span className={`text-[10px] font-bold rounded-sm px-1.5 py-0.5 border ${ATR_BADGE[p.atributo]}`}>
                       {p.atributo}
                     </span>
                   </td>
 
-                  {/* mod atributo */}
-                  <td className="py-2 px-3 text-center">
-                    <span className={`font-display font-bold text-lg ${treinada ? "text-gray-900" : "text-gray-900/50"}`}>
-                      +{modAtributo}
+                  {/* grau selector */}
+                  <td className="py-2 px-2">
+                    <div className="flex gap-1 justify-center">
+                      {GRAUS.map((g) => (
+                        <button
+                          key={g}
+                          type="button"
+                          title={g}
+                          onClick={() => setGrau(p.id, g)}
+                          className={`px-1.5 py-0.5 rounded-sm text-[10px] font-bold border transition-colors ${
+                            grau === g
+                              ? g === "Destreinado"
+                                ? "bg-gray-900/10 border-gray-900/30 text-gray-900/60"
+                                : g === "Treinado"
+                                ? "bg-green-100 border-green-700 text-green-800"
+                                : g === "Veterano"
+                                ? "bg-blue-100 border-blue-700 text-blue-800"
+                                : "bg-amber-100 border-amber-700 text-amber-800"
+                              : "bg-white/30 border-gray-900/15 text-gray-900/30 hover:border-gray-900/30 hover:text-gray-900/60"
+                          }`}
+                        >
+                          {g === "Destreinado" ? "—" : g.slice(0, 3)}
+                        </button>
+                      ))}
+                    </div>
+                  </td>
+
+                  {/* bônus */}
+                  <td className="py-2 px-2 text-center">
+                    <span className={`font-display font-bold text-xl ${GRAU_BONUS_STYLE[grau]}`}>
+                      {bonus === 0 ? "0" : `+${bonus}`}
                     </span>
                   </td>
 
-                  {/* treino bonus */}
-                  <td className="py-2 px-3 text-center">
-                    {treinada ? (
-                      <span className="font-display font-bold text-lg text-green-800">+{modTreino}</span>
-                    ) : (
-                      <span className="font-display text-gray-900/30 text-lg">—</span>
-                    )}
-                  </td>
-
-                  {/* outro (editable) */}
-                  <td className="py-2 px-3 text-center">
+                  {/* outro */}
+                  <td className="py-2 px-2 text-center">
                     <div className="flex items-center justify-center gap-1">
                       <button
                         type="button"
                         onClick={() => setOutro(p.id, outro - 1)}
-                        className="h-5 w-5 flex items-center justify-center rounded-sm border border-gray-900/20 bg-white/40 hover:bg-gray-900/10 text-gray-900 font-bold leading-none text-xs"
+                        className="h-5 w-5 flex items-center justify-center rounded-sm border border-gray-900/20 bg-white/40 hover:bg-gray-900/10 text-gray-900"
                       >
                         <ChevronDown className="h-3 w-3" />
                       </button>
-                      <span className={`font-display font-bold text-base w-8 text-center ${outro !== 0 ? "text-blue-800" : "text-gray-900/40"}`}>
+                      <span className={`font-display font-bold text-base w-8 text-center ${outro !== 0 ? "text-blue-800" : "text-gray-900/30"}`}>
                         {outro >= 0 ? `+${outro}` : outro}
                       </span>
                       <button
                         type="button"
                         onClick={() => setOutro(p.id, outro + 1)}
-                        className="h-5 w-5 flex items-center justify-center rounded-sm border border-gray-900/20 bg-white/40 hover:bg-gray-900/10 text-gray-900 font-bold leading-none text-xs"
+                        className="h-5 w-5 flex items-center justify-center rounded-sm border border-gray-900/20 bg-white/40 hover:bg-gray-900/10 text-gray-900"
                       >
                         <ChevronUp className="h-3 w-3" />
                       </button>
@@ -312,14 +338,17 @@ export default function CharacterPericiasTab({
                   </td>
 
                   {/* total */}
-                  <td className="py-2 px-3 text-center">
-                    <div className={`inline-flex items-center justify-center w-10 h-10 rounded-full border-2 font-display font-bold text-lg
-                      ${treinada
+                  <td className="py-2 px-2 text-center">
+                    <div className={`inline-flex items-center justify-center w-10 h-10 rounded-full border-2 font-display font-bold text-lg transition-colors
+                      ${grau === "Expert"
+                        ? "border-amber-700 bg-amber-50 text-amber-900"
+                        : grau === "Veterano"
+                        ? "border-blue-700 bg-blue-50 text-blue-900"
+                        : trained
                         ? "border-gray-900/40 bg-gray-900/10 text-gray-900"
-                        : "border-gray-900/15 bg-white/20 text-gray-900/50"
-                      }`}
+                        : "border-gray-900/15 bg-white/20 text-gray-900/40"}`}
                     >
-                      {total >= 0 ? `+${total}` : total}
+                      {total === 0 ? "0" : total > 0 ? `+${total}` : total}
                     </div>
                   </td>
                 </tr>
@@ -328,7 +357,7 @@ export default function CharacterPericiasTab({
 
             {rows.length === 0 && (
               <tr>
-                <td colSpan={7} className="py-8 text-center text-gray-900/40 font-display">
+                <td colSpan={6} className="py-8 text-center text-gray-900/40 font-display">
                   NENHUMA PERÍCIA ENCONTRADA
                 </td>
               </tr>
@@ -337,12 +366,18 @@ export default function CharacterPericiasTab({
         </table>
       </div>
 
-      {/* legend */}
-      <div className="flex flex-wrap gap-4 text-[10px] font-mono text-gray-900/50 pt-2 border-t border-gray-900/15">
-        <span><strong className="text-gray-900/70">MOD ATR</strong> = valor do atributo base da perícia</span>
-        <span><strong className="text-gray-900/70">TREINO</strong> = bônus por ser treinado (escala com NEX)</span>
-        <span><strong className="text-gray-900/70">OUTRO</strong> = bônus/penalidade extra (itens, habilidades etc.)</span>
-        <span><strong className="text-gray-900/70">TOTAL</strong> = resultado adicionado ao d20</span>
+      {/* ── legend ──────────────────────────────────────────────── */}
+      <div className="rounded-sm border border-gray-900/15 bg-white/20 p-3 space-y-1">
+        <p className="font-display text-[10px] tracking-widest text-gray-900/50 mb-2">BÔNUS DE PERÍCIA</p>
+        <div className="flex flex-wrap gap-x-6 gap-y-1 font-mono text-xs text-gray-900/60">
+          <span><span className="font-bold text-gray-900/40">Destreinado</span> = 0</span>
+          <span><span className="font-bold text-green-800">Treinado</span> = +5</span>
+          <span><span className="font-bold text-blue-800">Veterano</span> = +10</span>
+          <span><span className="font-bold text-amber-800">Expert</span> = +15</span>
+        </div>
+        <p className="font-mono text-[10px] text-gray-900/40 pt-1">
+          Total = Bônus de Perícia + Outro. Esse valor é somado ao maior resultado entre os dados rolados.
+        </p>
       </div>
     </div>
   );
