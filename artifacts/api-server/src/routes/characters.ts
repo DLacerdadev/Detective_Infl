@@ -46,9 +46,9 @@ router.post("/characters", async (req: Request, res: Response) => {
   if (classeId) {
     const [classe] = await db.select().from(classesTable).where(eq(classesTable.id, classeId));
     if (classe) {
-      pvMaximo = classe.pvInicial + (classe.pvPorNivel * (nivel - 1));
-      peMaximo = classe.peInicial + (classe.pePorNivel * (nivel - 1));
-      sanMaximo = classe.sanInicial + (classe.sanPorNivel * (nivel - 1));
+      pvMaximo  = classe.pvInicial  + (classe.pvPorNivel  * (nivel - 1)) + vigor;
+      peMaximo  = classe.peInicial  + (classe.pePorNivel  * (nivel - 1)) + presenca;
+      sanMaximo = classe.sanInicial + (classe.sanPorNivel * (nivel - 1)) + presenca;
     }
   }
 
