@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   Plus, Trash2, ChevronDown, ChevronUp, Zap, FlameKindling,
-  Shield, Star, Sparkles, BookMarked,
+  Shield, Star, Sparkles, BookMarked, Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +31,82 @@ export interface Habilidade {
   trilha?: string;
   pre_requisitos?: string;
   nex_minimo?: number | null;
+}
+
+interface HabilidadeProgressao {
+  nex: string;
+  nome: string;
+  descricao: string;
+}
+
+interface ClasseInfo {
+  nome: string;
+  habilidadesBase?: HabilidadeProgressao[];
+}
+
+interface OrigemInfo {
+  nome: string;
+  poderConcedido?: string | null;
+  poderDescricao?: string | null;
+}
+
+const CHOICE_PATTERNS = [
+  "Habilidade de Trilha",
+  "Poder de ",
+  "Aumento de Atributo",
+  "Grau de Treinamento",
+  "Versatilidade",
+];
+
+function isChoiceEntry(nome: string): boolean {
+  return CHOICE_PATTERNS.some((p) => nome.includes(p));
+}
+
+function nexToNumber(nexStr: string): number {
+  const n = parseInt(nexStr);
+  return isNaN(n) ? 0 : n;
+}
+
+function computeSystemHabilidades(
+  classe?: ClasseInfo | null,
+  origem?: OrigemInfo | null,
+  nex?: number,
+): Habilidade[] {
+  const result: Habilidade[] = [];
+  // All characters start at NEX 5% minimum — treat NEX 0 as NEX 5
+  const currentNex = Math.max(nex ?? 0, 5);
+
+  if (origem?.poderConcedido) {
+    result.push({
+      id: "sys-origin",
+      nome: origem.poderConcedido,
+      tipo: "poder_origem",
+      descricao: origem.poderDescricao ?? "",
+      custo_pe: null,
+    });
+  }
+
+  if (classe?.habilidadesBase) {
+    classe.habilidadesBase
+      .filter((entry) => {
+        const entryNex = nexToNumber(entry.nex);
+        const nexOk = entryNex === 0 || entryNex <= currentNex;
+        return nexOk && !isChoiceEntry(entry.nome);
+      })
+      .forEach((entry, i) => {
+        const entryNex = nexToNumber(entry.nex);
+        result.push({
+          id: `sys-class-${i}`,
+          nome: entry.nome,
+          tipo: "habilidade_fixa",
+          descricao: entry.descricao,
+          nex_minimo: entryNex || null,
+          custo_pe: null,
+        });
+      });
+  }
+
+  return result;
 }
 
 const TIPO_META: Record<
@@ -279,17 +355,19 @@ function AddHabilidadeDialog({
 function HabilidadeCard({
   hab,
   isOwner,
+  isSystem,
   onDelete,
 }: {
   hab: Habilidade;
   isOwner: boolean;
+  isSystem: boolean;
   onDelete: (id: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const meta = TIPO_META[hab.tipo];
 
   return (
-    <div className="border border-border/40 rounded-sm bg-card/20 overflow-hidden">
+    <div className={`border rounded-sm overflow-hidden ${isSystem ? "border-border/30 bg-card/10" : "border-border/40 bg-card/20"}`}>
       <button
         className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-secondary/20 transition-colors"
         onClick={() => setExpanded((v) => !v)}
@@ -314,7 +392,7 @@ function HabilidadeCard({
                 {hab.custo_pe} PE
               </span>
             )}
-            {hab.nex_minimo && (
+            {hab.nex_minimo != null && hab.nex_minimo > 0 && (
               <span className="text-[9px] font-mono text-muted-foreground/50">
                 NEX {hab.nex_minimo}%+
               </span>
@@ -323,7 +401,11 @@ function HabilidadeCard({
         </div>
 
         <div className="flex items-center gap-1 shrink-0">
-          {isOwner && (
+          {isSystem ? (
+            <span className="p-1.5 text-muted-foreground/20" title="Concedido por classe/origem">
+              <Lock className="w-3 h-3" />
+            </span>
+          ) : isOwner ? (
             <span
               role="button"
               onClick={(e) => {
@@ -334,7 +416,7 @@ function HabilidadeCard({
             >
               <Trash2 className="w-3.5 h-3.5" />
             </span>
-          )}
+          ) : null}
           {expanded ? (
             <ChevronUp className="w-3.5 h-3.5 text-muted-foreground/60" />
           ) : (
@@ -349,6 +431,12 @@ function HabilidadeCard({
             <p className="text-[10px] font-mono text-muted-foreground/60">
               <span className="text-muted-foreground/40">PRÉ-REQUISITO:</span>{" "}
               {hab.pre_requisitos}
+            </p>
+          )}
+          {isSystem && (
+            <p className="text-[9px] font-mono text-muted-foreground/30 italic flex items-center gap-1">
+              <Lock className="w-2.5 h-2.5" />
+              Concedido automaticamente pela sua {hab.tipo === "poder_origem" ? "origem" : "classe"}
             </p>
           )}
           {hab.descricao ? (
@@ -378,33 +466,44 @@ const FILTER_OPTIONS: { label: string; value: HabilidadeTipo | "all" }[] = [
 export default function CharacterHabilidadesTab({
   charId,
   isOwner,
+  classe,
+  origem,
+  nex,
 }: {
   charId: string;
   isOwner: boolean;
+  classe?: ClasseInfo | null;
+  origem?: OrigemInfo | null;
+  nex?: number;
 }) {
-  const [habilidades, setHabilidades] = useState<Habilidade[]>(() =>
+  const [userHabilidades, setUserHabilidades] = useState<Habilidade[]>(() =>
     loadHabilidades(charId)
   );
   const [filter, setFilter] = useState<HabilidadeTipo | "all">("all");
   const [addOpen, setAddOpen] = useState(false);
 
+  const systemHabilidades = computeSystemHabilidades(classe, origem, nex);
+  const systemIds = new Set(systemHabilidades.map((h) => h.id));
+
+  const allHabilidades = [...systemHabilidades, ...userHabilidades];
+
   const save = (list: Habilidade[]) => {
-    setHabilidades(list);
+    setUserHabilidades(list);
     saveHabilidades(charId, list);
   };
 
   const handleAdd = (data: Omit<Habilidade, "id">) => {
-    save([...habilidades, { ...data, id: genId() }]);
+    save([...userHabilidades, { ...data, id: genId() }]);
   };
 
   const handleDelete = (id: string) => {
-    save(habilidades.filter((h) => h.id !== id));
+    save(userHabilidades.filter((h) => h.id !== id));
   };
 
   const filtered =
     filter === "all"
-      ? habilidades
-      : habilidades.filter((h) => h.tipo === filter);
+      ? allHabilidades
+      : allHabilidades.filter((h) => h.tipo === filter);
 
   const grouped = TIPOS_ORDERED.reduce<Record<HabilidadeTipo, Habilidade[]>>(
     (acc, t) => {
@@ -414,7 +513,7 @@ export default function CharacterHabilidadesTab({
     {} as Record<HabilidadeTipo, Habilidade[]>
   );
 
-  const total = habilidades.length;
+  const total = allHabilidades.length;
   const filteredCount = filtered.length;
 
   return (
@@ -447,7 +546,7 @@ export default function CharacterHabilidadesTab({
           const count =
             opt.value === "all"
               ? total
-              : habilidades.filter((h) => h.tipo === opt.value).length;
+              : allHabilidades.filter((h) => h.tipo === opt.value).length;
           const active = filter === opt.value;
           return (
             <button
@@ -513,6 +612,7 @@ export default function CharacterHabilidadesTab({
                       key={hab.id}
                       hab={hab}
                       isOwner={isOwner}
+                      isSystem={systemIds.has(hab.id)}
                       onDelete={handleDelete}
                     />
                   ))}

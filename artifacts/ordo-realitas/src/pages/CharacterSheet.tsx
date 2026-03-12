@@ -304,7 +304,13 @@ export default function CharacterSheet() {
           )}
 
           {activeTab === "habilidades" && (
-            <CharacterHabilidadesTab charId={char.id} isOwner={isOwner} />
+            <CharacterHabilidadesTab
+              charId={char.id}
+              isOwner={isOwner}
+              classe={char.classe}
+              origem={char.origem}
+              nex={char.nex ?? 0}
+            />
           )}
 
           {activeTab === "rituais" && (
