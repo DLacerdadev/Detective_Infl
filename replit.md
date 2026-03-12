@@ -79,6 +79,8 @@ Manages all static game data:
 - `origens` — Character origins/backgrounds
 - `pericias` — Skills
 - `rituais` — Paranormal rituals (`descricao`=efeito, `discente`, `verdadeiro`, `dados`, `dadosDiscente`, `dadosVerdadeiro`, `fonte`)
+- `campanhas` — RPG campaigns with `codigoConvite` (invite code)
+- `campanha_membros` — Campaign members with `papel` (mestre/jogador), unique per campanha+user
 - `itens` — Equipment and items
 
 ### Seeded Data

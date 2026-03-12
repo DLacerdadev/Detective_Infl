@@ -14,6 +14,8 @@ import CreateCharacter from "@/pages/CreateCharacter";
 import CharacterSheet from "@/pages/CharacterSheet";
 import Admin from "@/pages/Admin";
 import Compendio from "@/pages/Compendio";
+import Campanhas from "@/pages/Campanhas";
+import CampanhaDetail from "@/pages/CampanhaDetail";
 import NotFound from "@/pages/not-found";
 import { useEffect } from "react";
 
@@ -65,6 +67,12 @@ function Router() {
           </Route>
           <Route path="/compendio">
             {() => <ProtectedRoute component={Compendio} />}
+          </Route>
+          <Route path="/campanhas">
+            {() => <ProtectedRoute component={Campanhas} />}
+          </Route>
+          <Route path="/campanhas/:id">
+            {() => <ProtectedRoute component={CampanhaDetail} />}
           </Route>
           <Route path="/admin">
             {() => <ProtectedRoute component={Admin} adminOnly={true} />}

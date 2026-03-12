@@ -1,10 +1,16 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, Shield } from "lucide-react";
 
 export function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
+  const [location] = useLocation();
+
+  function navCls(path: string) {
+    const active = location === path || location.startsWith(path + "/");
+    return `text-sm font-display uppercase tracking-widest transition-colors hidden sm:block ${active ? "text-foreground border-b border-primary pb-0.5" : "text-muted-foreground hover:text-foreground"}`;
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-md">
@@ -20,14 +26,17 @@ export function Navbar() {
 
         {isAuthenticated && (
           <nav className="flex items-center space-x-4">
-            <Link href="/characters" className="text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
+            <Link href="/characters" className={navCls("/characters")}>
               Arquivos
             </Link>
-            <Link href="/compendio" className="text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
+            <Link href="/campanhas" className={navCls("/campanhas")}>
+              Operações
+            </Link>
+            <Link href="/compendio" className={navCls("/compendio")}>
               Compêndio
             </Link>
             {user?.role === "admin" && (
-              <Link href="/admin" className="text-sm font-display uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
+              <Link href="/admin" className={navCls("/admin")}>
                 Administração
               </Link>
             )}
