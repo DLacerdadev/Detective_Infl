@@ -14,18 +14,18 @@ async function seed() {
   await db.insert(classesTable).values([
     {
       nome: "Combatente",
-      descricao: "Especialista em combate físico e sobrevivência em situações extremas. Treinado para lidar com ameaças paranormais de frente.",
-      pvInicial: 20, pvPorNivel: 5, peInicial: 3, pePorNivel: 2, sanInicial: 10, sanPorNivel: 3, periciasTreindasBase: 3,
+      descricao: "Agente de combate da Ordem Paranormal. PV base +Vigor; PE base +Presença.",
+      pvInicial: 20, pvPorNivel: 4, peInicial: 2, pePorNivel: 2, sanInicial: 12, sanPorNivel: 3, periciasTreindasBase: 1,
     },
     {
       nome: "Especialista",
-      descricao: "Profissional com habilidades técnicas avançadas. Usa inteligência e perícia para superar os desafios do paranormal.",
-      pvInicial: 16, pvPorNivel: 4, peInicial: 4, pePorNivel: 2, sanInicial: 12, sanPorNivel: 4, periciasTreindasBase: 4,
+      descricao: "Agente versátil da Ordem Paranormal. PV base +Vigor; PE base +Presença.",
+      pvInicial: 16, pvPorNivel: 3, peInicial: 3, pePorNivel: 3, sanInicial: 16, sanPorNivel: 4, periciasTreindasBase: 7,
     },
     {
       nome: "Ocultista",
-      descricao: "Estudioso do sobrenatural com acesso a rituais e conhecimentos proibidos. Frágil mas poderoso.",
-      pvInicial: 12, pvPorNivel: 3, peInicial: 6, pePorNivel: 3, sanInicial: 14, sanPorNivel: 5, periciasTreindasBase: 3,
+      descricao: "Agente especializado no Outro Lado. PV base +Vigor; PE base +Presença.",
+      pvInicial: 12, pvPorNivel: 2, peInicial: 4, pePorNivel: 4, sanInicial: 20, sanPorNivel: 5, periciasTreindasBase: 3,
     },
   ]);
 

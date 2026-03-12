@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ordem Paranormal RPG — Classes & Trilhas</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0a0a0f;
+      --bg-card: #12121a;
+      --bg-card2: #1a1a26;
+      --accent-red: #c0392b;
+      --accent-red-glow: #e74c3c;
+      --accent-gold: #d4a017;
+      --accent-blue: #2980b9;
+      --accent-purple: #8e44ad;
+      --accent-green: #27ae60;
+      --text-primary: #e8e8f0;
+      --text-secondary: #9a9ab0;
+      --text-muted: #5a5a70;
+      --border: #2a2a3a;
+      --border-glow: rgba(192,57,43,0.4);
+      --shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #0d0d15 0%, #1a0a0a 50%, #0d0d15 100%);
+      border-bottom: 2px solid var(--accent-red);
+      padding: 2rem 1rem 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(192,57,43,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent-red-glow);
+      margin-bottom: 0.5rem;
+    }
+    header h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, #fff 30%, var(--accent-red-glow) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+    header p {
+      margin-top: 0.75rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .header-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .stat-pill {
+      background: rgba(192,57,43,0.15);
+      border: 1px solid rgba(192,57,43,0.3);
+      border-radius: 2rem;
+      padding: 0.4rem 1.2rem;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+    .stat-pill strong { color: var(--accent-red-glow); }
+
+    /* ── MAIN LAYOUT ── */
+    main { max-width: 1400px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 2rem 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border) 0%, transparent 100%);
+    }
+
+    /* ── CHARTS ── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .chart-card h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .chart-wrap { position: relative; height: 220px; }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      padding: 1rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { color: var(--text-primary); }
+    .tab-btn.active {
+      color: var(--accent-red-glow);
+      border-bottom-color: var(--accent-red);
+    }
+
+    /* ── CLASS CARD ── */
+    .class-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .class-header {
+      background: linear-gradient(135deg, rgba(192,57,43,0.2) 0%, rgba(41,128,185,0.1) 100%);
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .class-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .class-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .stat-item {
+      background: var(--bg-card2);
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+
+    /* ── ABILITIES ── */
+    .abilities-section {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .abilities-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .ability {
+      background: var(--bg-card2);
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent-gold);
+      margin-bottom: 0.75rem;
+    }
+    .ability-nex {
+      font-size: 0.75rem;
+      color: var(--accent-gold);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .ability-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0.3rem 0;
+    }
+    .ability-desc {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── TRILHAS GRID ── */
+    .trilhas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 1.5rem;
+    }
+    .trilha-card {
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .trilha-card:hover {
+      border-color: var(--accent-red);
+      box-shadow: 0 4px 15px rgba(192,57,43,0.2);
+      transform: translateY(-2px);
+    }
+    .trilha-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .trilha-foco {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .trilha-badge {
+      display: inline-block;
+      background: rgba(192,57,43,0.2);
+      border: 1px solid rgba(192,57,43,0.3);
+      border-radius: 4px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.7rem;
+      color: var(--accent-red-glow);
+      margin-top: 0.5rem;
+    }
+
+    /* ── SURVIVOR CLASS ── */
+    .survivor-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .survivor-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-bottom: 1rem;
+    }
+    .stages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stage-card {
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .stage-num {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+      margin-bottom: 0.3rem;
+    }
+    .stage-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .charts-grid { grid-template-columns: 1fr; }
+      .class-stats { grid-template-columns: repeat(2, 1fr); }
+      .trilhas-grid { grid-template-columns: 1fr; }
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-red); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">Banco de Dados — Classes & Trilhas</div>
+  <h1>Ordem Paranormal RPG<br>Classes & Progressão</h1>
+  <p>Catálogo completo das classes, trilhas e habilidades de progressão (NEX) do Livro Base e do suplemento <em>Sobrevivendo ao Horror</em>.</p>
+  <div class="header-stats">
+    <div class="stat-pill"><strong>4</strong> classes totais</div>
+    <div class="stat-pill"><strong>3</strong> classes base</div>
+    <div class="stat-pill"><strong>1</strong> classe suplemento</div>
+    <div class="stat-pill"><strong>28</strong> trilhas</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- CHARTS -->
+  <div class="section-title">Visualizações de Progressão</div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>Distribuição de PV por Classe</h3>
+      <div class="chart-wrap"><canvas id="chartPV"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Distribuição de PE por Classe</h3>
+      <div class="chart-wrap"><canvas id="chartPE"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Distribuição de Sanidade por Classe</h3>
+      <div class="chart-wrap"><canvas id="chartSAN"></canvas></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="section-title">Classes do Sistema</div>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="combatente">⚔️ Combatente</button>
+    <button class="tab-btn" data-tab="especialista">🔍 Especialista</button>
+    <button class="tab-btn" data-tab="ocultista">✨ Ocultista</button>
+    <button class="tab-btn" data-tab="sobrevivente">🏃 Sobrevivente</button>
+  </div>
+
+  <!-- COMBATENTE -->
+  <div id="combatente-tab" class="tab-content">
+    <div class="class-card">
+      <div class="class-header">
+        <div class="class-name">⚔️ Combatente</div>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">Treinado para lutar com todo tipo de armas, e com a força e a coragem para encarar os perigos de frente.</p>
+        <div class="class-stats">
+          <div class="stat-item">
+            <div class="stat-label">PV Inicial</div>
+            <div class="stat-value">20 + VIG</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">PV por Nível</div>
+            <div class="stat-value">+4 + VIG</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">PE Inicial</div>
+            <div class="stat-value">2 + PRE</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">PE por Nível</div>
+            <div class="stat-value">+2 + PRE</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">SAN Inicial</div>
+            <div class="stat-value">12</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">SAN por Nível</div>
+            <div class="stat-value">+3</div>
+          </div>
+        </div>
+      </div>
+      <div class="abilities-section">
+        <div class="abilities-title">Habilidades de Classe</div>
+        <div class="ability">
+          <div class="ability-nex">NEX 5%</div>
+          <div class="ability-name">Ataque Especial</div>
+          <div class="ability-desc">Gasta 2 PE para adicionar +5 no teste de ataque ou +5 no dano. Aumenta para +1d6 em NEX 50%, +1d8 em NEX 80%, +1d10 em NEX 99%.</div>
+        </div>
+      </div>
+      <div class="trilhas-grid">
+        <div class="trilha-card">
+          <div class="trilha-name">Aniquilador</div>
+          <div class="trilha-foco">Dano massivo com uma arma favorita.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Comandante de Campo</div>
+          <div class="trilha-foco">Suporte tático e liderança.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Guerreiro</div>
+          <div class="trilha-foco">Combate corpo-a-corpo e manobras.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Operações Especiais</div>
+          <div class="trilha-foco">Iniciativa e múltiplas ações.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Tropa de Choque</div>
+          <div class="trilha-foco">Tanque e resistência física.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Agente Secreto</div>
+          <div class="trilha-foco">Disfarce, infiltração e ataques furtivos.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Caçador</div>
+          <div class="trilha-foco">Rastreio e bônus contra criaturas.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Monstruoso</div>
+          <div class="trilha-foco">Transformação física e combate bestial.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESPECIALISTA -->
+  <div id="especialista-tab" class="tab-content" style="display: none;">
+    <div class="class-card">
+      <div class="class-header">
+        <div class="class-name">🔍 Especialista</div>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">Um agente que confia mais em esperteza do que em força bruta. Resolve mistérios através de conhecimento técnico e raciocínio rápido.</p>
+        <div class="class-stats">
+          <div class="stat-item">
+            <div class="stat-label">PV Inicial</div>
+            <div class="stat-value">16 + VIG</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">PV por Nível</div>
+            <div class="stat-value">+3 + VIG</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">PE Inicial</div>
+            <div class="stat-value">3 + PRE</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">PE por Nível</div>
+            <div class="stat-value">+3 + PRE</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">SAN Inicial</div>
+            <div class="stat-value">16</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">SAN por Nível</div>
+            <div class="stat-value">+4</div>
+          </div>
+        </div>
+      </div>
+      <div class="abilities-section">
+        <div class="abilities-title">Habilidades de Classe</div>
+        <div class="ability">
+          <div class="ability-nex">NEX 5%</div>
+          <div class="ability-name">Perito</div>
+          <div class="ability-desc">Escolha duas perícias. Gasta 2 PE para somar +1d6 no teste. Aumenta para +1d8 em NEX 50%, +1d10 em NEX 80%.</div>
+        </div>
+        <div class="ability">
+          <div class="ability-nex">NEX 5%</div>
+          <div class="ability-name">Eclético</div>
+          <div class="ability-desc">Gasta 2 PE para ser treinado em uma perícia não treinada até o fim da cena.</div>
+        </div>
+      </div>
+      <div class="trilhas-grid">
+        <div class="trilha-card">
+          <div class="trilha-name">Atirador de Elite</div>
+          <div class="trilha-foco">Ataques à distância precisos e críticos.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Infiltrador</div>
+          <div class="trilha-foco">Furtividade e dano furtivo.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Médico de Campo</div>
+          <div class="trilha-foco">Cura e suporte médico.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Negociador</div>
+          <div class="trilha-foco">Interação social e diplomacia.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Técnico</div>
+          <div class="trilha-foco">Inventário expandido e uso de itens.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Agente do Governo</div>
+          <div class="trilha-foco">Autoridade, contatos e recursos estatais.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Bibliotecário</div>
+          <div class="trilha-foco">Pesquisa rápida e bônus por conhecimento.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Muambeiro</div>
+          <div class="trilha-foco">Itens de categoria menor e troca rápida.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Perseverante</div>
+          <div class="trilha-foco">Rerolar dados e resistir a condições.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OCULTISTA -->
+  <div id="ocultista-tab" class="tab-content" style="display: none;">
+    <div class="class-card">
+      <div class="class-header">
+        <div class="class-name">✨ Ocultista</div>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">Estudioso do Outro Lado que busca compreender e dominar os mistérios paranormais para combater as entidades.</p>
+        <div class="class-stats">
+          <div class="stat-item">
+            <div class="stat-label">PV Inicial</div>
+            <div class="stat-value">12 + VIG</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">PV por Nível</div>
+            <div class="stat-value">+2 + VIG</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">PE Inicial</div>
+            <div class="stat-value">4 + PRE</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">PE por Nível</div>
+            <div class="stat-value">+4 + PRE</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">SAN Inicial</div>
+            <div class="stat-value">20</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">SAN por Nível</div>
+            <div class="stat-value">+5</div>
+          </div>
+        </div>
+      </div>
+      <div class="abilities-section">
+        <div class="abilities-title">Habilidades de Classe</div>
+        <div class="ability">
+          <div class="ability-nex">NEX 5%</div>
+          <div class="ability-name">Escolhido pelo Outro Lado</div>
+          <div class="ability-desc">Começa com 3 rituais de 1º círculo. Ganha 1 novo ritual por cada NEX.</div>
+        </div>
+        <div class="ability">
+          <div class="ability-nex">NEX 5%</div>
+          <div class="ability-name">Transcender</div>
+          <div class="ability-desc">Pode escolher um Poder Paranormal em vez de habilidade de classe.</div>
+        </div>
+      </div>
+      <div class="trilhas-grid">
+        <div class="trilha-card">
+          <div class="trilha-name">Conduíte</div>
+          <div class="trilha-foco">Alcance e velocidade de rituais.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Flagelador</div>
+          <div class="trilha-foco">Usa PV em vez de PE para rituais.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Graduado</div>
+          <div class="trilha-foco">Grimório e muitos rituais conhecidos.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Intuitivo</div>
+          <div class="trilha-foco">Resistência mental e paranormal.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Lâmina Paranormal</div>
+          <div class="trilha-foco">Combate corpo-a-corpo com rituais.</div>
+          <div class="trilha-badge">Livro Base</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Exorcista</div>
+          <div class="trilha-foco">Expulsar entidades e proteção.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Maledictólogo</div>
+          <div class="trilha-foco">Maldições e debuffs em inimigos.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Parapsicólogo</div>
+          <div class="trilha-foco">Estudo da mente e comunicação.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Possuído</div>
+          <div class="trilha-foco">Hospedar entidade para ganhar poderes.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOBREVIVENTE -->
+  <div id="sobrevivente-tab" class="tab-content" style="display: none;">
+    <div class="survivor-section">
+      <div class="survivor-title">🏃 Classe Sobrevivente</div>
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Pessoas comuns em situações de terror extremo. Progridem através de 5 estágios até evoluir para uma das classes base.</p>
+      
+      <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.1rem;">Progressão por Estágios</h3>
+      <div class="stages-grid">
+        <div class="stage-card">
+          <div class="stage-num">1</div>
+          <div class="stage-name">Empenho</div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Gasta 1 PE para +2 em teste</p>
+        </div>
+        <div class="stage-card">
+          <div class="stage-num">2</div>
+          <div class="stage-name">Trilha (10%)</div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">1ª habilidade da trilha</p>
+        </div>
+        <div class="stage-card">
+          <div class="stage-num">3</div>
+          <div class="stage-name">Aumento de Atributo</div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">+1 em atributo à escolha</p>
+        </div>
+        <div class="stage-card">
+          <div class="stage-num">4</div>
+          <div class="stage-name">Trilha (40%)</div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">2ª habilidade da trilha</p>
+        </div>
+        <div class="stage-card">
+          <div class="stage-num">5</div>
+          <div class="stage-name">Cicatrizado</div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Resistência e bônus de testes</p>
+        </div>
+      </div>
+
+      <h3 style="color: var(--text-primary); margin: 2rem 0 1rem; font-size: 1.1rem;">Trilhas de Sobrevivente</h3>
+      <div class="trilhas-grid">
+        <div class="trilha-card">
+          <div class="trilha-name">Durão</div>
+          <div class="trilha-foco">Sobrevivência física e combate bruto. Evolui para Combatente.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Esperto</div>
+          <div class="trilha-foco">Investigação, perícias e tecnologia. Evolui para Especialista.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+        <div class="trilha-card">
+          <div class="trilha-name">Esotérico</div>
+          <div class="trilha-foco">Sensibilidade paranormal e rituais simples. Evolui para Ocultista.</div>
+          <div class="trilha-badge">Suplemento</div>
+        </div>
+      </div>
+
+      <div class="class-stats" style="margin-top: 2rem;">
+        <div class="stat-item">
+          <div class="stat-label">PV Inicial</div>
+          <div class="stat-value">8 + VIG</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">PV por Estágio</div>
+          <div class="stat-value">+2</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">PE Inicial</div>
+          <div class="stat-value">2 + PRE</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">PE por Estágio</div>
+          <div class="stat-value">+1</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">SAN Inicial</div>
+          <div class="stat-value">8</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">SAN por Estágio</div>
+          <div class="stat-value">+2</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Ordem Paranormal RPG © Cellbit, Dan Ramos, Guilherme Dei Svaldi, Leonel Caldela, Miguel Souza, Rafael Dei Svaldi &nbsp;|&nbsp;
+  Sobrevivendo ao Horror — Primeiro Suplemento Oficial &nbsp;|&nbsp;
+  Dados compilados para uso em banco de dados de aplicativo
+</footer>
+
+<script>
+// ─────────────────────────────────────────────
+// CHARTS
+// ─────────────────────────────────────────────
+function initCharts() {
+  const chartDefaults = {
+    plugins: { legend: { labels: { color: '#9a9ab0', font: { size: 12 } } } }
+  };
+
+  // Chart 1 — PV
+  new Chart(document.getElementById('chartPV'), {
+    type: 'bar',
+    data: {
+      labels: ['Combatente', 'Especialista', 'Ocultista', 'Sobrevivente'],
+      datasets: [
+        { label: 'Inicial', data: [20, 16, 12, 8], backgroundColor: '#2980b9' },
+        { label: 'Por Nível', data: [4, 3, 2, 2], backgroundColor: '#e74c3c' }
+      ]
+    },
+    options: {
+      plugins: { legend: { position: 'bottom', labels: { color: '#9a9ab0', padding: 16 } } },
+      scales: {
+        x: { ticks: { color: '#9a9ab0' }, grid: { color: '#2a2a3a' } },
+        y: { ticks: { color: '#9a9ab0' }, grid: { color: '#2a2a3a' } }
+      }
+    }
+  });
+
+  // Chart 2 — PE
+  new Chart(document.getElementById('chartPE'), {
+    type: 'bar',
+    data: {
+      labels: ['Combatente', 'Especialista', 'Ocultista', 'Sobrevivente'],
+      datasets: [
+        { label: 'Inicial', data: [2, 3, 4, 2], backgroundColor: '#8e44ad' },
+        { label: 'Por Nível', data: [2, 3, 4, 1], backgroundColor: '#d4a017' }
+      ]
+    },
+    options: {
+      plugins: { legend: { position: 'bottom', labels: { color: '#9a9ab0', padding: 16 } } },
+      scales: {
+        x: { ticks: { color: '#9a9ab0' }, grid: { color: '#2a2a3a' } },
+        y: { ticks: { color: '#9a9ab0' }, grid: { color: '#2a2a3a' } }
+      }
+    }
+  });
+
+  // Chart 3 — SAN
+  new Chart(document.getElementById('chartSAN'), {
+    type: 'bar',
+    data: {
+      labels: ['Combatente', 'Especialista', 'Ocultista', 'Sobrevivente'],
+      datasets: [
+        { label: 'Inicial', data: [12, 16, 20, 8], backgroundColor: '#27ae60' },
+        { label: 'Por Nível', data: [3, 4, 5, 2], backgroundColor: '#f39c12' }
+      ]
+    },
+    options: {
+      plugins: { legend: { position: 'bottom', labels: { color: '#9a9ab0', padding: 16 } } },
+      scales: {
+        x: { ticks: { color: '#9a9ab0' }, grid: { color: '#2a2a3a' } },
+        y: { ticks: { color: '#9a9ab0' }, grid: { color: '#2a2a3a' } }
+      }
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    document.getElementById(tab + '-tab').style.display = 'block';
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  initCharts();
+});
+</script>
+</body>
+</html>

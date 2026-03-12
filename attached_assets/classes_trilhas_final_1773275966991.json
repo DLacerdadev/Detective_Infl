@@ -1,0 +1,95 @@
+{
+  "livro_base": {
+    "classes": [
+      {
+        "nome": "Combatente",
+        "pv": {"inicial": 20, "por_nivel": 4},
+        "pe": {"inicial": 2, "por_nivel": 2},
+        "san": {"inicial": 12, "por_nivel": 3},
+        "pericias_base": 2,
+        "habilidades": [
+          {"nex": "5%", "nome": "Ataque Especial", "desc": "Gasta 2 PE para bônus no teste (+5) ou no dano (+5). Aumenta em +5 por 1 PE extra em NEX 50%, 80%, 99%."}
+        ],
+        "trilhas": [
+          {"nome": "Aniquilador", "foco": "Dano massivo com uma arma favorita."},
+          {"nome": "Comandante de Campo", "foco": "Suporte tático e liderança."},
+          {"nome": "Guerreiro", "foco": "Combate corpo-a-corpo e manobras."},
+          {"nome": "Operações Especiais", "foco": "Iniciativa e múltiplas ações."},
+          {"nome": "Tropa de Choque", "foco": "Tanque e resistência física."}
+        ]
+      },
+      {
+        "nome": "Especialista",
+        "pv": {"inicial": 16, "por_nivel": 3},
+        "pe": {"inicial": 3, "por_nivel": 3},
+        "san": {"inicial": 16, "por_nivel": 4},
+        "pericias_base": 7,
+        "habilidades": [
+          {"nex": "5%", "nome": "Perito", "desc": "Escolha duas perícias. Gasta 2 PE para somar +1d6 no teste. Aumenta para +1d8, +1d10 em NEX maiores."},
+          {"nex": "5%", "nome": "Eclético", "desc": "Gasta 2 PE para ser treinado em uma perícia não treinada até o fim da cena."}
+        ],
+        "trilhas": [
+          {"nome": "Atirador de Elite", "foco": "Ataques à distância precisos."},
+          {"nome": "Infiltrador", "foco": "Furtividade e dano furtivo."},
+          {"nome": "Médico de Campo", "foco": "Cura e suporte médico."},
+          {"nome": "Negociador", "foco": "Interação social e diplomacia."},
+          {"nome": "Técnico", "foco": "Inventário e uso de itens."}
+        ]
+      },
+      {
+        "nome": "Ocultista",
+        "pv": {"inicial": 12, "por_nivel": 2},
+        "pe": {"inicial": 4, "por_nivel": 4},
+        "san": {"inicial": 20, "por_nivel": 5},
+        "pericias_base": 3,
+        "habilidades": [
+          {"nex": "5%", "nome": "Escolhido pelo Outro Lado", "desc": "Começa com 3 rituais de 1º círculo. Ganha 1 novo ritual por NEX."},
+          {"nex": "5%", "nome": "Transcender", "desc": "Pode escolher um Poder Paranormal em vez de habilidade de classe (regra base)."}
+        ],
+        "trilhas": [
+          {"nome": "Conduíte", "foco": "Alcance e velocidade de rituais."},
+          {"nome": "Flagelador", "foco": "Usa PV em vez de PE para rituais."},
+          {"nome": "Graduado", "foco": "Grimório e muitos rituais conhecidos."},
+          {"nome": "Intuitivo", "foco": "Resistência mental e paranormal."},
+          {"nome": "Lâmina Paranormal", "foco": "Combate corpo-a-corpo com rituais."}
+        ]
+      }
+    ]
+  },
+  "sobrevivendo_ao_horror": {
+    "classe_sobrevivente": {
+      "nome": "Sobrevivente",
+      "estagios": [
+        {"nivel": 1, "nome": "Empenho", "desc": "Gasta 1 PE para +2 em um teste."},
+        {"nivel": 2, "nome": "Trilha (10%)", "desc": "Primeira habilidade da trilha de sobrevivente."},
+        {"nivel": 3, "nome": "Aumento de Atributo", "desc": "+1 em um atributo à escolha."},
+        {"nivel": 4, "nome": "Trilha (40%)", "desc": "Segunda habilidade da trilha de sobrevivente."},
+        {"nivel": 5, "nome": "Cicatrizado", "desc": "Resistência a dano e bônus em testes de resistência."}
+      ],
+      "trilhas": [
+        {"nome": "Durão", "foco": "Sobrevivência física e combate bruto."},
+        {"nome": "Esperto", "foco": "Investigação, perícias e tecnologia."},
+        {"nome": "Esotérico", "foco": "Sensibilidade paranormal e rituais simples."}
+      ]
+    },
+    "novas_trilhas": {
+      "Combatente": [
+        {"nome": "Agente Secreto", "foco": "Disfarce, infiltração e ataques furtivos com armas de fogo."},
+        {"nome": "Caçador", "foco": "Rastreio e bônus contra alvos específicos (criaturas)."},
+        {"nome": "Monstruoso", "foco": "Transformação física e combate com garras/mordidas."}
+      ],
+      "Especialista": [
+        {"nome": "Agente do Governo", "foco": "Autoridade, contatos e recursos estatais."},
+        {"nome": "Bibliotecário", "foco": "Pesquisa rápida e bônus por conhecimento de livros."},
+        {"nome": "Muambeiro", "foco": "Itens de categoria menor e troca de equipamentos rápida."},
+        {"nome": "Perseverante", "foco": "Rerolar dados e resistir a condições negativas."}
+      ],
+      "Ocultista": [
+        {"nome": "Exorcista", "foco": "Expulsar entidades e proteger aliados contra o Outro Lado."},
+        {"nome": "Maledictólogo", "foco": "Maldições e debuffs em inimigos."},
+        {"nome": "Parapsicólogo", "foco": "Estudo da mente e comunicação com o além."},
+        {"nome": "Possuído", "foco": "Hospedar uma entidade para ganhar poderes físicos e mentais."}
+      ]
+    }
+  }
+}
