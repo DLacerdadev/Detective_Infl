@@ -19,11 +19,11 @@ const characterSchema = z.object({
   historia: z.string().optional(),
   classeId: z.string().min(1, "Selecione uma classe"),
   origemId: z.string().min(1, "Selecione uma origem"),
-  forca: z.number().min(1).max(5),
-  agilidade: z.number().min(1).max(5),
-  intelecto: z.number().min(1).max(5),
-  vigor: z.number().min(1).max(5),
-  presenca: z.number().min(1).max(5),
+  forca: z.number().min(0).max(3),
+  agilidade: z.number().min(0).max(3),
+  intelecto: z.number().min(0).max(3),
+  vigor: z.number().min(0).max(3),
+  presenca: z.number().min(0).max(3),
   pericias: z.array(z.string()).optional(),
 });
 
@@ -160,40 +160,76 @@ export default function CreateCharacter() {
               <motion.div key="step4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                 <div className="flex justify-between items-end border-b border-border/50 pb-2">
                   <h2 className="text-xl font-display text-primary">IV. ATRIBUTOS</h2>
-                  <div className={`font-display text-sm px-3 py-1 rounded-sm ${pointsRemaining === 0 ? 'bg-green-900/30 text-green-500' : pointsRemaining < 0 ? 'bg-destructive/30 text-destructive' : 'bg-secondary text-foreground'}`}>
-                    PONTOS: {pointsRemaining}
+                  <div className={`font-display text-sm px-3 py-1 rounded-sm ${pointsRemaining === 0 ? 'bg-green-900/30 text-green-500 border border-green-800' : pointsRemaining < 0 ? 'bg-destructive/30 text-destructive border border-destructive/50' : 'bg-secondary text-foreground border border-border'}`}>
+                    {pointsRemaining < 0 ? `${Math.abs(pointsRemaining)} PONTO${Math.abs(pointsRemaining) > 1 ? 'S' : ''} A MAIS` : `${pointsRemaining} PONTO${pointsRemaining !== 1 ? 'S' : ''} RESTANTE${pointsRemaining !== 1 ? 'S' : ''}`}
                   </div>
+                </div>
+
+                {/* Rules box */}
+                <div className="bg-amber-950/20 border border-amber-800/30 rounded-sm px-4 py-3 text-xs text-amber-200/70 font-mono space-y-1 leading-relaxed">
+                  <p>• Todos os atributos começam em <strong className="text-amber-300">1</strong>. Você tem <strong className="text-amber-300">4 pontos</strong> para distribuir.</p>
+                  <p>• Reduza um atributo para <strong className="text-amber-300">0</strong> para receber <strong className="text-amber-300">+1 ponto</strong> adicional.</p>
+                  <p>• Valor máximo inicial por atributo: <strong className="text-amber-300">3</strong>.</p>
                 </div>
                 
-                <div className="flex flex-col items-center justify-center py-8">
-                  {/* Pentagram layout for attributes could go here, for now a list */}
-                  <div className="w-full max-w-md space-y-6 bg-background/50 p-6 rounded-sm border border-border">
-                    {(['forca', 'agilidade', 'intelecto', 'vigor', 'presenca'] as const).map((attr) => (
-                      <div key={attr} className="flex items-center justify-between">
-                        <Label className="w-32 text-lg">{attr.toUpperCase()}</Label>
+                <div className="w-full max-w-md mx-auto space-y-4 bg-background/50 p-6 rounded-sm border border-border">
+                  {([
+                    { key: 'forca', label: 'FORÇA' },
+                    { key: 'agilidade', label: 'AGILIDADE' },
+                    { key: 'intelecto', label: 'INTELECTO' },
+                    { key: 'vigor', label: 'VIGOR' },
+                    { key: 'presenca', label: 'PRESENÇA' },
+                  ] as const).map(({ key, label }) => {
+                    const val = form.watch(key);
+                    const isZero = val === 0;
+                    const isMax = val === 3;
+                    return (
+                      <div key={key} className="flex items-center justify-between">
+                        <Label className={`w-36 text-base font-display tracking-widest ${isZero ? 'text-destructive/70' : 'text-foreground'}`}>
+                          {label}
+                          {isZero && <span className="ml-2 text-[10px] text-amber-400 font-sans normal-case tracking-normal">+1 pt</span>}
+                        </Label>
                         <div className="flex items-center space-x-4">
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            size="icon" 
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
                             className="h-8 w-8 rounded-full"
-                            onClick={() => form.setValue(attr, Math.max(1, form.getValues(attr) - 1))}
-                          >-</Button>
-                          <span className="w-8 text-center font-display text-2xl text-primary">{form.watch(attr)}</span>
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            size="icon" 
+                            disabled={val <= 0}
+                            onClick={() => form.setValue(key, Math.max(0, val - 1))}
+                          >−</Button>
+                          <span className={`w-8 text-center font-display text-2xl ${isZero ? 'text-destructive' : isMax ? 'text-amber-400' : 'text-primary'}`}>
+                            {val}
+                          </span>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
                             className="h-8 w-8 rounded-full"
-                            disabled={pointsRemaining <= 0 && form.getValues(attr) < 5}
-                            onClick={() => form.setValue(attr, Math.min(5, form.getValues(attr) + 1))}
+                            disabled={isMax || pointsRemaining <= 0}
+                            onClick={() => form.setValue(key, Math.min(3, val + 1))}
                           >+</Button>
                         </div>
+                        {/* Bar indicator */}
+                        <div className="flex gap-1 ml-4">
+                          {[1, 2, 3].map((pip) => (
+                            <div
+                              key={pip}
+                              className={`h-3 w-3 rounded-sm border transition-colors ${
+                                pip <= val
+                                  ? pip === 3 ? 'bg-amber-500 border-amber-400' : 'bg-primary border-primary/80'
+                                  : 'bg-secondary border-border/50'
+                              }`}
+                            />
+                          ))}
+                        </div>
                       </div>
-                    ))}
-                  </div>
+                    );
+                  })}
                 </div>
-                {pointsRemaining < 0 && <p className="text-destructive text-sm text-center">Você usou pontos demais.</p>}
+
+                {pointsRemaining < 0 && <p className="text-destructive text-sm text-center font-mono">Distribua menos {Math.abs(pointsRemaining)} ponto{Math.abs(pointsRemaining) > 1 ? 's' : ''}.</p>}
+                {pointsRemaining > 0 && <p className="text-amber-400/70 text-xs text-center font-mono">Você ainda tem pontos para distribuir — não é obrigatório usá-los.</p>}
               </motion.div>
             )}
 
