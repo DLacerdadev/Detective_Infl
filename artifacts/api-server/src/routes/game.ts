@@ -106,6 +106,36 @@ router.get("/trilhas", async (_req: Request, res: Response) => {
   res.json(rows);
 });
 
+router.post("/trilhas", async (req: Request, res: Response) => {
+  if (!isAdmin(req)) { res.status(403).json({ error: "Forbidden" }); return; }
+  const { classeId, nome, fonte = "Livro Base", habilidades = [] } = req.body;
+  if (!classeId || !nome) { res.status(400).json({ error: "classeId e nome são obrigatórios" }); return; }
+  const [row] = await db.insert(trilhasTable).values({ classeId, nome, fonte, habilidades }).returning();
+  const joined = await db.select({
+    id: trilhasTable.id, classeId: trilhasTable.classeId, classeNome: classesTable.nome,
+    nome: trilhasTable.nome, fonte: trilhasTable.fonte, habilidades: trilhasTable.habilidades, createdAt: trilhasTable.createdAt,
+  }).from(trilhasTable).innerJoin(classesTable, eq(trilhasTable.classeId, classesTable.id)).where(eq(trilhasTable.id, row.id));
+  res.status(201).json(joined[0]);
+});
+
+router.put("/trilhas/:id", async (req: Request, res: Response) => {
+  if (!isAdmin(req)) { res.status(403).json({ error: "Forbidden" }); return; }
+  const { classeId, nome, fonte, habilidades } = req.body;
+  const [row] = await db.update(trilhasTable).set({ classeId, nome, fonte, habilidades }).where(eq(trilhasTable.id, req.params.id)).returning();
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  const joined = await db.select({
+    id: trilhasTable.id, classeId: trilhasTable.classeId, classeNome: classesTable.nome,
+    nome: trilhasTable.nome, fonte: trilhasTable.fonte, habilidades: trilhasTable.habilidades, createdAt: trilhasTable.createdAt,
+  }).from(trilhasTable).innerJoin(classesTable, eq(trilhasTable.classeId, classesTable.id)).where(eq(trilhasTable.id, row.id));
+  res.json(joined[0]);
+});
+
+router.delete("/trilhas/:id", async (req: Request, res: Response) => {
+  if (!isAdmin(req)) { res.status(403).json({ error: "Forbidden" }); return; }
+  await db.delete(trilhasTable).where(eq(trilhasTable.id, req.params.id));
+  res.status(204).send();
+});
+
 router.get("/rituals", async (_req: Request, res: Response) => {
   const rows = await db.select().from(rituaisTable).orderBy(rituaisTable.circulo, rituaisTable.nome);
   res.json(rows.map(mapRitual));

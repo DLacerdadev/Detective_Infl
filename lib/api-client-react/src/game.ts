@@ -63,3 +63,54 @@ export function useDeleteHabilidade() {
       apiFetch<void>(`/api/habilidades/${id}`, { method: "DELETE" }),
   });
 }
+
+// ── Trilhas mutations ──────────────────────────────────────────────────────
+
+export interface TrilhaProgressao {
+  nex: string;
+  nome: string;
+  descricao: string;
+}
+
+export interface TrilhaAdmin {
+  id: string;
+  classeId: string;
+  classeNome: string;
+  nome: string;
+  fonte: string;
+  habilidades: TrilhaProgressao[];
+  createdAt: string;
+}
+
+export function getListTrilhasAdminQueryKey() {
+  return ["listTrilhas"] as const;
+}
+
+export function useCreateTrilha() {
+  return useMutation({
+    mutationFn: (data: { classeId: string; nome: string; fonte: string; habilidades: TrilhaProgressao[] }) =>
+      apiFetch<TrilhaAdmin>("/api/trilhas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+  });
+}
+
+export function useUpdateTrilha() {
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: { classeId: string; nome: string; fonte: string; habilidades: TrilhaProgressao[] } }) =>
+      apiFetch<TrilhaAdmin>(`/api/trilhas/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+  });
+}
+
+export function useDeleteTrilha() {
+  return useMutation({
+    mutationFn: ({ id }: { id: string }) =>
+      apiFetch<void>(`/api/trilhas/${id}`, { method: "DELETE" }),
+  });
+}

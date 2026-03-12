@@ -40,7 +40,7 @@ const CLASSE_LABELS: Record<string, string> = {
   GERAL: "Geral",
 };
 
-const CATEGORIA_FILTERS = ["Todas", "HABILIDADE_CLASSE", "PODER_CLASSE", "PODER_GERAL", "TRILHA", "ORIGEM"];
+const CATEGORIA_FILTERS = ["Todas", "HABILIDADE_CLASSE", "PODER_CLASSE", "PODER_GERAL", "ORIGEM"];
 
 // ── card ─────────────────────────────────────────────────
 function HabilidadeCard({ hab }: { hab: HabilidadeCompendio }) {

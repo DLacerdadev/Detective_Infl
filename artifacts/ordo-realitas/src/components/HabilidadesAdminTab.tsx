@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
 const CLASSES = ["COMBATENTE", "ESPECIALISTA", "OCULTISTA", "SOBREVIVENTE", "GERAL"] as const;
-const CATEGORIAS = ["HABILIDADE_CLASSE", "PODER_CLASSE", "PODER_GERAL", "TRILHA", "ORIGEM"] as const;
+const CATEGORIAS = ["HABILIDADE_CLASSE", "PODER_CLASSE", "PODER_GERAL", "ORIGEM"] as const;
 const FONTES = ["LIVRO_BASE", "SOBREVIVENDO_AO_HORROR"] as const;
 
 type ClasseType = typeof CLASSES[number];
@@ -38,7 +38,7 @@ const CLASSE_LABEL: Record<ClasseType, string> = {
 
 const CATEGORIA_LABEL: Record<CategoriaType, string> = {
   HABILIDADE_CLASSE: "Hab. Classe", PODER_CLASSE: "Poder", PODER_GERAL: "Poder Geral",
-  TRILHA: "Trilha", ORIGEM: "Origem",
+  ORIGEM: "Origem",
 };
 
 const FONTE_LABEL: Record<string, string> = {
