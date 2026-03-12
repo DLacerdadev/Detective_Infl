@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { useListClasses, useListOrigins } from "@workspace/api-client-react";
+
 import { useCreateCharacterMut } from "@/hooks/use-api-mutations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -159,10 +160,10 @@ export default function CreateCharacter() {
     if (valid) setStep((s) => s + 1);
   };
 
-  const onSubmit = async (data: FormData) => {
-    // Guard: only submit on the last step
-    if (step !== TOTAL_STEPS) return;
-    // Ensure origin péricias are included
+  const handleFinalize = async () => {
+    const isValid = await form.trigger();
+    if (!isValid) return;
+    const data = form.getValues();
     const allPericias = Array.from(
       new Set([...periciasDaOrigem, ...data.pericias])
     );
@@ -205,8 +206,7 @@ export default function CreateCharacter() {
         </div>
 
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          onKeyDown={(e) => { if (e.key === "Enter") e.preventDefault(); }}
+          onSubmit={(e) => e.preventDefault()}
           className="relative z-10"
         >
           <AnimatePresence mode="wait">
@@ -427,7 +427,8 @@ export default function CreateCharacter() {
               <Button type="button" onClick={nextStep}>AVANÇAR</Button>
             ) : (
               <Button
-                type="submit"
+                type="button"
+                onClick={handleFinalize}
                 disabled={createMut.isPending}
                 className="animate-pulse hover:animate-none"
               >
