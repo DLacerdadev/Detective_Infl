@@ -429,9 +429,21 @@ router.post("/campanhas/:id/personagens", async (req: Request, res: Response) =>
     res.status(403).json({ error: "Você só pode adicionar seus próprios personagens" }); return;
   }
 
-  const existing = await db.select().from(campanhaPersonagensTable)
-    .where(and(eq(campanhaPersonagensTable.campanhaId, req.params.id), eq(campanhaPersonagensTable.personagemId, personagemId)));
-  if (existing.length > 0) { res.status(409).json({ error: "Personagem já está nesta campanha" }); return; }
+  const emQualquerCampanha = await db.select({
+    campanhaId: campanhaPersonagensTable.campanhaId,
+    campanhaNome: campanhasTable.nome,
+  })
+    .from(campanhaPersonagensTable)
+    .innerJoin(campanhasTable, eq(campanhaPersonagensTable.campanhaId, campanhasTable.id))
+    .where(eq(campanhaPersonagensTable.personagemId, personagemId));
+
+  if (emQualquerCampanha.length > 0) {
+    const nomeCampanha = emQualquerCampanha[0].campanhaNome;
+    res.status(409).json({
+      error: `Este agente já está em outra operação: "${nomeCampanha}". Um agente só pode participar de uma operação por vez.`,
+    });
+    return;
+  }
 
   await db.insert(campanhaPersonagensTable).values({
     campanhaId: req.params.id,
