@@ -25,7 +25,7 @@ export interface HabilidadeCompendio {
 export function useListHabilidades() {
   return useQuery<HabilidadeCompendio[]>({
     queryKey: ["habilidades"],
-    queryFn: () => apiFetch<HabilidadeCompendio[]>("/api/game/habilidades"),
+    queryFn: () => apiFetch<HabilidadeCompendio[]>("/api/habilidades"),
     staleTime: 1000 * 60 * 10,
   });
 }
