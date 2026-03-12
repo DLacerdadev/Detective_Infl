@@ -1,6 +1,7 @@
 import { pgTable, text, varchar, timestamp, unique, integer, boolean, jsonb } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { usersTable } from "./auth";
+import { personagensTable } from "./game";
 
 export const campanhasTable = pgTable("campanhas", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -41,6 +42,17 @@ export const campanhaRolagensTable = pgTable("campanha_rolagens", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const campanhaPersonagensTable = pgTable("campanha_personagens", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  campanhaId: varchar("campanha_id").notNull().references(() => campanhasTable.id, { onDelete: "cascade" }),
+  personagemId: varchar("personagem_id").notNull().references(() => personagensTable.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+  addedAt: timestamp("added_at", { withTimezone: true }).notNull().defaultNow(),
+}, (t) => [
+  unique("campanha_personagem_uniq").on(t.campanhaId, t.personagemId),
+]);
+
 export type Campanha = typeof campanhasTable.$inferSelect;
 export type CampanhaMembro = typeof campanhaMembrosTable.$inferSelect;
 export type CampanhaRolagem = typeof campanhaRolagensTable.$inferSelect;
+export type CampanhaPersonagem = typeof campanhaPersonagensTable.$inferSelect;

@@ -23,10 +23,11 @@ import {
 } from "@/components/ui/dialog";
 import {
   Crown, Users, Copy, ArrowLeft, Trash2,
-  LogOut, UserCheck, Loader2, Pencil, Swords, Check, Dice5,
+  LogOut, UserCheck, Loader2, Pencil, Swords, Check, Dice5, Shield,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import RolagensTab from "@/components/RolagensTab";
+import PersonagensTab from "@/components/PersonagensTab";
 
 function memberName(m: { firstName?: string | null; lastName?: string | null; email: string }) {
   if (m.firstName || m.lastName) return [m.firstName, m.lastName].filter(Boolean).join(" ");
@@ -160,7 +161,7 @@ function EditDialog({
   );
 }
 
-type Tab = "membros" | "rolagens";
+type Tab = "membros" | "rolagens" | "agentes";
 
 export default function CampanhaDetail() {
   const [, params] = useRoute("/campanhas/:id");
@@ -215,6 +216,7 @@ export default function CampanhaDetail() {
 
   const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: "rolagens", label: "Rolagens", icon: <Dice5 className="w-3.5 h-3.5" /> },
+    { id: "agentes", label: "Agentes", icon: <Shield className="w-3.5 h-3.5" /> },
     { id: "membros", label: "Membros", icon: <Users className="w-3.5 h-3.5" /> },
   ];
 
@@ -281,7 +283,11 @@ export default function CampanhaDetail() {
       </div>
 
       {activeTab === "rolagens" && (
-        <RolagensTab campanhaId={campanha.id} />
+        <RolagensTab campanhaId={campanha.id} amMestre={amMestre} />
+      )}
+
+      {activeTab === "agentes" && (
+        <PersonagensTab campanhaId={campanha.id} amMestre={amMestre} />
       )}
 
       {activeTab === "membros" && (

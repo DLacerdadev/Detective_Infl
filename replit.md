@@ -82,6 +82,7 @@ Manages all static game data:
 - `campanhas` — RPG campaigns with `codigoConvite` (invite code)
 - `campanha_membros` — Campaign members with `papel` (mestre/jogador), unique per campanha+user
 - `campanha_rolagens` — Dice rolls per campaign: server-side roll engine, persisted history, supports pericia/atributo/dano types
+- `campanha_personagens` — Characters (agents) linked to campaigns. Unique per campanha+personagem. Members can add their own characters; mestre can add/remove any. Foreign keys cascade on delete.
 - `itens` — Equipment and items
 
 ### Seeded Data

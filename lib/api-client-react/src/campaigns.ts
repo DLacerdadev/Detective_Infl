@@ -160,6 +160,63 @@ export function useRemoverMembro(campanhaId: string) {
   });
 }
 
+export interface CampanhaPersonagemEntry {
+  id: string;
+  campanhaId: string;
+  personagemId: string;
+  userId: string;
+  addedAt: string;
+  personagemNome: string;
+  personagemNex: number;
+  personagemNivel: number;
+  personagemPatente: string | null;
+  personagemForca: number;
+  personagemAgilidade: number;
+  personagemIntelecto: number;
+  personagemVigor: number;
+  personagemPresenca: number;
+  personagemDefesa: number;
+  personagemPvAtual: number | null;
+  personagemPvMaximo: number | null;
+  personagemPeAtual: number | null;
+  personagemPeMaximo: number | null;
+  personagemSanAtual: number | null;
+  personagemSanMaximo: number | null;
+  personagemPericias: string[] | null;
+  classeNome: string | null;
+  classeId: string | null;
+  userFirstName: string | null;
+  userEmail: string;
+}
+
+export const personagensKey = (campanhaId: string) => ["campanhas", campanhaId, "personagens"] as const;
+
+export function useListCampanhaPersonagens(campanhaId: string) {
+  return useQuery<CampanhaPersonagemEntry[]>({
+    queryKey: personagensKey(campanhaId),
+    queryFn: () => apiFetch(`/api/campanhas/${campanhaId}/personagens`),
+    enabled: !!campanhaId,
+  });
+}
+
+export function useAdicionarPersonagem(campanhaId: string) {
+  const qc = useQueryClient();
+  return useMutation<CampanhaPersonagemEntry, Error, string>({
+    mutationFn: (personagemId) =>
+      apiFetch(`/api/campanhas/${campanhaId}/personagens`, { method: "POST", body: JSON.stringify({ personagemId }) }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: personagensKey(campanhaId) }),
+  });
+}
+
+export function useRemoverPersonagemDaCampanha(campanhaId: string) {
+  const qc = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: (personagemId) =>
+      apiFetch(`/api/campanhas/${campanhaId}/personagens/${personagemId}`, { method: "DELETE" }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: personagensKey(campanhaId) }),
+  });
+}
+
 export const rolagensKey = (campanhaId: string) => ["campanhas", campanhaId, "rolagens"] as const;
 
 export function useListRolagens(campanhaId: string) {

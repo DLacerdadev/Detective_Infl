@@ -3,14 +3,42 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   useListRolagens,
   useRolar,
+  useListCampanhaPersonagens,
   type CampanhaRolagem,
+  type CampanhaPersonagemEntry,
 } from "@workspace/api-client-react";
 import {
-  useListCharacters,
   useListPericias,
-  type Character,
   type Pericia,
 } from "@workspace/api-client-react";
+
+interface CharLike {
+  id: string;
+  nome: string;
+  userId: string;
+  forca: number;
+  agilidade: number;
+  intelecto: number;
+  vigor: number;
+  presenca: number;
+  pericias: string[] | null;
+  classe?: { nome: string } | null;
+}
+
+function entryToChar(e: CampanhaPersonagemEntry): CharLike {
+  return {
+    id: e.personagemId,
+    nome: e.personagemNome,
+    userId: e.userId,
+    forca: e.personagemForca,
+    agilidade: e.personagemAgilidade,
+    intelecto: e.personagemIntelecto,
+    vigor: e.personagemVigor,
+    presenca: e.personagemPresenca,
+    pericias: e.personagemPericias,
+    classe: e.classeNome ? { nome: e.classeNome } : null,
+  };
+}
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -40,7 +68,7 @@ const GRAU_BONUS: Record<GrauTreinamento, number> = {
 
 const GRAUS: GrauTreinamento[] = ["Destreinado", "Treinado", "Veterano", "Expert"];
 
-const ATTR_KEYS: Record<string, keyof Character> = {
+const ATTR_KEYS: Record<string, keyof CharLike> = {
   FOR: "forca",
   AGI: "agilidade",
   INT: "intelecto",
@@ -76,9 +104,9 @@ function norm(s: string) {
   return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-function getCharAttrValue(char: Character | null, atributo: string): number {
+function getCharAttrValue(char: CharLike | null, atributo: string): number {
   if (!char) return 1;
-  const key = ATTR_KEYS[atributo] as keyof Character;
+  const key = ATTR_KEYS[atributo] as keyof CharLike;
   return (char[key] as number | undefined) ?? 1;
 }
 
@@ -280,18 +308,19 @@ function Spinner({ num, onChange, min = 0, max = 10 }: { num: number; onChange: 
   );
 }
 
-export default function RolagensTab({ campanhaId }: { campanhaId: string }) {
+export default function RolagensTab({ campanhaId, amMestre }: { campanhaId: string; amMestre: boolean }) {
   const { user } = useAuth();
   const { toast } = useToast();
   const rolarMut = useRolar(campanhaId);
   const { data: rolagens = [] } = useListRolagens(campanhaId);
-  const { data: allCharacters = [] } = useListCharacters();
+  const { data: campPersonagens = [] } = useListCampanhaPersonagens(campanhaId);
   const { data: pericias = [] } = useListPericias();
 
-  const myChars = useMemo(
-    () => allCharacters.filter((c) => c.userId === user?.id || !c.userId),
-    [allCharacters, user?.id],
-  );
+  const myChars = useMemo<CharLike[]>(() => {
+    const all = campPersonagens.map(entryToChar);
+    if (amMestre) return all;
+    return all.filter((c) => c.userId === user?.id);
+  }, [campPersonagens, amMestre, user?.id]);
 
   const [latestRoll, setLatestRoll] = useState<CampanhaRolagem | null>(null);
   const [modo, setModo] = useState<Modo>("pericia");
@@ -434,7 +463,9 @@ export default function RolagensTab({ campanhaId }: { campanhaId: string }) {
               </SelectTrigger>
               <SelectContent>
                 {myChars.length === 0 && (
-                  <SelectItem value="__none" disabled>Nenhum personagem cadastrado</SelectItem>
+                  <SelectItem value="__none" disabled>
+                    {amMestre ? "Nenhum agente na operação" : "Adicione seus personagens na aba Agentes"}
+                  </SelectItem>
                 )}
                 {myChars.map((c) => (
                   <SelectItem key={c.id} value={c.id}>

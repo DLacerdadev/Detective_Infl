@@ -1,5 +1,8 @@
 import { Router, type IRouter, type Request, type Response } from "express";
-import { db, campanhasTable, campanhaMembrosTable, usersTable, campanhaRolagensTable } from "@workspace/db";
+import {
+  db, campanhasTable, campanhaMembrosTable, usersTable,
+  campanhaRolagensTable, campanhaPersonagensTable, personagensTable, classesTable,
+} from "@workspace/db";
 import { eq, and, inArray, desc } from "drizzle-orm";
 
 const router: IRouter = Router();
@@ -360,6 +363,136 @@ router.delete("/campanhas/:id/membros/:userId", async (req: Request, res: Respon
         eq(campanhaMembrosTable.userId, req.params.userId),
       ),
     );
+
+  res.status(204).send();
+});
+
+router.get("/campanhas/:id/personagens", async (req: Request, res: Response) => {
+  if (!isMembro(req)) { res.status(401).json({ error: "Unauthorized" }); return; }
+  const userId = req.user!.id;
+  const membership = await getMembroship(req.params.id, userId);
+  if (!membership) { res.status(403).json({ error: "Forbidden" }); return; }
+
+  const rows = await db
+    .select({
+      id: campanhaPersonagensTable.id,
+      campanhaId: campanhaPersonagensTable.campanhaId,
+      personagemId: campanhaPersonagensTable.personagemId,
+      userId: campanhaPersonagensTable.userId,
+      addedAt: campanhaPersonagensTable.addedAt,
+      personagemNome: personagensTable.nome,
+      personagemNex: personagensTable.nex,
+      personagemNivel: personagensTable.nivel,
+      personagemPatente: personagensTable.patente,
+      personagemForca: personagensTable.forca,
+      personagemAgilidade: personagensTable.agilidade,
+      personagemIntelecto: personagensTable.intelecto,
+      personagemVigor: personagensTable.vigor,
+      personagemPresenca: personagensTable.presenca,
+      personagemDefesa: personagensTable.defesa,
+      personagemPvAtual: personagensTable.pvAtual,
+      personagemPvMaximo: personagensTable.pvMaximo,
+      personagemPeAtual: personagensTable.peAtual,
+      personagemPeMaximo: personagensTable.peMaximo,
+      personagemSanAtual: personagensTable.sanAtual,
+      personagemSanMaximo: personagensTable.sanMaximo,
+      personagemPericias: personagensTable.pericias,
+      classeNome: classesTable.nome,
+      classeId: personagensTable.classeId,
+      userFirstName: usersTable.firstName,
+      userEmail: usersTable.email,
+    })
+    .from(campanhaPersonagensTable)
+    .innerJoin(personagensTable, eq(campanhaPersonagensTable.personagemId, personagensTable.id))
+    .leftJoin(classesTable, eq(personagensTable.classeId, classesTable.id))
+    .innerJoin(usersTable, eq(campanhaPersonagensTable.userId, usersTable.id))
+    .where(eq(campanhaPersonagensTable.campanhaId, req.params.id))
+    .orderBy(campanhaPersonagensTable.addedAt);
+
+  res.json(rows);
+});
+
+router.post("/campanhas/:id/personagens", async (req: Request, res: Response) => {
+  if (!isMembro(req)) { res.status(401).json({ error: "Unauthorized" }); return; }
+  const userId = req.user!.id;
+  const membership = await getMembroship(req.params.id, userId);
+  if (!membership) { res.status(403).json({ error: "Você não é membro desta campanha" }); return; }
+
+  const { personagemId } = req.body;
+  if (!personagemId) { res.status(400).json({ error: "personagemId required" }); return; }
+
+  const [personagem] = await db.select().from(personagensTable).where(eq(personagensTable.id, personagemId));
+  if (!personagem) { res.status(404).json({ error: "Personagem não encontrado" }); return; }
+
+  const isMestr = await getMestreCampaign(req.params.id, userId);
+  if (!isMestr && personagem.userId !== userId) {
+    res.status(403).json({ error: "Você só pode adicionar seus próprios personagens" }); return;
+  }
+
+  const existing = await db.select().from(campanhaPersonagensTable)
+    .where(and(eq(campanhaPersonagensTable.campanhaId, req.params.id), eq(campanhaPersonagensTable.personagemId, personagemId)));
+  if (existing.length > 0) { res.status(409).json({ error: "Personagem já está nesta campanha" }); return; }
+
+  await db.insert(campanhaPersonagensTable).values({
+    campanhaId: req.params.id,
+    personagemId,
+    userId: personagem.userId,
+  });
+
+  const [row] = await db.select({
+    id: campanhaPersonagensTable.id,
+    campanhaId: campanhaPersonagensTable.campanhaId,
+    personagemId: campanhaPersonagensTable.personagemId,
+    userId: campanhaPersonagensTable.userId,
+    addedAt: campanhaPersonagensTable.addedAt,
+    personagemNome: personagensTable.nome,
+    personagemNex: personagensTable.nex,
+    personagemNivel: personagensTable.nivel,
+    personagemPatente: personagensTable.patente,
+    personagemForca: personagensTable.forca,
+    personagemAgilidade: personagensTable.agilidade,
+    personagemIntelecto: personagensTable.intelecto,
+    personagemVigor: personagensTable.vigor,
+    personagemPresenca: personagensTable.presenca,
+    personagemDefesa: personagensTable.defesa,
+    personagemPvAtual: personagensTable.pvAtual,
+    personagemPvMaximo: personagensTable.pvMaximo,
+    personagemPeAtual: personagensTable.peAtual,
+    personagemPeMaximo: personagensTable.peMaximo,
+    personagemSanAtual: personagensTable.sanAtual,
+    personagemSanMaximo: personagensTable.sanMaximo,
+    personagemPericias: personagensTable.pericias,
+    classeNome: classesTable.nome,
+    classeId: personagensTable.classeId,
+    userFirstName: usersTable.firstName,
+    userEmail: usersTable.email,
+  })
+    .from(campanhaPersonagensTable)
+    .innerJoin(personagensTable, eq(campanhaPersonagensTable.personagemId, personagensTable.id))
+    .leftJoin(classesTable, eq(personagensTable.classeId, classesTable.id))
+    .innerJoin(usersTable, eq(campanhaPersonagensTable.userId, usersTable.id))
+    .where(and(eq(campanhaPersonagensTable.campanhaId, req.params.id), eq(campanhaPersonagensTable.personagemId, personagemId)));
+
+  res.status(201).json(row);
+});
+
+router.delete("/campanhas/:id/personagens/:personagemId", async (req: Request, res: Response) => {
+  if (!isMembro(req)) { res.status(401).json({ error: "Unauthorized" }); return; }
+  const userId = req.user!.id;
+  const membership = await getMembroship(req.params.id, userId);
+  if (!membership) { res.status(403).json({ error: "Forbidden" }); return; }
+
+  const [entry] = await db.select().from(campanhaPersonagensTable)
+    .where(and(eq(campanhaPersonagensTable.campanhaId, req.params.id), eq(campanhaPersonagensTable.personagemId, req.params.personagemId)));
+  if (!entry) { res.status(404).json({ error: "Personagem não encontrado nesta campanha" }); return; }
+
+  const isMestr = await getMestreCampaign(req.params.id, userId);
+  if (!isMestr && entry.userId !== userId) {
+    res.status(403).json({ error: "Você só pode remover seus próprios personagens" }); return;
+  }
+
+  await db.delete(campanhaPersonagensTable)
+    .where(and(eq(campanhaPersonagensTable.campanhaId, req.params.id), eq(campanhaPersonagensTable.personagemId, req.params.personagemId)));
 
   res.status(204).send();
 });
