@@ -1,0 +1,448 @@
+{
+  "livro_base": {
+    "titulo": "Ordem Paranormal RPG - Livro Base",
+    "origens": [
+      {
+        "id": "lb-001",
+        "nome": "Acadêmico",
+        "descricao": "Você trabalhou em uma universidade, instituto de pesquisa ou museu. Seu trabalho envolvia pesquisa, ensino ou curadoria de conhecimento. Em algum momento, suas pesquisas esbarraram no paranormal.",
+        "pericias_concedidas": ["Atualidades", "Ciências"],
+        "poder_nome": "Estudioso",
+        "poder_descricao": "Você recebe +2 em testes de Atualidades e Ciências. Além disso, uma vez por cena, pode gastar 1 PE para fazer um teste de Atualidades ou Ciências no lugar de qualquer outra perícia de Intelecto.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-002",
+        "nome": "Agente de Saúde",
+        "descricao": "Você trabalhou na área da saúde, seja como médico, enfermeiro, paramédico ou técnico. Seu contato com o sofrimento humano e, eventualmente, com casos inexplicáveis, o levou à Ordem.",
+        "pericias_concedidas": ["Medicina", "Vontade"],
+        "poder_nome": "Socorrista",
+        "poder_descricao": "Você pode usar Medicina para estabilizar personagens sem um kit médico, com DT 15. Além disso, quando usa um kit médico, você pode gastar 2 PE para curar 1d6+INT PV adicionais.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-003",
+        "nome": "Amnésico",
+        "descricao": "Você não se lembra de quem era antes. Talvez tenha sido um experimento, uma vítima de ritual ou simplesmente alguém que viu algo que não deveria. Sua vida começa agora, na Ordem.",
+        "pericias_concedidas": ["Reflexos", "Vontade"],
+        "poder_nome": "Memória Fragmentada",
+        "poder_descricao": "Escolha duas perícias quaisquer. Você é treinado nelas (memórias de sua vida anterior). Além disso, uma vez por missão, pode 'lembrar' de algo relevante para a cena atual, a critério do mestre.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-004",
+        "nome": "Artista",
+        "descricao": "Você era um ator, músico, escritor, pintor ou qualquer outro tipo de artista. Sua sensibilidade e criatividade o tornaram mais perceptivo ao paranormal.",
+        "pericias_concedidas": ["Artes", "Enganação"],
+        "poder_nome": "Inspiração",
+        "poder_descricao": "Uma vez por cena, você pode gastar 2 PE para conceder +2 em um teste de perícia a um aliado em alcance médio.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-005",
+        "nome": "Chef",
+        "descricao": "Você era um cozinheiro profissional, seja em um restaurante sofisticado ou em uma barraca de rua. Sua habilidade com ingredientes e sua criatividade na cozinha o tornaram um membro valioso da Ordem.",
+        "pericias_concedidas": ["Profissão (cozinheiro)", "Vontade"],
+        "poder_nome": "Refeição Revigorante",
+        "poder_descricao": "Durante um interlúdio, você pode preparar uma refeição especial. Todos que a consumirem recuperam 1d6+PRE PV adicionais durante o descanso.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-006",
+        "nome": "Combatente",
+        "descricao": "Você tem experiência em combate, seja como lutador de artes marciais, praticante de esportes de contato ou simplesmente alguém que cresceu em um ambiente violento.",
+        "pericias_concedidas": ["Atletismo", "Luta"],
+        "poder_nome": "Durão",
+        "poder_descricao": "Você recebe +2 PV para cada NEX que possui. Além disso, quando fica com 0 PV, pode gastar 2 PE para ficar com 1 PV em vez de cair inconsciente.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-007",
+        "nome": "Criminoso",
+        "descricao": "Você viveu à margem da lei, seja como ladrão, hacker, traficante ou outro tipo de criminoso. Suas habilidades ilícitas provaram ser surpreendentemente úteis na Ordem.",
+        "pericias_concedidas": ["Crime", "Furtividade"],
+        "poder_nome": "Vida no Crime",
+        "poder_descricao": "Você recebe +2 em testes de Crime e Furtividade. Além disso, uma vez por cena, pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Crime.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-008",
+        "nome": "Detetive",
+        "descricao": "Você trabalhou como detetive particular ou investigador. Sua habilidade em encontrar pistas e interrogar suspeitos o tornou um ativo valioso para a Ordem.",
+        "pericias_concedidas": ["Investigação", "Percepção"],
+        "poder_nome": "Faro Investigativo",
+        "poder_descricao": "Você recebe +2 em testes de Investigação e Percepção. Além disso, quando examina uma cena de crime ou local suspeito, pode gastar 2 PE para fazer um teste de Investigação e descobrir uma pista adicional.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-009",
+        "nome": "Esportista",
+        "descricao": "Você foi um atleta profissional ou amador de alto nível. Seu corpo treinado e sua mentalidade competitiva o tornaram um agente eficaz.",
+        "pericias_concedidas": ["Atletismo", "Reflexos"],
+        "poder_nome": "Atleta",
+        "poder_descricao": "Você recebe +2 em testes de Atletismo e Reflexos. Além disso, seu deslocamento aumenta em 3 metros.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-010",
+        "nome": "Herdeiro",
+        "descricao": "Você nasceu em uma família rica e influente. Seja por herança, casamento ou golpe de sorte, você tem acesso a recursos que a maioria das pessoas jamais terá.",
+        "pericias_concedidas": ["Diplomacia", "Intuição"],
+        "poder_nome": "Recursos Familiares",
+        "poder_descricao": "Você recebe +2 em testes de Diplomacia. Além disso, uma vez por missão, pode gastar 5 PE para adquirir um item de Categoria I ou II sem custo.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-011",
+        "nome": "Jornalista",
+        "descricao": "Você trabalhou como repórter, fotógrafo jornalístico ou editor. Sua curiosidade insaciável e sua habilidade em encontrar a verdade o levaram a investigar casos paranormais.",
+        "pericias_concedidas": ["Atualidades", "Investigação"],
+        "poder_nome": "Fontes Confiáveis",
+        "poder_descricao": "Você recebe +2 em testes de Investigação. Além disso, uma vez por missão, pode contatar uma fonte e obter informações relevantes sobre o caso atual, a critério do mestre.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-012",
+        "nome": "Magnata",
+        "descricao": "Você possui muito dinheiro ou patrimônio. Pode ser o herdeiro de uma família antiga ligada ao oculto, ter criado e vendido uma empresa e decidido usar sua riqueza para uma causa maior, ou ter ganho uma loteria após inadvertidamente escolher números amaldiçoados que formavam um ritual.",
+        "pericias_concedidas": ["Diplomacia", "Pilotagem"],
+        "poder_nome": "Patrocinador da Ordem",
+        "poder_descricao": "Seu limite de crédito é sempre considerado um acima do atual.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-013",
+        "nome": "Mercenário",
+        "descricao": "Você é um soldado de aluguel, que trabalha sozinho ou como parte de alguma organização que vende serviços militares. Escoltas e assassinatos fizeram parte de sua rotina por tempo o suficiente para você se envolver em alguma situação com o paranormal.",
+        "pericias_concedidas": ["Iniciativa", "Intimidação"],
+        "poder_nome": "Posição de Combate",
+        "poder_descricao": "No primeiro turno de cada cena de ação, você pode gastar 2 PE para receber uma ação de movimento adicional.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-014",
+        "nome": "Militar",
+        "descricao": "Você serviu em uma força militar, como o exército ou a marinha. Passou muito tempo treinando com armas de fogo, até se tornar um perito no uso delas. Acostumado a obedecer ordens e partir em missões, está em casa na Ordo Realitas.",
+        "pericias_concedidas": ["Pontaria", "Tática"],
+        "poder_nome": "Para Bellum",
+        "poder_descricao": "Você recebe +2 em rolagens de dano com armas de fogo.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-015",
+        "nome": "Operário",
+        "descricao": "Pedreiro, industriário, operador de máquinas em uma fábrica… Você passou uma parte de sua vida em um emprego braçal, desempenhando atividades práticas que lhe deram uma visão pragmática do mundo.",
+        "pericias_concedidas": ["Fortitude", "Profissão"],
+        "poder_nome": "Ferramenta de Trabalho",
+        "poder_descricao": "Escolha uma arma simples ou tática que, a critério do mestre, poderia ser usada como ferramenta em sua profissão. Você sabe usar a arma escolhida e recebe +1 em testes de ataque, rolagens de dano e margem de ameaça com ela.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-016",
+        "nome": "Policial",
+        "descricao": "Você fez parte de uma força de segurança pública, civil ou militar. Em alguma patrulha ou chamado se deparou com um caso paranormal e sobreviveu para contar a história.",
+        "pericias_concedidas": ["Percepção", "Pontaria"],
+        "poder_nome": "Patrulha",
+        "poder_descricao": "Você recebe +2 em Defesa.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-017",
+        "nome": "Religioso",
+        "descricao": "Você é devoto ou sacerdote de uma fé. Independentemente da religião que pratica, se dedica a auxiliar as pessoas com problemas espirituais. A partir disso, teve contato com o paranormal.",
+        "pericias_concedidas": ["Religião", "Vontade"],
+        "poder_nome": "Acalentar",
+        "poder_descricao": "Você recebe +5 em testes de Religião para acalmar. Além disso, quando acalma uma pessoa, ela recebe um número de pontos de Sanidade igual a 1d6 + a sua Presença.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-018",
+        "nome": "Servidor Público",
+        "descricao": "Você possuía carreira em um órgão do governo, lidando com burocracia e atendendo pessoas. Sua rotina foi quebrada quando você viu que o prefeito era um cultista ou que a câmara de vereadores se reunia à noite para realizar rituais.",
+        "pericias_concedidas": ["Intuição", "Vontade"],
+        "poder_nome": "Espírito Cívico",
+        "poder_descricao": "Sempre que faz um teste para ajudar, você pode gastar 1 PE para aumentar o bônus concedido em +2.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-019",
+        "nome": "Teórico da Conspiração",
+        "descricao": "A humanidade nunca pisou na lua. Reptilianos ocupam importantes cargos públicos. A Terra é plana... E secretamente governada pelos Illuminati. Você sabe isso tudo, pois investigou a fundo esses importantes assuntos.",
+        "pericias_concedidas": ["Investigação", "Ocultismo"],
+        "poder_nome": "Eu Já Sabia",
+        "poder_descricao": "Você não se abala com entidades ou anomalias. Afinal, sempre soube que isso tudo existia. Você recebe resistência a dano mental igual ao seu Intelecto.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-020",
+        "nome": "T.I.",
+        "descricao": "Programador, engenheiro de software ou simplesmente 'o cara da T.I.', você tem treinamento e experiência para lidar com sistemas informatizados. Seu talento (ou curiosidade exagerada) chamou a atenção da Ordem.",
+        "pericias_concedidas": ["Investigação", "Tecnologia"],
+        "poder_nome": "Motor de Busca",
+        "poder_descricao": "A critério do Mestre, sempre que tiver acesso a internet, você pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Tecnologia.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-021",
+        "nome": "Trabalhador Rural",
+        "descricao": "Você trabalhava no campo ou em áreas isoladas, como fazendeiro, pescador, biólogo, veterinário... Você se acostumou com o convívio com a natureza e os animais e talvez tenha ouvido uma ou outra história de fantasmas ao redor da fogueira.",
+        "pericias_concedidas": ["Adestramento", "Sobrevivência"],
+        "poder_nome": "Desbravador",
+        "poder_descricao": "Quando faz um teste de Adestramento ou Sobrevivência, você pode gastar 2 PE para receber +5 nesse teste. Além disso, você não sofre penalidade em deslocamento por terreno difícil.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-022",
+        "nome": "Trambiqueiro",
+        "descricao": "Uma vida digna exige muito trabalho, então é melhor nem tentar. Você vivia de pequenos golpes, jogatina ilegal e falcatruas. Certo dia, enganou a pessoa errada; no dia seguinte, se viu servindo à Ordem.",
+        "pericias_concedidas": ["Crime", "Enganação"],
+        "poder_nome": "Impostor",
+        "poder_descricao": "Uma vez por cena, você pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Enganação.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-023",
+        "nome": "Universitário",
+        "descricao": "Você era aluno de uma faculdade. Em sua rotina de estudos, provas e festas, acabou descobrindo algo — talvez um livro amaldiçoado na antiga biblioteca do campus? Por seu achado, foi convocado pela Ordem.",
+        "pericias_concedidas": ["Atualidades", "Investigação"],
+        "poder_nome": "Dedicação",
+        "poder_descricao": "Você recebe +1 PE, e mais 1 PE adicional a cada NEX ímpar (15%, 25%...). Além disso, seu limite de PE por turno aumenta em 1.",
+        "fonte": "Livro Base"
+      },
+      {
+        "id": "lb-024",
+        "nome": "Vítima",
+        "descricao": "Em algum momento de sua vida — infância, juventude ou início da vida adulta — você encontrou o paranormal... E a experiência não foi nada boa. Você viu os espíritos dos mortos, foi atacado por uma entidade ou mesmo foi sequestrado para ser sacrificado em um ritual.",
+        "pericias_concedidas": ["Reflexos", "Vontade"],
+        "poder_nome": "Cicatrizes Psicológicas",
+        "poder_descricao": "Você recebe +1 de Sanidade para cada 5% de NEX.",
+        "fonte": "Livro Base"
+      }
+    ]
+  },
+  "sobrevivendo_ao_horror": {
+    "titulo": "Sobrevivendo ao Horror - Suplemento",
+    "origens": [
+      {
+        "id": "sh-001",
+        "nome": "Amigo dos Animais",
+        "descricao": "Você desenvolveu uma conexão muito forte com outros seres: os animais. Seja por nunca ter se dado muito bem com humanos ou por preferir a companhia de um melhor amigo de quatro patas, você leva sua vida ao lado de um bichano e até mesmo aprende com a natureza perceptiva deles.",
+        "pericias_concedidas": ["Adestramento", "Percepção"],
+        "poder_nome": "Companheiro Animal",
+        "poder_descricao": "Você consegue entender as intenções e sentimentos de animais, e pode usar Adestramento para mudar a atitude deles. Além disso, você possui um melhor amigo, um animal que cresceu com você. Ele conta como um aliado que fornece +2 em uma perícia a sua escolha. Quando alcança NEX 35%, ele passa a fornecer o bônus de um aliado de um tipo a sua escolha. Quando alcança NEX 70%, ele fornece a habilidade do tipo de aliado escolhido. Se ele morrer, você perde 10 pontos de Sanidade permanentemente.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": "Gabriela 'Louie' | Arsenal Paranormal",
+        "origem_comunidade": true
+      },
+      {
+        "id": "sh-002",
+        "nome": "Astronauta",
+        "descricao": "Outrora limitada a membros de algumas agências espaciais estatais, a profissão de explorador espacial se tornou mais acessível. Como um astronauta, você se acostumou à pressão de ser responsável pela vida de seus colegas e por experimentos de milhões de reais. E foi na escuridão do espaço que você descobriu que não estamos sozinhos.",
+        "pericias_concedidas": ["Ciências", "Fortitude"],
+        "poder_nome": "Acostumado ao Extremo",
+        "poder_descricao": "Quando sofre dano de fogo, de frio ou mental, você pode gastar 1 PE para reduzir esse dano em 5. A cada vez que usa esta habilidade novamente na mesma cena, seu custo aumenta em +1 PE.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": null,
+        "origem_comunidade": false
+      },
+      {
+        "id": "sh-003",
+        "nome": "Chef do Outro Lado",
+        "descricao": "Você nunca foi muito bom na culinária convencional. Depois de sobreviver ao paranormal, entretanto, descobriu um talento que é considerado um grande tabu até mesmo pelos ocultistas mais experientes: cozinhar e ingerir entidades do Outro Lado.",
+        "pericias_concedidas": ["Ocultismo", "Profissão (cozinheiro)"],
+        "poder_nome": "Fome do Outro Lado",
+        "poder_descricao": "Você pode usar partes de criaturas do Outro Lado como ingredientes culinários. Pode preparar um prato especial durante um interlúdio; se passar no teste de Profissão (cozinheiro) DT 15+O, o prato fornece RD 10 contra o tipo de dano do elemento da criatura. Se falhar, causa vulnerabilidade. A cada refeição consumida, você perde 1 ponto permanente de Sanidade.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": "Julie Sathler | Ateliê Secreto",
+        "origem_comunidade": true
+      },
+      {
+        "id": "sh-004",
+        "nome": "Colegial",
+        "descricao": "Você era um aluno do colegial e tinha uma rotina baseada nos estudos, nas amizades e nos dramas típicos de alguém da sua idade, até que um encontro com o paranormal mudou sua vida. Tendo se unido à Ordem com uma mentalidade juvenil e pouca experiência de vida, você descobriu que sua verdadeira força está nos amigos que fizer pelo caminho.",
+        "pericias_concedidas": ["Atualidades", "Tecnologia"],
+        "poder_nome": "Poder da Amizade",
+        "poder_descricao": "Escolha um personagem para ser seu melhor amigo. Se estiver em alcance médio dele e puderem trocar olhares, você recebe +2 em todos os testes de perícia. Entretanto, se ele morrer, seu total de PE é reduzido em –1 para cada 5% de NEX até o fim da missão.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": null,
+        "origem_comunidade": false
+      },
+      {
+        "id": "sh-005",
+        "nome": "Cosplayer",
+        "descricao": "Você é apaixonado pela arte do cosplay e dedicou sua vida a criar a melhor fantasia possível. Confrontado com o paranormal, você colocou sua arte, e sua resiliência, a serviço da Ordem.",
+        "pericias_concedidas": ["Artes", "Vontade"],
+        "poder_nome": "Não É Fantasia, É Cosplay!",
+        "poder_descricao": "Você pode fazer testes de disfarce usando Artes em vez de Enganação. Além disso, ao fazer um teste de perícia, se estiver usando um cosplay que tem relação com ele, você recebe +2.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": "Rafael 'Damnu' e Victor Moda | Toca dos Monstros",
+        "origem_comunidade": true
+      },
+      {
+        "id": "sh-006",
+        "nome": "Diplomata",
+        "descricao": "Você atuava em uma área onde as habilidades sociais e políticas eram ferramentas indispensáveis. Talvez fosse representante comercial de uma empresa, membro de um partido político ou embaixador do governo. Em algum momento, entretanto, você teve uma experiência paranormal que revelou entidades com as quais não se é possível negociar.",
+        "pericias_concedidas": ["Atualidades", "Diplomacia"],
+        "poder_nome": "Conexões",
+        "poder_descricao": "Você recebe +2 em Diplomacia. Além disso, se puder contatar um NPC capaz de lhe auxiliar, você pode gastar 10 minutos e 2 PE para substituir um teste de uma perícia relacionada ao conhecimento desse NPC, feito até o fim da cena, por um teste de Diplomacia.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": null,
+        "origem_comunidade": false
+      },
+      {
+        "id": "sh-007",
+        "nome": "Explorador",
+        "descricao": "Você é uma pessoa que se interessa muito por história ou geografia, frequentemente embarcando em trilhas e explorações para enriquecer seus estudos. Suas aventuras tornaram seu corpo mais resistente e capaz de se manter firme mesmo nas situações mais adversas.",
+        "pericias_concedidas": ["Fortitude", "Sobrevivência"],
+        "poder_nome": "Manual do Sobrevivente",
+        "poder_descricao": "Ao fazer um teste para resistir a armadilhas, clima, doenças, fome, sede, fumaça, sono, sufocamento ou veneno, incluindo de fontes paranormais, você pode gastar 2 PE para receber +5 nesse teste. Além disso, em cenas de interlúdio, você considera condições de sono precárias como normais.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": "Guilherme 'Guirassol' e João Vitor 'Vapor' | Arquivo do Medo",
+        "origem_comunidade": true
+      },
+      {
+        "id": "sh-008",
+        "nome": "Experimento",
+        "descricao": "Você foi uma cobaia em um experimento físico. Pode ter sido um voluntário em um procedimento experimental legítimo, ou submetido a experimentos científicos ou paranormais contra sua vontade. Qualquer que seja a natureza desse evento, causou alterações permanentes em seu corpo.",
+        "pericias_concedidas": ["Atletismo", "Fortitude"],
+        "poder_nome": "Mutação",
+        "poder_descricao": "Você recebe resistência a dano 2 e +2 em uma perícia à sua escolha que seja originalmente baseada em Força, Agilidade ou Vigor. Entretanto, sofre penalidade em Diplomacia.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": null,
+        "origem_comunidade": false
+      },
+      {
+        "id": "sh-009",
+        "nome": "Fanático por Criaturas",
+        "descricao": "Você sempre foi obcecado pelo sobrenatural. Desde que pode se lembrar, a ideia de encontrar uma criatura o fascina tanto quanto o assusta. Essa faísca fez você se tornar um 'caçador de monstros', dedicando-se a localizar as feras citadas em documentários sensacionalistas.",
+        "pericias_concedidas": ["Investigação", "Ocultismo"],
+        "poder_nome": "Conhecimento Oculto",
+        "poder_descricao": "Você pode fazer testes de Ocultismo para identificar criatura a partir de informações como uma imagem, rastros, indícios de sua presença ou outras pistas. Se passar, você descobre as características da criatura. Além disso, quando passa em um teste de Ocultismo para identificar criatura, você recebe +2 em todos os testes contra a criatura até o fim da missão.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": "Everson 'Akkiel' e Yasmim Furtado | Grimório Paranormal",
+        "origem_comunidade": true
+      },
+      {
+        "id": "sh-010",
+        "nome": "Fotógrafo",
+        "descricao": "Você é um artista visual que usa câmeras para capturar momentos e transmitir histórias através de imagens estáticas. Costumeiramente movido pela paixão de observar o mundo ao seu redor, buscando ângulos únicos e perspectivas singulares para documentar a vida e a sociedade.",
+        "pericias_concedidas": ["Artes", "Percepção"],
+        "poder_nome": "Através da Lente",
+        "poder_descricao": "Quando faz um teste de Investigação ou de Percepção para adquirir pistas olhando através de uma câmera ou analisando fotos, você pode gastar 2 PE para receber +5 nesse teste (um personagem que se move olhando através de uma lente anda à metade de seu deslocamento).",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": null,
+        "origem_comunidade": false
+      },
+      {
+        "id": "sh-011",
+        "nome": "Inventor Paranormal",
+        "descricao": "A curiosidade e a criatividade fizeram de você uma pessoa que busca constantemente desafiar limites e criar soluções inovadoras, sendo mais de uma vez intitulado como um 'cientista louco'. Você teve contato com o paranormal por meio de seus experimentos ou foi procurado pela Ordem porque suas pesquisas chamaram atenção demais.",
+        "pericias_concedidas": ["Profissão (engenheiro)", "Vontade"],
+        "poder_nome": "Invenção Paranormal",
+        "poder_descricao": "Escolha um ritual de 1º círculo. Você possui um invento paranormal, um item de categoria 0 que ocupa 1 espaço e que permite executar o efeito do ritual escolhido. Para ativar o invento, gasta uma ação padrão e faz um teste de Profissão (engenheiro) com DT 15 +5 para cada ativação na mesma missão. Pode trocar o ritual contido em seu invento no início de cada missão.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": "Bruno Sargi | C.R.I.S.",
+        "origem_comunidade": true
+      },
+      {
+        "id": "sh-012",
+        "nome": "Jovem Místico",
+        "descricao": "Você possui uma profunda conexão com sua espiritualidade, suas crenças ou o próprio universo. Essa conexão faz com que você veja o mundo e viva sua vida de forma diferente e peculiar, características que o tornaram mais suscetível a um encontro com o paranormal.",
+        "pericias_concedidas": ["Ocultismo", "Religião"],
+        "poder_nome": "A Culpa é das Estrelas",
+        "poder_descricao": "Escolha um número da sorte entre 1 e 6. No início de cada cena, você pode gastar 1 PE e rolar 1d6. Se o resultado for seu número da sorte, você recebe +2 em testes de perícia até o fim da cena. Caso contrário, na próxima vez que usar esta habilidade, escolha mais um número como número da sorte. Quando rolar um de seus números da sorte, a quantidade de números volta a 1.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": "Ramon 'PlayRay' e João 'Portill' | A Passagem",
+        "origem_comunidade": true
+      },
+      {
+        "id": "sh-013",
+        "nome": "Legista do Turno da Noite",
+        "descricao": "Em um trabalho como o seu, é de se esperar que você já tenha visto muita coisa. No entanto, quando o sol se põe, seus colegas vão embora e a luz artificial deixa cantos sombrios do necrotério, talvez você veja mais do que gostaria.",
+        "pericias_concedidas": ["Ciências", "Medicina"],
+        "poder_nome": "Luto Habitual",
+        "poder_descricao": "Você sofre apenas a metade do dano mental por presenciar uma cena relacionada à rotina de um legista (como presenciar uma morte, ver um cadáver ou encontrar órgãos humanos). Além disso, quando faz um teste de Medicina para primeiros socorros ou necropsia, você pode gastar 2 PE para receber +5 nesse teste.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": "Ivo 'Eddu' e Ana Beatriz 'Bix' | Arquivos Confidenciais",
+        "origem_comunidade": true
+      },
+      {
+        "id": "sh-014",
+        "nome": "Mateiro",
+        "descricao": "Você conhece áreas rurais e selvagens. Você pode ser um guia florestal, um biólogo de campo ou simplesmente um entusiasta da vida selvagem. Qualquer que seja sua relação com a natureza, ela foi sua porta para o contato com o Outro Lado.",
+        "pericias_concedidas": ["Percepção", "Sobrevivência"],
+        "poder_nome": "Mapa Celeste",
+        "poder_descricao": "Desde que possa ver o céu, você sempre sabe as direções dos pontos cardeais e consegue chegar sem se perder em qualquer lugar que já tenha visitado ao menos uma vez. Quando faz um teste de Sobrevivência, você pode gastar 2 PE para rolar o teste novamente e escolher o melhor entre os dois resultados. Além disso, em cenas de interlúdio, você considera condições de sono precárias como normais.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": null,
+        "origem_comunidade": false
+      },
+      {
+        "id": "sh-015",
+        "nome": "Mergulhador",
+        "descricao": "Seja por profissão ou por hobby, você é um aventureiro subaquático que explora os mistérios e maravilhas do mundo submerso. Trajando seu equipamento de mergulho, você consegue se aventurar a grandes profundidades para descobrir um mundo totalmente diferente daquele que conhecemos na superfície.",
+        "pericias_concedidas": ["Atletismo", "Fortitude"],
+        "poder_nome": "Fôlego de Nadador",
+        "poder_descricao": "Você recebe +5 PV e pode prender a respiração por um número de rodadas igual ao dobro do seu Vigor. Além disso, quando passa em um teste de Atletismo para natação, você avança seu deslocamento normal (em vez da metade).",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": null,
+        "origem_comunidade": false
+      },
+      {
+        "id": "sh-016",
+        "nome": "Motorista",
+        "descricao": "Você é um caminhoneiro, motorista de aplicativo, motoboy, piloto de corrida, motorista de ambulância ou qualquer outro tipo de condutor profissional. Você levava a vida transportando cargas ou passageiros, até o dia em que suas viagens cruzaram o caminho do Outro Lado.",
+        "pericias_concedidas": ["Pilotagem", "Reflexos"],
+        "poder_nome": "Mãos no Volante",
+        "poder_descricao": "Você não sofre penalidades em testes de ataque por estar em um veículo em movimento e, sempre que estiver pilotando e tiver que fazer um teste de Pilotagem ou resistência, pode gastar 2 PE para receber +5 nesse teste.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": null,
+        "origem_comunidade": false
+      },
+      {
+        "id": "sh-017",
+        "nome": "Nerd Entusiasta",
+        "descricao": "Você dedicou muito do seu tempo aprendendo sobre videogames, RPGs de mesa, ficção científica ou qualquer outro assunto considerado 'nerd'. Sua obsessão em pesquisar fundo seus assuntos de interesse e sua capacidade em lidar com os mais variados temas chamou a atenção de organizações paranormais.",
+        "pericias_concedidas": ["Ciências", "Tecnologia"],
+        "poder_nome": "O Inteligentão",
+        "poder_descricao": "O bônus que você recebe ao utilizar a ação de interlúdio ler aumenta em +1 dado (de +1d6 para +2d6).",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": "Daniel Dill e Lukas Castanho | Remate Paranormal",
+        "origem_comunidade": true
+      },
+      {
+        "id": "sh-018",
+        "nome": "Profetizado",
+        "descricao": "Como qualquer pessoa, você vai morrer. Entretanto, diferente delas, você sabe como isso vai acontecer. De algum jeito, seja por pesadelos, pensamentos intrusivos ou até visões inesperadas, você tem uma premonição clara de como serão seus últimos momentos de vida.",
+        "pericias_concedidas": ["Vontade", "Uma à sua escolha relacionada à premonição"],
+        "poder_nome": "Luta ou Fuga",
+        "poder_descricao": "Conhecer os sinais de sua morte o deixa mais confiante, principalmente quando eles não estão presentes. Você recebe +2 em Vontade. Quando surge uma referência a sua premonição, uma onda de adrenalina toma seu corpo e seus instintos de luta ou fuga se intensificam. Além do bônus em Vontade, você recebe +2 PE temporários que duram até o fim da cena.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": null,
+        "origem_comunidade": false
+      },
+      {
+        "id": "sh-019",
+        "nome": "Psicólogo",
+        "descricao": "Você se especializou no estudo e tratamento das questões mentais do ser humano. Em sua prática profissional, você teve contato com o paranormal e descobriu que algumas aflições mentais possuem origens sombrias e perigosas.",
+        "pericias_concedidas": ["Intuição", "Profissão (psicólogo)"],
+        "poder_nome": "Terapia",
+        "poder_descricao": "Você pode usar Profissão (psicólogo) como Diplomacia. Além disso, uma vez por rodada, quando você ou um aliado em alcance curto falha em um teste de resistência contra um efeito que causa dano mental, você pode gastar 2 PE para fazer um teste de Profissão (psicólogo) e usar o resultado desse teste no lugar do teste de resistência falho.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": "Luiz Giovane e Matheus Santana | Missões Ordem",
+        "origem_comunidade": true
+      },
+      {
+        "id": "sh-020",
+        "nome": "Repórter Investigativo",
+        "descricao": "Você está sempre em busca de histórias significativas, investigando eventos, entrevistando fontes e analisando dados para descobrir a verdade por trás dos acontecimentos. Profissionais do seu ramo costumam ser curiosos, persistentes e, em muitos casos, éticos em sua busca pela verdade.",
+        "pericias_concedidas": ["Atualidades", "Investigação"],
+        "poder_nome": "Encontrar a Verdade",
+        "poder_descricao": "Você pode usar Investigação no lugar de Diplomacia ao fazer testes para persuadir e mudar atitude e, quando faz um teste de Investigação, pode gastar 2 PE para receber +5 nesse teste.",
+        "fonte": "Sobrevivendo ao Horror",
+        "criador": null,
+        "origem_comunidade": false
+      }
+    ]
+  }
+}
