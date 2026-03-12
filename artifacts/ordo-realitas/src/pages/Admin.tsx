@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card } from "@/components/ui/card";
 import { ShieldAlert } from "lucide-react";
 import { OrigensTab } from "@/components/OrigensTab";
+import { RituaisAdminTab } from "@/components/RituaisAdminTab";
 
 function GenericTable({ title, data, columns }: { title: string; data: any[] | undefined; columns: { key: string; label: string }[] }) {
   if (!data) return <div className="p-4 text-muted-foreground animate-pulse font-mono text-sm">Carregando...</div>;
@@ -66,6 +67,7 @@ export default function Admin() {
           <TabsTrigger value="origens">ORIGENS</TabsTrigger>
           <TabsTrigger value="classes">CLASSES</TabsTrigger>
           <TabsTrigger value="pericias">PERÍCIAS</TabsTrigger>
+          <TabsTrigger value="rituais">RITUAIS</TabsTrigger>
         </TabsList>
 
         <TabsContent value="origens">
@@ -95,6 +97,10 @@ export default function Admin() {
               { key: "somenteTrainada", label: "Só Treinada" },
             ]}
           />
+        </TabsContent>
+
+        <TabsContent value="rituais">
+          <RituaisAdminTab />
         </TabsContent>
       </Tabs>
     </div>
