@@ -49,13 +49,20 @@ const EMPTY_FORM: RitualForm = {
 const ELEMENTOS = ["Sangue", "Morte", "Conhecimento", "Energia", "Medo", "Variável"] as const;
 const FONTES = ["Livro Base", "Sobrevivendo ao Horror"] as const;
 
-const ELEM_CONFIG: Record<string, { icon: React.ReactNode; badge: string; row: string }> = {
-  Sangue:      { icon: <Flame   className="w-3 h-3" />, badge: "bg-red-900/60 text-red-300 border-red-700",         row: "hover:bg-red-950/20" },
-  Morte:       { icon: <Skull   className="w-3 h-3" />, badge: "bg-slate-700/60 text-slate-300 border-slate-600",   row: "hover:bg-slate-900/20" },
-  Conhecimento:{ icon: <Brain   className="w-3 h-3" />, badge: "bg-violet-900/60 text-violet-300 border-violet-700",row: "hover:bg-violet-950/20" },
-  Energia:     { icon: <Zap     className="w-3 h-3" />, badge: "bg-yellow-900/60 text-yellow-300 border-yellow-700",row: "hover:bg-yellow-950/20" },
-  Medo:        { icon: <Ghost   className="w-3 h-3" />, badge: "bg-purple-900/60 text-purple-300 border-purple-700",row: "hover:bg-purple-950/20" },
-  Variável:    { icon: <Shuffle className="w-3 h-3" />, badge: "bg-amber-900/60 text-amber-300 border-amber-700",   row: "hover:bg-amber-950/20" },
+const ELEM_CONFIG: Record<string, {
+  icon: React.ReactNode;
+  iconLg: React.ReactNode;
+  badge: string;
+  row: string;
+  active: string;
+  border: string;
+}> = {
+  Sangue:      { icon: <Flame   className="w-3 h-3" />, iconLg: <Flame   className="w-5 h-5" />, badge: "bg-red-900/60 text-red-300 border-red-700",         row: "hover:bg-red-950/20",    active: "bg-red-900/50 text-red-200",    border: "border-red-600" },
+  Morte:       { icon: <Skull   className="w-3 h-3" />, iconLg: <Skull   className="w-5 h-5" />, badge: "bg-slate-700/60 text-slate-300 border-slate-600",   row: "hover:bg-slate-900/20",  active: "bg-slate-700/50 text-slate-200",border: "border-slate-500" },
+  Conhecimento:{ icon: <Brain   className="w-3 h-3" />, iconLg: <Brain   className="w-5 h-5" />, badge: "bg-violet-900/60 text-violet-300 border-violet-700", row: "hover:bg-violet-950/20", active: "bg-violet-900/50 text-violet-200",border: "border-violet-600" },
+  Energia:     { icon: <Zap     className="w-3 h-3" />, iconLg: <Zap     className="w-5 h-5" />, badge: "bg-yellow-900/60 text-yellow-300 border-yellow-700", row: "hover:bg-yellow-950/20", active: "bg-yellow-900/50 text-yellow-200",border: "border-yellow-600" },
+  Medo:        { icon: <Ghost   className="w-3 h-3" />, iconLg: <Ghost   className="w-5 h-5" />, badge: "bg-purple-900/60 text-purple-300 border-purple-700", row: "hover:bg-purple-950/20", active: "bg-purple-900/50 text-purple-200",border: "border-purple-600" },
+  Variável:    { icon: <Shuffle className="w-3 h-3" />, iconLg: <Shuffle className="w-5 h-5" />, badge: "bg-amber-900/60 text-amber-300 border-amber-700",    row: "hover:bg-amber-950/20",  active: "bg-amber-900/50 text-amber-200", border: "border-amber-600" },
 };
 
 const CIRC_BADGE: Record<number, string> = {
@@ -65,6 +72,12 @@ const CIRC_BADGE: Record<number, string> = {
   4: "bg-red-900/50 text-red-300 border-red-700",
 };
 const CIRC_LABEL: Record<number, string> = { 1: "I", 2: "II", 3: "III", 4: "IV" };
+const CIRC_CONFIG: Record<number, { active: string; border: string; label: string }> = {
+  1: { active: "bg-green-900/50 text-green-200",  border: "border-green-600",  label: "1º" },
+  2: { active: "bg-blue-900/50 text-blue-200",    border: "border-blue-600",   label: "2º" },
+  3: { active: "bg-violet-900/50 text-violet-200",border: "border-violet-600", label: "3º" },
+  4: { active: "bg-red-900/50 text-red-200",      border: "border-red-600",    label: "4º" },
+};
 
 function FieldGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -119,7 +132,6 @@ function RitualFormDialog({
   };
 
   const inputCls = "bg-secondary/30 border-border text-sm font-mono focus-visible:ring-primary";
-  const selectCls = "w-full bg-secondary/30 border border-border rounded px-3 py-2 text-sm font-mono focus:outline-none focus:ring-1 focus:ring-primary text-foreground";
 
   return (
     <Dialog open={open} onOpenChange={v => !v && onClose()}>
@@ -137,22 +149,81 @@ function RitualFormDialog({
               placeholder="Nome do ritual" className={inputCls} />
           </FieldGroup>
 
-          {/* Row 2: elemento + círculo + fonte */}
-          <div className="grid grid-cols-3 gap-3">
-            <FieldGroup label="Elemento *">
-              <select value={form.elemento} onChange={e => set("elemento", e.target.value)} className={selectCls}>
-                {ELEMENTOS.map(el => <option key={el} value={el}>{el}</option>)}
-              </select>
-            </FieldGroup>
+          {/* Row 2: elemento */}
+          <FieldGroup label="Elemento *">
+            <div className="grid grid-cols-3 gap-2">
+              {ELEMENTOS.map(el => {
+                const cfg = ELEM_CONFIG[el];
+                const selected = form.elemento === el;
+                return (
+                  <button
+                    key={el}
+                    type="button"
+                    onClick={() => set("elemento", el)}
+                    className={[
+                      "flex items-center gap-2 px-3 py-2 rounded border text-sm font-mono transition-all",
+                      selected
+                        ? `${cfg.active} ${cfg.border} ring-1 ring-offset-0 ring-current`
+                        : "bg-secondary/20 border-border text-muted-foreground hover:bg-secondary/40",
+                    ].join(" ")}
+                  >
+                    {cfg.iconLg}
+                    <span className="font-semibold">{el}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </FieldGroup>
+
+          {/* Row 3a: círculo + fonte */}
+          <div className="grid grid-cols-2 gap-3">
             <FieldGroup label="Círculo *">
-              <select value={form.circulo} onChange={e => set("circulo", Number(e.target.value))} className={selectCls}>
-                {[1, 2, 3, 4].map(c => <option key={c} value={c}>{c}º Círculo</option>)}
-              </select>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4].map(c => {
+                  const cfg = CIRC_CONFIG[c];
+                  const selected = form.circulo === c;
+                  return (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => set("circulo", c)}
+                      className={[
+                        "flex-1 py-2 rounded border text-sm font-display tracking-wide transition-all",
+                        selected
+                          ? `${cfg.active} ${cfg.border} ring-1 ring-current`
+                          : "bg-secondary/20 border-border text-muted-foreground hover:bg-secondary/40",
+                      ].join(" ")}
+                    >
+                      {cfg.label}
+                    </button>
+                  );
+                })}
+              </div>
             </FieldGroup>
             <FieldGroup label="Fonte">
-              <select value={form.fonte ?? "Livro Base"} onChange={e => set("fonte", e.target.value)} className={selectCls}>
-                {FONTES.map(f => <option key={f} value={f}>{f}</option>)}
-              </select>
+              <div className="flex gap-2 h-full">
+                {FONTES.map(f => {
+                  const selected = (form.fonte ?? "Livro Base") === f;
+                  const short = f === "Livro Base" ? "LB" : "SaH";
+                  const title = f;
+                  return (
+                    <button
+                      key={f}
+                      type="button"
+                      title={title}
+                      onClick={() => set("fonte", f)}
+                      className={[
+                        "flex-1 py-2 rounded border text-sm font-mono transition-all",
+                        selected
+                          ? "bg-amber-900/40 text-amber-200 border-amber-600 ring-1 ring-amber-600"
+                          : "bg-secondary/20 border-border text-muted-foreground hover:bg-secondary/40",
+                      ].join(" ")}
+                    >
+                      {short}
+                    </button>
+                  );
+                })}
+              </div>
             </FieldGroup>
           </div>
 
