@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useListClasses } from "@workspace/api-client-react";
 import { OrigensTab } from "@/components/OrigensTab";
-import { BookOpen, Brain, Sword } from "lucide-react";
+import { PericiasTab } from "@/components/PericiasTab";
+import { BookOpen, Brain, Sword, ScrollText } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // ── types ────────────────────────────────────────────────
@@ -417,6 +418,10 @@ export default function Compendio() {
             <Brain className="h-3.5 w-3.5" />
             ORIGENS
           </TabsTrigger>
+          <TabsTrigger value="pericias" className="gap-2">
+            <ScrollText className="h-3.5 w-3.5" />
+            PERÍCIAS
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="classes">
@@ -425,6 +430,10 @@ export default function Compendio() {
 
         <TabsContent value="origens">
           <OrigensTab />
+        </TabsContent>
+
+        <TabsContent value="pericias">
+          <PericiasTab />
         </TabsContent>
       </Tabs>
     </div>
