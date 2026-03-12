@@ -1,6 +1,6 @@
 import { Router, type IRouter, type Request, type Response } from "express";
-import { db, campanhasTable, campanhaMembrosTable, usersTable } from "@workspace/db";
-import { eq, and, inArray } from "drizzle-orm";
+import { db, campanhasTable, campanhaMembrosTable, usersTable, campanhaRolagensTable } from "@workspace/db";
+import { eq, and, inArray, desc } from "drizzle-orm";
 
 const router: IRouter = Router();
 
@@ -198,6 +198,133 @@ router.put("/campanhas/:id/membros/:userId/papel", async (req: Request, res: Res
 
   if (!updated) { res.status(404).json({ error: "Membro não encontrado" }); return; }
   res.json(updated);
+});
+
+function rolarPericia(qtdDadosBase: number, bonusPericia: number, modificadoresO: number) {
+  const qtdTotal = qtdDadosBase + modificadoresO;
+  const dados: number[] = [];
+  let resultadoBase: number;
+  let sucessoAutomatico = false;
+  let modoPenalidade = false;
+
+  if (qtdTotal > 0) {
+    for (let i = 0; i < qtdTotal; i++) {
+      const d = Math.floor(Math.random() * 20) + 1;
+      dados.push(d);
+      if (d === 20) sucessoAutomatico = true;
+    }
+    resultadoBase = Math.max(...dados);
+  } else {
+    modoPenalidade = true;
+    const qtdPenalidade = 2 + Math.abs(qtdTotal);
+    for (let i = 0; i < qtdPenalidade; i++) {
+      dados.push(Math.floor(Math.random() * 20) + 1);
+    }
+    resultadoBase = Math.min(...dados);
+  }
+
+  return { dados, resultadoBase, resultadoFinal: resultadoBase + bonusPericia, sucessoAutomatico, modoPenalidade };
+}
+
+function rolarDano(expressao: string): { dados: number[]; resultadoBase: number; resultadoFinal: number } {
+  const m = expressao.trim().toLowerCase().match(/^(\d+)d(\d+)([+-]\d+)?$/);
+  if (!m) throw new Error(`Expressão de dano inválida: "${expressao}"`);
+  const qty = Math.min(parseInt(m[1]), 20);
+  const faces = Math.min(parseInt(m[2]), 100);
+  const bonus = m[3] ? parseInt(m[3]) : 0;
+  const dados = Array.from({ length: qty }, () => Math.floor(Math.random() * faces) + 1);
+  const soma = dados.reduce((a, b) => a + b, 0);
+  return { dados, resultadoBase: soma, resultadoFinal: soma + bonus };
+}
+
+router.post("/campanhas/:id/rolagens", async (req: Request, res: Response) => {
+  if (!isMembro(req)) { res.status(401).json({ error: "Unauthorized" }); return; }
+  const userId = req.user!.id;
+
+  const membership = await getMembroship(req.params.id, userId);
+  if (!membership) { res.status(403).json({ error: "Você não é membro desta campanha" }); return; }
+
+  const { rolandoComo, label, tipo, atributo, qtdDadosBase, bonusPericia, modificadoresO, expressaoDano } = req.body;
+
+  let rollResult: { dados: number[]; resultadoBase: number; resultadoFinal: number; sucessoAutomatico?: boolean; modoPenalidade?: boolean };
+
+  try {
+    if (tipo === "dano") {
+      if (!expressaoDano) { res.status(400).json({ error: "expressaoDano required for tipo=dano" }); return; }
+      rollResult = rolarDano(expressaoDano);
+    } else {
+      const base = typeof qtdDadosBase === "number" ? qtdDadosBase : 1;
+      const bonus = typeof bonusPericia === "number" ? bonusPericia : 0;
+      const mods = typeof modificadoresO === "number" ? modificadoresO : 0;
+      rollResult = rolarPericia(base, bonus, mods);
+    }
+  } catch (e: any) {
+    res.status(400).json({ error: e.message }); return;
+  }
+
+  const [rolagem] = await db
+    .insert(campanhaRolagensTable)
+    .values({
+      campanhaId: req.params.id,
+      userId,
+      rolandoComo: rolandoComo ?? null,
+      label: label ?? null,
+      tipo: tipo ?? "pericia",
+      atributo: atributo ?? null,
+      qtdDadosBase: typeof qtdDadosBase === "number" ? qtdDadosBase : 1,
+      bonusPericia: typeof bonusPericia === "number" ? bonusPericia : 0,
+      modificadoresO: typeof modificadoresO === "number" ? modificadoresO : 0,
+      expressaoDano: expressaoDano ?? null,
+      dadosRolados: rollResult.dados,
+      resultadoBase: rollResult.resultadoBase,
+      resultadoFinal: rollResult.resultadoFinal,
+      sucessoAutomatico: rollResult.sucessoAutomatico ?? false,
+      modoPenalidade: rollResult.modoPenalidade ?? false,
+    })
+    .returning();
+
+  const [user] = await db.select({ firstName: usersTable.firstName, email: usersTable.email })
+    .from(usersTable).where(eq(usersTable.id, userId));
+
+  res.status(201).json({ ...rolagem, user });
+});
+
+router.get("/campanhas/:id/rolagens", async (req: Request, res: Response) => {
+  if (!isMembro(req)) { res.status(401).json({ error: "Unauthorized" }); return; }
+  const userId = req.user!.id;
+
+  const membership = await getMembroship(req.params.id, userId);
+  if (!membership) { res.status(403).json({ error: "Forbidden" }); return; }
+
+  const rows = await db
+    .select({
+      id: campanhaRolagensTable.id,
+      campanhaId: campanhaRolagensTable.campanhaId,
+      userId: campanhaRolagensTable.userId,
+      rolandoComo: campanhaRolagensTable.rolandoComo,
+      label: campanhaRolagensTable.label,
+      tipo: campanhaRolagensTable.tipo,
+      atributo: campanhaRolagensTable.atributo,
+      qtdDadosBase: campanhaRolagensTable.qtdDadosBase,
+      bonusPericia: campanhaRolagensTable.bonusPericia,
+      modificadoresO: campanhaRolagensTable.modificadoresO,
+      expressaoDano: campanhaRolagensTable.expressaoDano,
+      dadosRolados: campanhaRolagensTable.dadosRolados,
+      resultadoBase: campanhaRolagensTable.resultadoBase,
+      resultadoFinal: campanhaRolagensTable.resultadoFinal,
+      sucessoAutomatico: campanhaRolagensTable.sucessoAutomatico,
+      modoPenalidade: campanhaRolagensTable.modoPenalidade,
+      createdAt: campanhaRolagensTable.createdAt,
+      userFirstName: usersTable.firstName,
+      userEmail: usersTable.email,
+    })
+    .from(campanhaRolagensTable)
+    .innerJoin(usersTable, eq(campanhaRolagensTable.userId, usersTable.id))
+    .where(eq(campanhaRolagensTable.campanhaId, req.params.id))
+    .orderBy(desc(campanhaRolagensTable.createdAt))
+    .limit(100);
+
+  res.json(rows);
 });
 
 router.delete("/campanhas/:id/membros/:userId", async (req: Request, res: Response) => {

@@ -23,9 +23,10 @@ import {
 } from "@/components/ui/dialog";
 import {
   Crown, Users, Copy, ArrowLeft, Trash2,
-  LogOut, UserCheck, Loader2, Pencil, Swords, Check,
+  LogOut, UserCheck, Loader2, Pencil, Swords, Check, Dice5,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import RolagensTab from "@/components/RolagensTab";
 
 function memberName(m: { firstName?: string | null; lastName?: string | null; email: string }) {
   if (m.firstName || m.lastName) return [m.firstName, m.lastName].filter(Boolean).join(" ");
@@ -159,6 +160,8 @@ function EditDialog({
   );
 }
 
+type Tab = "membros" | "rolagens";
+
 export default function CampanhaDetail() {
   const [, params] = useRoute("/campanhas/:id");
   const id = params?.id ?? "";
@@ -169,6 +172,7 @@ export default function CampanhaDetail() {
   const { toast } = useToast();
   const [editOpen, setEditOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState<Tab>("rolagens");
 
   if (isLoading) {
     return (
@@ -209,8 +213,13 @@ export default function CampanhaDetail() {
     }
   };
 
+  const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
+    { id: "rolagens", label: "Rolagens", icon: <Dice5 className="w-3.5 h-3.5" /> },
+    { id: "membros", label: "Membros", icon: <Users className="w-3.5 h-3.5" /> },
+  ];
+
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-5xl">
       <button
         onClick={() => setLocation("/campanhas")}
         className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 font-display text-sm tracking-widest"
@@ -219,7 +228,7 @@ export default function CampanhaDetail() {
         OPERAÇÕES
       </button>
 
-      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8 pb-6 border-b border-border/50">
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6 pb-6 border-b border-border/50">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-1">
             <Swords className="w-5 h-5 text-primary shrink-0" />
@@ -236,6 +245,15 @@ export default function CampanhaDetail() {
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 border border-border/40 rounded-sm px-3 py-1.5 bg-secondary/20">
+            <code className="font-mono text-sm tracking-[0.3em] text-foreground">
+              {campanha.codigoConvite ?? "------"}
+            </code>
+            <Button size="icon" variant="ghost" className="h-5 w-5 text-muted-foreground hover:text-foreground" onClick={handleCopyCode}>
+              {copied ? <Check className="w-3 h-3 text-green-400" /> : <Copy className="w-3 h-3" />}
+            </Button>
+          </div>
+
           {amMestre && (
             <Button variant="outline" size="sm" onClick={handleDelete} disabled={deleteMut.isPending}
               className="border-destructive/40 text-destructive hover:bg-destructive/10 font-display tracking-wide text-xs">
@@ -246,10 +264,30 @@ export default function CampanhaDetail() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
-          <section>
-            <div className="flex items-center gap-2 mb-4">
+      <div className="flex gap-0.5 mb-6 border-b border-border/40">
+        {TABS.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex items-center gap-1.5 px-4 py-2.5 font-display text-xs tracking-widest uppercase transition-all border-b-2 -mb-px ${activeTab === tab.id
+              ? "border-primary text-foreground"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {tab.icon}
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === "rolagens" && (
+        <RolagensTab campanhaId={campanha.id} />
+      )}
+
+      {activeTab === "membros" && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-4">
+            <div className="flex items-center gap-2 mb-2">
               <Users className="w-4 h-4 text-muted-foreground" />
               <h2 className="font-display text-sm tracking-widest text-muted-foreground uppercase">
                 Membros ({campanha.membros.length})
@@ -277,67 +315,35 @@ export default function CampanhaDetail() {
                 />
               ))}
             </div>
-
-            {jogadores.length === 0 && !amMestre && (
-              <p className="text-center text-muted-foreground/60 text-sm font-sans py-4">
-                Nenhum jogador ainda. Compartilhe o código de acesso para convidar.
-              </p>
-            )}
-          </section>
-
-          <section className="bg-muted/10 border border-border/40 rounded-sm p-4">
-            <p className="text-[10px] font-display uppercase tracking-widest text-muted-foreground mb-1">Em desenvolvimento</p>
-            <div className="flex flex-wrap gap-2">
-              {["Chat de Mesa", "Rolagem de Dados", "Mapa Tático", "Anotações"].map(label => (
-                <span key={label} className="text-xs font-mono text-muted-foreground/50 border border-border/30 rounded-sm px-2 py-1">
-                  {label}
-                </span>
-              ))}
-            </div>
-          </section>
-        </div>
-
-        <div className="space-y-4">
-          <div className="border border-border/50 rounded-sm bg-card/30 p-4">
-            <p className="text-[10px] font-display uppercase tracking-widest text-muted-foreground mb-3">Código de acesso</p>
-            <div className="flex items-center gap-2">
-              <code className="flex-1 font-mono text-2xl tracking-[0.4em] text-foreground text-center py-2 bg-secondary/20 rounded-sm border border-border/40">
-                {campanha.codigoConvite ?? "------"}
-              </code>
-              <Button size="icon" variant="outline" className="border-border/50 shrink-0" onClick={handleCopyCode} title="Copiar código">
-                {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
-              </Button>
-            </div>
-            <p className="text-xs text-muted-foreground/60 font-sans mt-2 text-center">
-              Compartilhe com os jogadores para ingressarem
-            </p>
           </div>
 
-          <div className="border border-border/50 rounded-sm bg-card/30 p-4 space-y-2">
-            <p className="text-[10px] font-display uppercase tracking-widest text-muted-foreground mb-2">Informações</p>
-            <div className="space-y-1.5 text-xs font-mono text-muted-foreground">
-              <div className="flex justify-between">
-                <span>Criado em</span>
-                <span>{new Date(campanha.createdAt).toLocaleDateString("pt-BR")}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Mestre</span>
-                <span className="text-yellow-400">{mestre ? memberName(mestre) : "—"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Jogadores</span>
-                <span>{jogadores.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Seu papel</span>
-                <span className={amMestre ? "text-yellow-400" : "text-foreground"}>
-                  {amMestre ? "Mestre" : "Jogador"}
-                </span>
+          <div className="space-y-4">
+            <div className="border border-border/50 rounded-sm bg-card/30 p-4 space-y-2">
+              <p className="text-[10px] font-display uppercase tracking-widest text-muted-foreground mb-2">Informações</p>
+              <div className="space-y-1.5 text-xs font-mono text-muted-foreground">
+                <div className="flex justify-between">
+                  <span>Criado em</span>
+                  <span>{new Date(campanha.createdAt).toLocaleDateString("pt-BR")}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Mestre</span>
+                  <span className="text-yellow-400">{mestre ? memberName(mestre) : "—"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Jogadores</span>
+                  <span>{jogadores.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Seu papel</span>
+                  <span className={amMestre ? "text-yellow-400" : "text-foreground"}>
+                    {amMestre ? "Mestre" : "Jogador"}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {amMestre && (
         <EditDialog

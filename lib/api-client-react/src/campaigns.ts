@@ -41,6 +41,45 @@ export interface CreateCampanhaBody {
   descricao?: string;
 }
 
+export interface CampanhaRolagem {
+  id: string;
+  campanhaId: string;
+  userId: string;
+  rolandoComo: string | null;
+  label: string | null;
+  tipo: string;
+  atributo: string | null;
+  qtdDadosBase: number;
+  bonusPericia: number;
+  modificadoresO: number;
+  expressaoDano: string | null;
+  dadosRolados: number[];
+  resultadoBase: number;
+  resultadoFinal: number;
+  sucessoAutomatico: boolean;
+  modoPenalidade: boolean;
+  createdAt: string;
+  userFirstName: string | null;
+  userEmail: string;
+}
+
+export interface RolarPericiaBody {
+  tipo: "pericia";
+  rolandoComo?: string;
+  label?: string;
+  atributo?: string;
+  qtdDadosBase: number;
+  bonusPericia: number;
+  modificadoresO: number;
+}
+
+export interface RolarDanoBody {
+  tipo: "dano";
+  rolandoComo?: string;
+  label?: string;
+  expressaoDano: string;
+}
+
 export const CAMPANHAS_KEY = ["campanhas"] as const;
 export const campanhaKey = (id: string) => ["campanhas", id] as const;
 
@@ -117,6 +156,28 @@ export function useRemoverMembro(campanhaId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: CAMPANHAS_KEY });
       qc.invalidateQueries({ queryKey: campanhaKey(campanhaId) });
+    },
+  });
+}
+
+export const rolagensKey = (campanhaId: string) => ["campanhas", campanhaId, "rolagens"] as const;
+
+export function useListRolagens(campanhaId: string) {
+  return useQuery<CampanhaRolagem[]>({
+    queryKey: rolagensKey(campanhaId),
+    queryFn: () => apiFetch(`/api/campanhas/${campanhaId}/rolagens`),
+    enabled: !!campanhaId,
+    refetchInterval: 5000,
+  });
+}
+
+export function useRolar(campanhaId: string) {
+  const qc = useQueryClient();
+  return useMutation<CampanhaRolagem, Error, RolarPericiaBody | RolarDanoBody>({
+    mutationFn: (data) =>
+      apiFetch(`/api/campanhas/${campanhaId}/rolagens`, { method: "POST", body: JSON.stringify(data) }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: rolagensKey(campanhaId) });
     },
   });
 }
