@@ -1,0 +1,645 @@
+[
+    {
+        "nome": "Acadêmico",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você era um pesquisador ou professor universitário. De forma proposital ou não, seus estudos tocaram em assuntos misteriosos.",
+        "pericias_treinadas": [
+            "Ciências",
+            "Investigação"
+        ],
+        "poder_origem": {
+            "nome": "Saber é Poder",
+            "efeito": "Quando faz um teste usando Intelecto, você pode gastar 2 PE para receber +5 nesse teste."
+        },
+        "id": "e5b0a976-9f59-4939-a4ee-0302a690025c"
+    },
+    {
+        "nome": "Agente de Saúde",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você era um profissional da saúde, como um enfermeiro, farmacêutico, médico, psicólogo ou socorrista.",
+        "pericias_treinadas": [
+            "Intuição",
+            "Medicina"
+        ],
+        "poder_origem": {
+            "nome": "Técnica Medicinal",
+            "efeito": "Sempre que cura um personagem, você adiciona seu Intelecto no total de PV curados."
+        },
+        "id": "4d4c7d3a-96e6-43c7-8253-426930a5ed9e"
+    },
+    {
+        "nome": "Amnésico",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você perdeu a maior parte da memória. Sabe apenas o próprio nome, ou nem isso.",
+        "pericias_treinadas": [
+            "Duas à escolha do mestre"
+        ],
+        "poder_origem": {
+            "nome": "Vislumbres do Passado",
+            "efeito": "Uma vez por sessão, você pode fazer um teste de Intelecto (DT 10) para reconhecer pessoas ou lugares familiares. Se passar, recebe 1d4 PE temporários e uma informação útil."
+        },
+        "id": "7ab4b673-0132-4fa3-8d83-bfaefda22557"
+    },
+    {
+        "nome": "Artista",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você era um ator, músico, escritor, dançarino, influenciador…",
+        "pericias_treinadas": [
+            "Artes",
+            "Enganação"
+        ],
+        "poder_origem": {
+            "nome": "Magnum Opus",
+            "efeito": "Uma vez por missão, pode determinar que uma pessoa envolvida em uma cena de interação o reconheça. Você recebe +5 em testes de Presença e de perícias baseadas em Presença contra aquela pessoa."
+        },
+        "id": "bb13dad7-6070-43a3-b7c0-6eb9df33374a"
+    },
+    {
+        "nome": "Atleta",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você competia em um esporte individual ou coletivo, como natação ou futebol.",
+        "pericias_treinadas": [
+            "Acrobacia",
+            "Atletismo"
+        ],
+        "poder_origem": {
+            "nome": "110%",
+            "efeito": "Quando faz um teste de perícia usando Força ou Agilidade (exceto Luta e Pontaria) você pode gastar 2 PE para receber +5 nesse teste."
+        },
+        "id": "49cf94d3-d6fc-43ae-b0be-4398f027bf99"
+    },
+    {
+        "nome": "Chef",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você é um cozinheiro amador ou profissional.",
+        "pericias_treinadas": [
+            "Fortitude",
+            "Profissão (cozinheiro)"
+        ],
+        "poder_origem": {
+            "nome": "Ingrediente Secreto",
+            "efeito": "Em cenas de interlúdio, você pode fazer a ação alimentar-se para cozinhar um prato especial. Você e todos que comerem recebem o benefício de dois pratos."
+        },
+        "id": "f57744ae-01be-411d-bda9-8306b97a449a"
+    },
+    {
+        "nome": "Criminoso",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você vivia uma vida fora da lei, seja como mero batedor de carteiras, seja como membro de uma facção criminosa.",
+        "pericias_treinadas": [
+            "Crime",
+            "Furtividade"
+        ],
+        "poder_origem": {
+            "nome": "O Crime Compensa",
+            "efeito": "No final de uma missão, você pode escolher um item encontrado na missão (exceto itens amaldiçoados). Em sua próxima missão, você pode incluir esse item em seu inventário sem que ele conte em seu limite de itens por patente."
+        },
+        "id": "cbcb5b2b-1c17-460e-8ee6-7336ee1d32d5"
+    },
+    {
+        "nome": "Cultista Arrependido",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você fez parte de um culto paranormal. Algo abriu seus olhos e agora você luta pelo lado certo.",
+        "pericias_treinadas": [
+            "Ocultismo",
+            "Religião"
+        ],
+        "poder_origem": {
+            "nome": "Traços do Outro Lado",
+            "efeito": "Você recebe um poder paranormal à sua escolha, mas começa o jogo com metade da Sanidade inicial."
+        },
+        "id": "4bfc0d9a-bd45-4566-8eea-20aebfeff7bd"
+    },
+    {
+        "nome": "Desgarrado",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você vivia isolado da sociedade, em florestas, montanhas ou áreas rurais remotas.",
+        "pericias_treinadas": [
+            "Fortitude",
+            "Sobrevivência"
+        ],
+        "poder_origem": {
+            "nome": "Calejado",
+            "efeito": "Você recebe +1 PV para cada 5% de NEX."
+        },
+        "id": "ab8b4b51-0ebe-4c5c-a60c-1b9b70be61fa"
+    },
+    {
+        "nome": "Engenheiro",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você coloca a mão na massa, seja como engenheiro profissional, seja como inventor de garagem.",
+        "pericias_treinadas": [
+            "Profissão",
+            "Tecnologia"
+        ],
+        "poder_origem": {
+            "nome": "Ferramenta Favorita",
+            "efeito": "Um item a sua escolha (exceto armas) conta como uma categoria abaixo para você."
+        },
+        "id": "859c54ae-9caf-4acb-a72a-4e1ce3d47995"
+    },
+    {
+        "nome": "Executivo",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você possuía um trabalho de escritório em uma grande empresa, banco ou corporação.",
+        "pericias_treinadas": [
+            "Diplomacia",
+            "Profissão"
+        ],
+        "poder_origem": {
+            "nome": "Processo Otimizado",
+            "efeito": "Sempre que faz um teste de perícia durante uma cena de investigação, você pode gastar 2 PE para receber +O nesse teste."
+        },
+        "id": "e32bfe41-be84-4fe4-a4f2-0766bbe9d030"
+    },
+    {
+        "nome": "Investigador",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você era um investigador do governo ou privado.",
+        "pericias_treinadas": [
+            "Investigação",
+            "Percepção"
+        ],
+        "poder_origem": {
+            "nome": "Faro para Pistas",
+            "efeito": "Uma vez por cena, quando fizer um teste para procurar pistas, você pode gastar 1 PE para receber +5 nesse teste."
+        },
+        "id": "9b6c3fc1-01a6-47b6-bf99-15227557dbe7"
+    },
+    {
+        "nome": "Lutador",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você pratica uma arte marcial ou esporte de luta.",
+        "pericias_treinadas": [
+            "Luta",
+            "Reflexos"
+        ],
+        "poder_origem": {
+            "nome": "Mão Pesada",
+            "efeito": "Você recebe +2 em rolagens de dano com ataques corpo a corpo."
+        },
+        "id": "beff2fd6-b235-4cb6-bb70-796ce4847202"
+    },
+    {
+        "nome": "Magnata",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você possui muito dinheiro ou patrimônio.",
+        "pericias_treinadas": [
+            "Diplomacia",
+            "Pilotagem"
+        ],
+        "poder_origem": {
+            "nome": "Patrocinador da Ordem",
+            "efeito": "Seu limite de crédito é sempre considerado um acima do atual."
+        },
+        "id": "0f323827-4f24-48ca-b33f-98c363574b73"
+    },
+    {
+        "nome": "Mercenário",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você é um soldado de aluguel.",
+        "pericias_treinadas": [
+            "Iniciativa",
+            "Intimidação"
+        ],
+        "poder_origem": {
+            "nome": "Posição de Combate",
+            "efeito": "No primeiro turno de cada cena de ação, você pode gastar 2 PE para receber uma ação de movimento adicional."
+        },
+        "id": "84ec95b0-3d99-40b0-953d-7520aa619807"
+    },
+    {
+        "nome": "Militar",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você serviu em uma força militar e treinou com armas de fogo.",
+        "pericias_treinadas": [
+            "Pontaria",
+            "Tática"
+        ],
+        "poder_origem": {
+            "nome": "Para Bellum",
+            "efeito": "Você recebe +2 em rolagens de dano com armas de fogo."
+        },
+        "id": "6fabcd26-b3ac-4689-bcf5-2357f3a09d8f"
+    },
+    {
+        "nome": "Operário",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Pedreiro, industriário, operador de máquinas… Você passou uma parte de sua vida em um emprego braçal.",
+        "pericias_treinadas": [
+            "Fortitude",
+            "Profissão"
+        ],
+        "poder_origem": {
+            "nome": "Ferramenta de Trabalho",
+            "efeito": "Escolha uma arma simples ou tática que poderia ser usada como ferramenta. Você é treinado com a arma e recebe +1 em testes de ataque, dano e margem de ameaça com ela."
+        },
+        "id": "d166ede6-28a3-4091-ab0b-4017e4cbdd73"
+    },
+    {
+        "nome": "Policial",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você fez parte de uma força de segurança pública.",
+        "pericias_treinadas": [
+            "Percepção",
+            "Pontaria"
+        ],
+        "poder_origem": {
+            "nome": "Patrulha",
+            "efeito": "Você recebe +2 em Defesa."
+        },
+        "id": "21ce54f0-f17c-4297-8bf9-9ce603718ed2"
+    },
+    {
+        "nome": "Religioso",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você é devoto ou sacerdote de uma fé.",
+        "pericias_treinadas": [
+            "Religião",
+            "Vontade"
+        ],
+        "poder_origem": {
+            "nome": "Acalentar",
+            "efeito": "Você recebe +5 em testes de Religião para acalmar. Quando acalma uma pessoa, ela recebe 1d6 + Presença de Sanidade."
+        },
+        "id": "dd254439-25d0-4a45-be50-d1a361b39b37"
+    },
+    {
+        "nome": "Servidor Público",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você possuía carreira em um órgão do governo.",
+        "pericias_treinadas": [
+            "Intuição",
+            "Vontade"
+        ],
+        "poder_origem": {
+            "nome": "Espírito Cívico",
+            "efeito": "Sempre que faz um teste para ajudar, você pode gastar 1 PE para aumentar o bônus concedido de +2 para +5."
+        },
+        "id": "9eaa067e-7b52-4636-aca4-b5a3fb827ed4"
+    },
+    {
+        "nome": "Teórico da Conspiração",
+        "fonte": "Livro Base v1.3",
+        "descricao": "A humanidade nunca pisou na lua. Reptilianos ocupam cargos públicos. Você investigou esses assuntos.",
+        "pericias_treinadas": [
+            "Investigação",
+            "Ocultismo"
+        ],
+        "poder_origem": {
+            "nome": "Eu Já Sabia",
+            "efeito": "Você recebe +2 em Defesa e testes de resistência contra criaturas."
+        },
+        "id": "63d5d242-ad74-4212-9ac2-66e801ff1573"
+    },
+    {
+        "nome": "T.I.",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você era um especialista em tecnologia da informação.",
+        "pericias_treinadas": [
+            "Investigação",
+            "Tecnologia"
+        ],
+        "poder_origem": {
+            "nome": "Motor de Busca",
+            "efeito": "Sempre que tiver acesso a internet, você pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Tecnologia."
+        },
+        "id": "b178bf31-cb01-4aa4-aaee-7ea5b16e9e4d"
+    },
+    {
+        "nome": "Trabalhador Rural",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você trabalhava no campo ou em áreas isoladas.",
+        "pericias_treinadas": [
+            "Adestramento",
+            "Sobrevivência"
+        ],
+        "poder_origem": {
+            "nome": "Desbravador",
+            "efeito": "Quando faz um teste de Adestramento ou Sobrevivência, você pode gastar 2 PE para receber +5 nesse teste. Além disso, não sofre penalidade em deslocamento por terreno difícil."
+        },
+        "id": "b8c2e165-3841-42bc-883f-41e78ab5b2e2"
+    },
+    {
+        "nome": "Trambiqueiro",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você vivia de pequenos golpes, jogatina ilegal e falcatruas.",
+        "pericias_treinadas": [
+            "Crime",
+            "Enganação"
+        ],
+        "poder_origem": {
+            "nome": "Impostor",
+            "efeito": "Uma vez por cena, você pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Enganação."
+        },
+        "id": "d4060f05-40dc-4a72-8ba1-2521e3bc4da5"
+    },
+    {
+        "nome": "Universitário",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Você era aluno de uma faculdade.",
+        "pericias_treinadas": [
+            "Atualidades",
+            "Investigação"
+        ],
+        "poder_origem": {
+            "nome": "Dedicação",
+            "efeito": "Você recebe +1 PE, e mais 1 PE adicional a cada NEX ímpar. Além disso, seu limite de PE por turno aumenta em 1."
+        },
+        "id": "2725ec09-3ab4-423d-af8b-952e6ae9614f"
+    },
+    {
+        "nome": "Vítima",
+        "fonte": "Livro Base v1.3",
+        "descricao": "Em algum momento de sua vida você encontrou o paranormal.",
+        "pericias_treinadas": [
+            "Reflexos",
+            "Vontade"
+        ],
+        "poder_origem": {
+            "nome": "Cicatrizes Psicológicas",
+            "efeito": "Você recebe +1 de Sanidade para cada 5% de NEX."
+        },
+        "id": "c674c91b-90bd-4497-b0aa-f4ccbfd87a84"
+    },
+    {
+        "nome": "Amigo dos Animais",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Você desenvolveu uma conexão muito forte com os animais.",
+        "pericias_treinadas": [
+            "Adestramento",
+            "Percepção"
+        ],
+        "poder_origem": {
+            "nome": "Companheiro Animal",
+            "efeito": "Você possui um animal de estimação que o ajuda em missões, fornecendo bônus e ações de ajuda."
+        },
+        "id": "050d31cd-7053-4f88-a592-5a0d99b2e36f"
+    },
+    {
+        "nome": "Astronauta",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Como um astronauta, você se acostumou à pressão de ser responsável pela vida de seus colegas.",
+        "pericias_treinadas": [
+            "Ciências",
+            "Fortitude"
+        ],
+        "poder_origem": {
+            "nome": "Acostumado ao Extremo",
+            "efeito": "Gaste 1 PE para reduzir dano de fogo, frio ou mental em 5. Custo aumenta a cada uso na cena."
+        },
+        "id": "c67074f9-fddc-4d23-9fbb-4747c0c3459b"
+    },
+    {
+        "nome": "Chef do Outro Lado",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Você cozinha partes de criaturas do Outro Lado.",
+        "pericias_treinadas": [
+            "Ocultismo",
+            "Profissão (cozinheiro)"
+        ],
+        "poder_origem": {
+            "nome": "Fome do Outro Lado",
+            "efeito": "Pratos que dão RD 10 contra o elemento da criatura, custando 1 Sanidade permanente por refeição."
+        },
+        "id": "f64f39e2-3b70-408a-a98c-3a3bcbbef04a"
+    },
+    {
+        "nome": "Colegial",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Você era um aluno do colegial focado em estudos e amizades.",
+        "pericias_treinadas": [
+            "Atualidades",
+            "Tecnologia"
+        ],
+        "poder_origem": {
+            "nome": "Poder da Amizade",
+            "efeito": "+2 em testes de perícia se estiver perto do melhor amigo escolhido."
+        },
+        "id": "d1b24f11-07b5-4f3b-86dc-b536b0aed753"
+    },
+    {
+        "nome": "Cosplayer",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Entusiasta de cultura pop e fantasias.",
+        "pericias_treinadas": [
+            "Artes",
+            "Vontade"
+        ],
+        "poder_origem": {
+            "nome": "Não é fantasia, é cosplay!",
+            "efeito": "Usa Artes para Diplomacia/Enganação e +5 em resistência contra medo caracterizado."
+        },
+        "id": "3a310c89-d75d-4f35-9f89-96513f51a4af"
+    },
+    {
+        "nome": "Diplomata",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Especialista em negociações e relações interpessoais.",
+        "pericias_treinadas": [
+            "Atualidades",
+            "Diplomacia"
+        ],
+        "poder_origem": {
+            "nome": "Conexões",
+            "efeito": "Você pode gastar 2 PE para receber +5 em um teste de Diplomacia ou para descobrir uma informação sobre um NPC."
+        },
+        "id": "15530bc7-d67d-493d-82b8-eae5e9cb3aa6"
+    },
+    {
+        "nome": "Explorador",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Acostumado a sobreviver em ambientes hostis.",
+        "pericias_treinadas": [
+            "Fortitude",
+            "Sobrevivência"
+        ],
+        "poder_origem": {
+            "nome": "Manual do Sobrevivente",
+            "efeito": "Pode gastar ação de interlúdio para preparar rações que recuperam +1d6 PV ou Sanidade."
+        },
+        "id": "17582e25-4192-45c5-901b-896780796b14"
+    },
+    {
+        "nome": "Experimento",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Cobaia de experimentos físicos ou paranormais.",
+        "pericias_treinadas": [
+            "Atletismo",
+            "Fortitude"
+        ],
+        "poder_origem": {
+            "nome": "Mutação",
+            "efeito": "RD 2 e +2 em perícia de For/Agi/Vig, mas -O em Diplomacia."
+        },
+        "id": "618afe58-0215-4c40-99fa-076ef5d2c65b"
+    },
+    {
+        "nome": "Fanático por Criaturas",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Obcecado por monstros e lendas urbanas.",
+        "pericias_treinadas": [
+            "Investigação",
+            "Ocultismo"
+        ],
+        "poder_origem": {
+            "nome": "Conhecimento Oculto",
+            "efeito": "+5 em Ocultismo para identificar criaturas e enigmas de medo."
+        },
+        "id": "caa99e90-52c3-4ab4-8997-f854bc37e4f7"
+    },
+    {
+        "nome": "Fotógrafo",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Especialista em capturar momentos através de lentes.",
+        "pericias_treinadas": [
+            "Artes",
+            "Percepção"
+        ],
+        "poder_origem": {
+            "nome": "Através da Lente",
+            "efeito": "Você pode gastar 1 PE para receber +5 em um teste de Percepção para observar detalhes ou para registrar uma cena."
+        },
+        "id": "0353155b-2cd6-436e-bce5-df33326184a4"
+    },
+    {
+        "nome": "Inventor Paranormal",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Cria soluções inovadoras usando o desconhecido.",
+        "pericias_treinadas": [
+            "Profissão (engenheiro)",
+            "Vontade"
+        ],
+        "poder_origem": {
+            "nome": "Invenção Paranormal",
+            "efeito": "Possui um invento que permite executar um ritual de 1º círculo escolhido."
+        },
+        "id": "a35236cd-1ac6-43e8-9a31-8797bfe074a0"
+    },
+    {
+        "nome": "Jovem Místico",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Acredita em horóscopo, cristais e energias.",
+        "pericias_treinadas": [
+            "Ocultismo",
+            "Religião"
+        ],
+        "poder_origem": {
+            "nome": "A Culpa é das Estrelas",
+            "efeito": "Uma vez por cena, pode gastar 2 PE para rolar novamente um teste de perícia baseado em sorte ou intuição."
+        },
+        "id": "47cd7fc5-9af8-4c0a-9510-4cc9c8542638"
+    },
+    {
+        "nome": "Legista do Turno da Noite",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Trabalha no necrotério lidando com vítimas do paranormal.",
+        "pericias_treinadas": [
+            "Ciências",
+            "Medicina"
+        ],
+        "poder_origem": {
+            "nome": "Luto Habitual",
+            "efeito": "Você recebe +5 em testes de Medicina para necropsia e +2 em testes de resistência contra efeitos de medo de cadáveres."
+        },
+        "id": "36d7dd6d-53d7-423e-b08d-0e662736ca67"
+    },
+    {
+        "nome": "Mateiro",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Conhece áreas rurais e selvagens.",
+        "pericias_treinadas": [
+            "Percepção",
+            "Sobrevivência"
+        ],
+        "poder_origem": {
+            "nome": "Mapa Celeste",
+            "efeito": "Desde que possa ver o céu, você nunca se perde e recebe +5 em testes de Sobrevivência para orientação."
+        },
+        "id": "9082cb2a-5e51-4390-a08f-be95e3782351"
+    },
+    {
+        "nome": "Mergulhador",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Explorador subaquático de mistérios submersos.",
+        "pericias_treinadas": [
+            "Atletismo",
+            "Fortitude"
+        ],
+        "poder_origem": {
+            "nome": "Fôlego de Nadador",
+            "efeito": "Você pode prender a respiração pelo dobro do tempo e recebe +5 em testes de Atletismo para natação."
+        },
+        "id": "994f2365-f95b-4f93-b7c4-044d7f4cad20"
+    },
+    {
+        "nome": "Motorista",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Especialista em conduzir veículos em situações de risco.",
+        "pericias_treinadas": [
+            "Pilotagem",
+            "Reflexos"
+        ],
+        "poder_origem": {
+            "nome": "Mãos no Volante",
+            "efeito": "Você recebe +5 em testes de Pilotagem e pode gastar 1 PE para realizar uma manobra de veículo como ação de movimento."
+        },
+        "id": "194d505e-8d79-4e3a-ab4b-1fe8885d7dfa"
+    },
+    {
+        "nome": "Nerd Entusiasta",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Especialista em ciências e tecnologia com foco em cultura nerd.",
+        "pericias_treinadas": [
+            "Ciências",
+            "Tecnologia"
+        ],
+        "poder_origem": {
+            "nome": "O Inteligentão",
+            "efeito": "Você pode gastar 2 PE para receber +5 em um teste de Intelecto ou de uma perícia baseada em Intelecto."
+        },
+        "id": "f6ebebe2-5c18-4806-ae4e-d0df7da3fd2e"
+    },
+    {
+        "nome": "Profetizado",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Sua vida foi marcada por uma profecia ou destino traçado.",
+        "pericias_treinadas": [
+            "Vontade",
+            "mais uma à escolha"
+        ],
+        "poder_origem": {
+            "nome": "Luta ou Fuga",
+            "efeito": "Recebe PE temporários quando em situações de extremo perigo que confirmam sua profecia."
+        },
+        "id": "bc894638-e4e6-4ffd-af91-2ad25fcf0e95"
+    },
+    {
+        "nome": "Psicólogo",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Especialista em questões mentais humanas.",
+        "pericias_treinadas": [
+            "Intuição",
+            "Profissão (psicólogo)"
+        ],
+        "poder_origem": {
+            "nome": "Terapia",
+            "efeito": "Usa Profissão (psicólogo) como Diplomacia e ajuda aliados contra dano mental."
+        },
+        "id": "8a2085c6-90e2-45ea-88a1-f9014eca7154"
+    },
+    {
+        "nome": "Repórter Investigativo",
+        "fonte": "Sobrevivendo ao Horror v1.2",
+        "descricao": "Busca a verdade por trás das notícias.",
+        "pericias_treinadas": [
+            "Atualidades",
+            "Investigação"
+        ],
+        "poder_origem": {
+            "nome": "Encontrar a Verdade",
+            "efeito": "Você recebe +5 em testes de Investigação para obter informações e pode gastar 1 PE para localizar uma fonte confiável."
+        },
+        "id": "f988e0b5-0399-4c91-a220-85bf912f879c"
+    }
+]

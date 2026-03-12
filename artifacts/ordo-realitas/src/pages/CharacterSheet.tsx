@@ -3,9 +3,10 @@ import { useRoute, useLocation } from "wouter";
 import { useState } from "react";
 import { useUpdateCharacterMut } from "@/hooks/use-api-mutations";
 import CharacterPericiasTab from "@/components/CharacterPericiasTab";
+import CharacterHabilidadesTab from "@/components/CharacterHabilidadesTab";
 import {
   ArrowLeft, Shield, Skull, BookOpen, Backpack, ScrollText,
-  Pencil,
+  Pencil, Zap,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 
-type Tab = "pericias" | "rituais" | "inventario" | "historia";
+type Tab = "pericias" | "habilidades" | "rituais" | "inventario" | "historia";
 
 const ATTR_COLOR: Record<string, string> = {
   FOR: "border-red-700/60 bg-red-900/20 text-red-300",
@@ -153,6 +154,7 @@ export default function CharacterSheet() {
 
   const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: "pericias", label: "Perícias", icon: <BookOpen className="w-3.5 h-3.5" /> },
+    { id: "habilidades", label: "Habilidades", icon: <Zap className="w-3.5 h-3.5" /> },
     { id: "rituais", label: "Rituais", icon: <ScrollText className="w-3.5 h-3.5" /> },
     { id: "inventario", label: "Inventário", icon: <Backpack className="w-3.5 h-3.5" /> },
     { id: "historia", label: "Histórico", icon: <Skull className="w-3.5 h-3.5" /> },
@@ -299,6 +301,10 @@ export default function CharacterSheet() {
               pericias={(char.pericias as string[]) ?? []}
               atributos={atributos}
             />
+          )}
+
+          {activeTab === "habilidades" && (
+            <CharacterHabilidadesTab charId={char.id} isOwner={isOwner} />
           )}
 
           {activeTab === "rituais" && (
