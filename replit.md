@@ -74,11 +74,19 @@ Manages all static game data:
 - `users` — Auth users (`password_hash`, `google_id`, `role`)
 - `sessions` — Session storage
 - `personagens` — Character sheets
-- `classes` — RPG classes
+- `classes` — RPG classes with `habilidadesBase` (JSONB progression table)
+- `trilhas` — Class advancement paths with per-NEX `habilidades` (JSONB)
 - `origens` — Character origins/backgrounds
 - `pericias` — Skills
-- `rituais` — Paranormal rituals
+- `rituais` — Paranormal rituals (`descricao`=efeito, `discente`, `verdadeiro`, `fonte`)
 - `itens` — Equipment and items
+
+### Seeded Data
+- 4 classes: Combatente, Especialista, Ocultista, Sobrevivente (with full NEX progression)
+- 27 trilhas (8 Combatente, 8 Especialista, 8 Ocultista, 3 Sobrevivente)
+- 46 origens (26 Livro Base + 20 Sobrevivendo ao Horror)
+- 28 perícias
+- **160 rituais** (Sangue:38, Morte:37, Conhecimento:34, Energia:36, Medo:14, Variável:1) from `lib/db/src/data/rituais.json`
 
 ### Game System (Ordem Paranormal)
 - **Attributes**: Forca, Agilidade, Intelecto, Vigor, Presença (1-5)
@@ -86,7 +94,8 @@ Manages all static game data:
 - **NEX**: 0-99% paranormal exposure level
 - **Nível**: 1-20 mundane proficiency
 - **Patentes**: Recruta, Operador, Agente Especial, Agente de Elite
-- **Ritual Elements**: Sangue, Morte, Conhecimento, Energia, Medo
+- **Ritual Elements**: Sangue, Morte, Conhecimento, Energia, Medo, Variável
+- **Ritual Circles**: 1º–4º (32/46/40/42 rituais respectively)
 
 ## Visual Identity
 

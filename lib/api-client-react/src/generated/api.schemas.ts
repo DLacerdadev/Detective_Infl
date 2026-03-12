@@ -219,6 +219,7 @@ export const RitualElemento = {
   Conhecimento: "Conhecimento",
   Energia: "Energia",
   Medo: "Medo",
+  Variavel: "Variável",
 } as const;
 
 export interface Ritual {
@@ -233,6 +234,9 @@ export interface Ritual {
   resistencia?: string;
   custoPe?: number;
   descricao?: string;
+  discente?: string | null;
+  verdadeiro?: string | null;
+  fonte?: string | null;
   createdAt?: string;
 }
 

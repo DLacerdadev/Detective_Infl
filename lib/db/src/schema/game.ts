@@ -64,8 +64,11 @@ export const rituaisTable = pgTable("rituais", {
   alvo: text("alvo"),
   duracao: text("duracao"),
   resistencia: text("resistencia"),
-  custoPe: integer("custo_pe").notNull().default(2),
+  custoPe: integer("custo_pe").notNull().default(0),
   descricao: text("descricao"),
+  discente: text("discente"),
+  verdadeiro: text("verdadeiro"),
+  fonte: text("fonte"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
