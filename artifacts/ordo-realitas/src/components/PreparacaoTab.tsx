@@ -19,7 +19,10 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
-  Shield, ScrollText, Package, Search,
+  Tabs, TabsContent, TabsList, TabsTrigger,
+} from "@/components/ui/tabs";
+import {
+  Shield, ScrollText, Package, Search, ShoppingCart, Archive,
   Check, X, Loader2, ChevronDown, ChevronRight, Sparkles,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -138,30 +141,118 @@ const ITEM_TYPE_LABELS: Record<string, string> = {
 };
 const ITEM_TYPE_KEYS = ["ARMA", "PROTECAO", "GERAL", "MUNICAO"] as const;
 
+function ItemListView({
+  items,
+  selectedIds,
+  onToggle,
+  emptyMessage,
+  sourceBadge,
+}: {
+  items: ItemCompendio[];
+  selectedIds: Set<string>;
+  onToggle: (id: string) => void;
+  emptyMessage: string;
+  sourceBadge?: { label: string; cls: string };
+}) {
+  if (items.length === 0) {
+    return <p className="text-sm font-mono text-muted-foreground text-center py-6">{emptyMessage}</p>;
+  }
+  return (
+    <div className="space-y-1">
+      {items.map((item) => {
+        const active = selectedIds.has(item.id);
+        return (
+          <button
+            key={item.id}
+            onClick={() => onToggle(item.id)}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-sm border transition-all text-left ${
+              active
+                ? "border-primary/60 bg-primary/10"
+                : "border-border/40 bg-secondary/20 hover:bg-secondary/40"
+            }`}
+          >
+            <div className={`w-5 h-5 rounded-sm border flex items-center justify-center shrink-0 ${
+              active ? "border-primary bg-primary text-primary-foreground" : "border-border/60"
+            }`}>
+              {active && <Check className="w-3 h-3" />}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-mono text-foreground">{item.nome}</span>
+                <span className="text-[9px] font-mono text-muted-foreground/60">
+                  {ITEM_TYPE_LABELS[item.tipo] ?? item.tipo}
+                </span>
+                {sourceBadge && (
+                  <span className={`text-[8px] font-display tracking-widest px-1.5 py-0.5 rounded-sm border ${sourceBadge.cls}`}>
+                    {sourceBadge.label}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-2 mt-0.5">
+                {item.categoria && item.categoria !== "0" && (
+                  <span className="text-[9px] font-mono text-muted-foreground">Cat. {item.categoria}</span>
+                )}
+                {item.espacos != null && (
+                  <span className="text-[9px] font-mono text-muted-foreground/50">{item.espacos} esp.</span>
+                )}
+              </div>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function ItemPickerDialog({
   open,
   onClose,
   allItems,
+  inventoryItemIds,
   selectedIds,
   onToggle,
 }: {
   open: boolean;
   onClose: () => void;
   allItems: ItemCompendio[];
+  inventoryItemIds: Set<string>;
   selectedIds: Set<string>;
   onToggle: (id: string) => void;
 }) {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string | null>(null);
-  const filtered = useMemo(() => {
-    let items = allItems;
-    if (typeFilter) items = items.filter((i) => i.tipo === typeFilter);
+
+  const estoqueItems = useMemo(
+    () => allItems.filter((i) => inventoryItemIds.has(i.id)),
+    [allItems, inventoryItemIds],
+  );
+
+  const lojaItems = useMemo(
+    () => allItems.filter((i) => !inventoryItemIds.has(i.id)),
+    [allItems, inventoryItemIds],
+  );
+
+  function applyFilters(items: ItemCompendio[]) {
+    let result = items;
+    if (typeFilter) result = result.filter((i) => i.tipo === typeFilter);
     const q = search.toLowerCase().trim();
-    if (q) items = items.filter(
+    if (q) result = result.filter(
       (i) => i.nome.toLowerCase().includes(q) || (i.descricao ?? "").toLowerCase().includes(q),
     );
-    return items;
-  }, [allItems, search, typeFilter]);
+    return result;
+  }
+
+  const filteredEstoque = useMemo(() => applyFilters(estoqueItems), [estoqueItems, search, typeFilter]);
+  const filteredLoja = useMemo(() => applyFilters(lojaItems), [lojaItems, search, typeFilter]);
+
+  const estoqueSelectedCount = useMemo(
+    () => Array.from(selectedIds).filter((id) => inventoryItemIds.has(id)).length,
+    [selectedIds, inventoryItemIds],
+  );
+  const lojaSelectedCount = useMemo(
+    () => Array.from(selectedIds).filter((id) => !inventoryItemIds.has(id)).length,
+    [selectedIds, inventoryItemIds],
+  );
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
@@ -169,6 +260,7 @@ function ItemPickerDialog({
         <DialogHeader>
           <DialogTitle className="font-display tracking-widest">SELECIONAR ITENS</DialogTitle>
         </DialogHeader>
+
         <div className="relative mb-2">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -178,6 +270,7 @@ function ItemPickerDialog({
             className="pl-9 bg-secondary/30 border-border font-mono text-sm"
           />
         </div>
+
         <div className="flex gap-1.5 mb-2 flex-wrap">
           <button
             onClick={() => setTypeFilter(null)}
@@ -203,44 +296,60 @@ function ItemPickerDialog({
             </button>
           ))}
         </div>
-        <div className="flex-1 overflow-y-auto space-y-1 min-h-0">
-          {filtered.length === 0 ? (
-            <p className="text-sm font-mono text-muted-foreground text-center py-6">Nenhum item encontrado.</p>
-          ) : (
-            filtered.map((item) => {
-              const active = selectedIds.has(item.id);
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onToggle(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-sm border transition-all text-left ${
-                    active
-                      ? "border-primary/60 bg-primary/10"
-                      : "border-border/40 bg-secondary/20 hover:bg-secondary/40"
-                  }`}
-                >
-                  <div className={`w-5 h-5 rounded-sm border flex items-center justify-center shrink-0 ${
-                    active ? "border-primary bg-primary text-primary-foreground" : "border-border/60"
-                  }`}>
-                    {active && <Check className="w-3 h-3" />}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-mono text-foreground">{item.nome}</span>
-                      <span className="text-[9px] font-mono text-muted-foreground/60">
-                        {ITEM_TYPE_LABELS[item.tipo] ?? item.tipo}
-                      </span>
-                    </div>
-                    {item.categoria && (
-                      <span className="text-[9px] font-mono text-muted-foreground">Cat. {item.categoria}</span>
-                    )}
-                  </div>
-                </button>
-              );
-            })
-          )}
-        </div>
-        <div className="flex justify-end pt-2 border-t border-border/40">
+
+        <Tabs defaultValue="estoque" className="flex-1 flex flex-col min-h-0">
+          <TabsList className="bg-secondary/20 p-0.5 border border-border mb-2 shrink-0">
+            <TabsTrigger value="estoque" className="text-[10px] font-display tracking-widest gap-1.5 data-[state=active]:bg-blue-900/40 data-[state=active]:text-blue-300">
+              <Archive className="w-3 h-3" />
+              ESTOQUE ({estoqueItems.length})
+              {estoqueSelectedCount > 0 && (
+                <span className="text-[9px] bg-blue-600/40 text-blue-200 px-1 rounded-sm">{estoqueSelectedCount}</span>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="loja" className="text-[10px] font-display tracking-widest gap-1.5 data-[state=active]:bg-amber-900/40 data-[state=active]:text-amber-300">
+              <ShoppingCart className="w-3 h-3" />
+              LOJA ({lojaItems.length})
+              {lojaSelectedCount > 0 && (
+                <span className="text-[9px] bg-amber-600/40 text-amber-200 px-1 rounded-sm">{lojaSelectedCount}</span>
+              )}
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="estoque" className="flex-1 overflow-y-auto min-h-0 mt-0">
+            <ItemListView
+              items={filteredEstoque}
+              selectedIds={selectedIds}
+              onToggle={onToggle}
+              emptyMessage={estoqueItems.length === 0
+                ? "Seu agente não possui itens no inventário."
+                : "Nenhum item do estoque corresponde à busca."}
+            />
+          </TabsContent>
+          <TabsContent value="loja" className="flex-1 overflow-y-auto min-h-0 mt-0">
+            <ItemListView
+              items={filteredLoja}
+              selectedIds={selectedIds}
+              onToggle={onToggle}
+              emptyMessage="Nenhum item disponível na loja."
+            />
+          </TabsContent>
+        </Tabs>
+
+        <div className="flex items-center justify-between pt-2 border-t border-border/40">
+          <div className="flex gap-3 text-[10px] font-mono text-muted-foreground">
+            {estoqueSelectedCount > 0 && (
+              <span className="flex items-center gap-1">
+                <Archive className="w-3 h-3 text-blue-400" />
+                <span className="text-blue-400">{estoqueSelectedCount} do estoque</span>
+              </span>
+            )}
+            {lojaSelectedCount > 0 && (
+              <span className="flex items-center gap-1">
+                <ShoppingCart className="w-3 h-3 text-amber-400" />
+                <span className="text-amber-400">{lojaSelectedCount} da loja</span>
+              </span>
+            )}
+          </div>
           <Button size="sm" onClick={onClose} className="font-display tracking-widest text-xs">
             CONFIRMAR ({selectedIds.size})
           </Button>
@@ -293,6 +402,11 @@ function AgentPrepCard({
   const selectedItemIds = useMemo(() => new Set(effectiveItens), [effectiveItens]);
 
   const isOcultista = entry.classeNome?.toLowerCase().includes("ocultista");
+
+  const inventoryItemIds = useMemo(() => {
+    const inv = entry.personagemInventario ?? [];
+    return new Set(inv.map((i) => i.itemId));
+  }, [entry.personagemInventario]);
 
   const prepRituals = useMemo(
     () => allRituals.filter((r) => selectedRitualIds.has(r.id)),
@@ -423,6 +537,16 @@ function AgentPrepCard({
             <span className="flex items-center gap-1">
               <Package className="w-3 h-3" /> {selectedItemIds.size} itens
             </span>
+            {selectedItemIds.size > 0 && (() => {
+              const estoqueCount = Array.from(selectedItemIds).filter((id) => inventoryItemIds.has(id)).length;
+              const lojaCount = selectedItemIds.size - estoqueCount;
+              return (
+                <>
+                  {estoqueCount > 0 && <span className="text-blue-400">{estoqueCount} estoque</span>}
+                  {lojaCount > 0 && <span className="text-amber-400">{lojaCount} loja</span>}
+                </>
+              );
+            })()}
           </div>
         </div>
         <div className="shrink-0">
@@ -540,25 +664,36 @@ function AgentPrepCard({
             </div>
             {prepItems.length > 0 ? (
               <div className="flex flex-wrap gap-1.5">
-                {prepItems.map((item) => (
-                  <span
-                    key={item.id}
-                    className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-1 border border-border/50 bg-secondary/20 rounded-sm text-foreground/80"
-                  >
-                    {item.nome}
-                    {item.categoria && (
-                      <span className="text-[9px] opacity-50">({item.categoria})</span>
-                    )}
-                    {canEdit && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleRemoveItem(item.id); }}
-                        className="ml-0.5 opacity-60 hover:opacity-100 text-muted-foreground"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    )}
-                  </span>
-                ))}
+                {prepItems.map((item) => {
+                  const fromEstoque = inventoryItemIds.has(item.id);
+                  return (
+                    <span
+                      key={item.id}
+                      className={`inline-flex items-center gap-1 text-[11px] font-mono px-2 py-1 border rounded-sm ${
+                        fromEstoque
+                          ? "border-blue-700/40 bg-blue-950/20 text-blue-200/90"
+                          : "border-amber-700/40 bg-amber-950/20 text-amber-200/90"
+                      }`}
+                    >
+                      {fromEstoque
+                        ? <Archive className="w-3 h-3 opacity-50 shrink-0" />
+                        : <ShoppingCart className="w-3 h-3 opacity-50 shrink-0" />
+                      }
+                      {item.nome}
+                      {item.categoria && item.categoria !== "0" && (
+                        <span className="text-[9px] opacity-50">({item.categoria})</span>
+                      )}
+                      {canEdit && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleRemoveItem(item.id); }}
+                          className="ml-0.5 opacity-60 hover:opacity-100"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      )}
+                    </span>
+                  );
+                })}
               </div>
             ) : (
               <p className="text-[11px] font-mono text-muted-foreground/50 italic">Nenhum item selecionado</p>
@@ -606,6 +741,7 @@ function AgentPrepCard({
             open={itemPickerOpen}
             onClose={() => setItemPickerOpen(false)}
             allItems={allItems}
+            inventoryItemIds={inventoryItemIds}
             selectedIds={selectedItemIds}
             onToggle={handleToggleItem}
           />

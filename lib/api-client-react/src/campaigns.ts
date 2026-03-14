@@ -191,6 +191,7 @@ export interface CampanhaPersonagemEntry {
   personagemSanMaximo: number | null;
   personagemPericias: string[] | null;
   personagemRituals: string[] | null;
+  personagemInventario: { uid: string; itemId: string; nome: string; categoria: string; espacos: number; tipo: string; subtipo: string | null }[] | null;
   classeNome: string | null;
   classeId: string | null;
   userFirstName: string | null;
