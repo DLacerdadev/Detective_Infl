@@ -9,7 +9,7 @@ import { OrigensTab } from "@/components/OrigensTab";
 import { RituaisAdminTab } from "@/components/RituaisAdminTab";
 import { HabilidadesAdminTab } from "@/components/HabilidadesAdminTab";
 import { TrilhasAdminTab } from "@/components/TrilhasAdminTab";
-import { EquipamentosTab } from "@/components/EquipamentosTab";
+import { EquipamentosAdminTab } from "@/components/EquipamentosAdminTab";
 
 function GenericTable({ title, data, columns }: { title: string; data: any[] | undefined; columns: { key: string; label: string }[] }) {
   if (!data) return <div className="p-4 text-muted-foreground animate-pulse font-mono text-sm">Carregando...</div>;
@@ -121,7 +121,7 @@ export default function Admin() {
         </TabsContent>
 
         <TabsContent value="equipamentos">
-          <EquipamentosTab />
+          <EquipamentosAdminTab />
         </TabsContent>
       </Tabs>
     </div>

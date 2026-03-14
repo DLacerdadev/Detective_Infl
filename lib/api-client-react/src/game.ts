@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const BASE = import.meta.env?.VITE_API_URL ?? "";
 
@@ -157,5 +157,31 @@ export function useListItens(filter?: ItensFilter) {
     queryKey: getListItensQueryKey(filter),
     queryFn: () => apiFetch<ItemCompendio[]>(`/api/items${qs ? `?${qs}` : ""}`),
     staleTime: 1000 * 60 * 10,
+  });
+}
+
+export type ItemInput = Omit<ItemCompendio, "id">;
+
+export function useCreateItemMut() {
+  const qc = useQueryClient();
+  return useMutation<ItemCompendio, Error, ItemInput>({
+    mutationFn: (data) => apiFetch<ItemCompendio>("/api/items", { method: "POST", body: JSON.stringify(data) }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["itens"] }); },
+  });
+}
+
+export function useUpdateItemMut() {
+  const qc = useQueryClient();
+  return useMutation<ItemCompendio, Error, { id: string; data: Partial<ItemInput> }>({
+    mutationFn: ({ id, data }) => apiFetch<ItemCompendio>(`/api/items/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["itens"] }); },
+  });
+}
+
+export function useDeleteItemMut() {
+  const qc = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: (id) => apiFetch<void>(`/api/items/${id}`, { method: "DELETE" }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["itens"] }); },
   });
 }

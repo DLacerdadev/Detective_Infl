@@ -178,16 +178,29 @@ router.get("/items", async (req: Request, res: Response) => {
 
 router.post("/items", async (req: Request, res: Response) => {
   if (!isAdmin(req)) { res.status(403).json({ error: "Forbidden" }); return; }
-  const { nome, tipo = "Utilitario", descricao, espacos = 1, categoria, peso, preco = 0, requisitos } = req.body;
+  const {
+    nome, tipo = "GERAL", subtipo, proficiencia, descricao,
+    espacos = 1, categoria = "0", dano, critico, alcance, tipoAtaque,
+    defesa, propriedades = [], fonte = "LIVRO_BASE", peso, preco = 0, requisitos,
+  } = req.body;
   if (!nome) { res.status(400).json({ error: "nome required" }); return; }
-  const [row] = await db.insert(itensTable).values({ nome, tipo, descricao, espacos, categoria, peso, preco, requisitos }).returning();
+  const [row] = await db.insert(itensTable).values({
+    nome, tipo, subtipo, proficiencia, descricao, espacos, categoria,
+    dano, critico, alcance, tipoAtaque, defesa, propriedades, fonte, peso, preco, requisitos,
+  }).returning();
   res.status(201).json(mapItem(row));
 });
 
 router.put("/items/:id", async (req: Request, res: Response) => {
   if (!isAdmin(req)) { res.status(403).json({ error: "Forbidden" }); return; }
-  const { nome, tipo, descricao, espacos, categoria, peso, preco, requisitos } = req.body;
-  const [row] = await db.update(itensTable).set({ nome, tipo, descricao, espacos, categoria, peso, preco, requisitos }).where(eq(itensTable.id, req.params.id)).returning();
+  const {
+    nome, tipo, subtipo, proficiencia, descricao, espacos, categoria,
+    dano, critico, alcance, tipoAtaque, defesa, propriedades, fonte, peso, preco, requisitos,
+  } = req.body;
+  const patch: Record<string, unknown> = {};
+  const fields = { nome, tipo, subtipo, proficiencia, descricao, espacos, categoria, dano, critico, alcance, tipoAtaque, defesa, propriedades, fonte, peso, preco, requisitos };
+  for (const [k, v] of Object.entries(fields)) { if (v !== undefined) patch[k] = v; }
+  const [row] = await db.update(itensTable).set(patch).where(eq(itensTable.id, req.params.id)).returning();
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   res.json(mapItem(row));
 });
