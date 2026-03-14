@@ -46,7 +46,7 @@ artifacts-monorepo/
 │   │           └── health.ts    # Healthcheck
 │   └── ordo-realitas/           # Frontend React (porta definida por $PORT)
 │       └── src/
-│           ├── App.tsx          # Router principal (react-router-dom)
+│           ├── App.tsx          # Router principal (wouter)
 │           ├── main.tsx         # Entry point (QueryClientProvider, Toaster)
 │           ├── pages/           # Paginas (ver secao 7)
 │           ├── components/      # Componentes de feature + shadcn/ui
@@ -392,12 +392,12 @@ Todas as rotas sao montadas sob `/api/`. Ex: `GET /api/classes`.
 
 | Rota | Pagina/Arquivo | Descricao |
 |------|----------------|-----------|
-| `/` | `Home.tsx` | Landing page com estetica noir |
+| `/` | `Home.tsx` | Landing page com estetica noir (publica) |
 | `/login` | `Login.tsx` | Login email/senha + Google Sign-In |
 | `/characters` | `Characters.tsx` | Lista de personagens do usuario |
 | `/characters/new` | `CreateCharacter.tsx` | Wizard multi-step (6 steps para Ocultista, 5 para outros) |
 | `/characters/:id` | `CharacterSheet.tsx` | Ficha completa com tabs |
-| `/compendio` | `Compendio.tsx` | Compendio publico (classes, origens, pericias, rituais, itens, habilidades, trilhas) |
+| `/compendio` | `Compendio.tsx` | Compendio de regras do jogo — protegido por login (classes, origens, pericias, rituais, itens, habilidades, trilhas) |
 | `/admin` | `Admin.tsx` | Painel admin (CRUD de dados do jogo) |
 | `/campanhas` | `Campanhas.tsx` | Lista de campanhas, criar, entrar via codigo |
 | `/campanhas/:id` | `CampanhaDetail.tsx` | Detalhe da campanha com tabs: Rolagens, Agentes, Membros, Preparacao, Em Cena |
