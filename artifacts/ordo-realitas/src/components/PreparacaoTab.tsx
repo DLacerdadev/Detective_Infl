@@ -146,13 +146,11 @@ function ItemListView({
   selectedIds,
   onToggle,
   emptyMessage,
-  sourceBadge,
 }: {
   items: ItemCompendio[];
   selectedIds: Set<string>;
   onToggle: (id: string) => void;
   emptyMessage: string;
-  sourceBadge?: { label: string; cls: string };
 }) {
   if (items.length === 0) {
     return <p className="text-sm font-mono text-muted-foreground text-center py-6">{emptyMessage}</p>;
@@ -182,11 +180,6 @@ function ItemListView({
                 <span className="text-[9px] font-mono text-muted-foreground/60">
                   {ITEM_TYPE_LABELS[item.tipo] ?? item.tipo}
                 </span>
-                {sourceBadge && (
-                  <span className={`text-[8px] font-display tracking-widest px-1.5 py-0.5 rounded-sm border ${sourceBadge.cls}`}>
-                    {sourceBadge.label}
-                  </span>
-                )}
               </div>
               <div className="flex items-center gap-2 mt-0.5">
                 {item.categoria && item.categoria !== "0" && (
