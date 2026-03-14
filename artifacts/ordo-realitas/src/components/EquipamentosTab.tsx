@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useListItens, type ItemCompendio } from "@workspace/api-client-react";
-import { Sword, Shield, Crosshair, Package, Search, BookOpen, Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import { Sword, Shield, Crosshair, Package, Search, BookOpen, Loader2, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
@@ -194,7 +194,8 @@ type SectionKey =
   | "gerais_acessorios"
   | "gerais_explosivos"
   | "gerais_operacionais"
-  | "gerais_medicamentos";
+  | "gerais_medicamentos"
+  | "gerais_paranormais";
 
 function classifyItem(item: ItemCompendio): SectionKey | null {
   if (item.tipo === "MUNICAO") return "municoes";
@@ -205,6 +206,7 @@ function classifyItem(item: ItemCompendio): SectionKey | null {
     if (s === "EXPLOSIVO")  return "gerais_explosivos";
     if (s === "OPERACIONAL") return "gerais_operacionais";
     if (s === "MEDICAMENTO") return "gerais_medicamentos";
+    if (s === "PARANORMAL") return "gerais_paranormais";
     return null;
   }
   if (item.tipo === "ARMA") {
@@ -238,6 +240,7 @@ const SECTION_CONFIG: { key: SectionKey; label: string; icon: React.ReactNode }[
   { key: "gerais_explosivos",     label: "Explosivos",                    icon: <Package className="h-4 w-4" /> },
   { key: "gerais_operacionais",   label: "Itens Operacionais",            icon: <Package className="h-4 w-4" /> },
   { key: "gerais_medicamentos",   label: "Medicamentos",                  icon: <Package className="h-4 w-4" /> },
+  { key: "gerais_paranormais",    label: "Itens Paranormais",             icon: <Sparkles className="h-4 w-4" /> },
 ];
 
 // ── tab filters ────────────────────────────────────────────
@@ -255,7 +258,7 @@ const TAB_SECTIONS: Record<MainTab, SectionKey[]> = {
     "armas_taticas_corpo", "armas_taticas_disparo", "armas_taticas_fogo",
     "armas_pesadas", "municoes", "protecoes",
   ],
-  equipamentos: ["gerais_acessorios", "gerais_explosivos", "gerais_operacionais", "gerais_medicamentos"],
+  equipamentos: ["gerais_acessorios", "gerais_explosivos", "gerais_operacionais", "gerais_medicamentos", "gerais_paranormais"],
 };
 
 // ── main component ─────────────────────────────────────────
