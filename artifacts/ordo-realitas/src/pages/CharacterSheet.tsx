@@ -5,6 +5,7 @@ import { useUpdateCharacterMut } from "@/hooks/use-api-mutations";
 import CharacterPericiasTab from "@/components/CharacterPericiasTab";
 import CharacterHabilidadesTab from "@/components/CharacterHabilidadesTab";
 import CharacterRituaisTab from "@/components/CharacterRituaisTab";
+import CharacterInventarioTab, { type InventarioItem } from "@/components/CharacterInventarioTab";
 import {
   ArrowLeft, Shield, Skull, BookOpen, Backpack, ScrollText,
   Pencil, Zap,
@@ -322,10 +323,13 @@ export default function CharacterSheet() {
           )}
 
           {activeTab === "inventario" && (
-            <div className="border border-border/40 border-dashed rounded-sm p-10 text-center space-y-2">
-              <Backpack className="w-10 h-10 text-muted-foreground/30 mx-auto" />
-              <p className="font-mono text-sm text-muted-foreground">Módulo de Inventário (em desenvolvimento)</p>
-            </div>
+            <CharacterInventarioTab
+              charId={char.id}
+              forca={char.forca ?? 1}
+              pontosPrestígio={(char as any).pontosPrestígio ?? 0}
+              inventario={((char as any).inventario ?? []) as InventarioItem[]}
+              isOwner={isOwner}
+            />
           )}
 
           {activeTab === "historia" && (

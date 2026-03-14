@@ -46,6 +46,13 @@ artifacts-monorepo/
 
 ## Features
 
+### Inventory System (CharacterInventarioTab)
+- **Pontos de Prestígio (PP)**: tracked per character; auto-derives `patente` (Recruta → Agente de Elite). Quick-event buttons (+10, +2, -2, -5).
+- **Carrying capacity**: Força × 5 espaços (min 2); overload warning at > capacity.
+- **Item limits by category**: I/II/III/IV enforced per patente (visual gauge).
+- **Inventário**: JSON array of `InventarioItem` stored in `personagens.inventario`. Add from full item compendium (search dialog), remove per item.
+- **`pontos_prestigio`** column added to `personagens` table; `patente` auto-calculated on save.
+
 ### Authentication
 - **Email/password**: bcrypt (12 rounds), session-based
 - **Google Sign-In**: ID token verification via `google-auth-library`, auto-creates user on first login

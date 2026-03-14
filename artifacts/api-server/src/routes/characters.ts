@@ -131,24 +131,24 @@ router.put("/characters/:id", async (req: Request, res: Response) => {
     return;
   }
 
-  const updateData: Record<string, unknown> = {};
   const allowed = [
     "nome", "classeId", "origemId", "nivel", "nex", "patente",
     "pvAtual", "pvMaximo", "peAtual", "peMaximo", "sanAtual", "sanMaximo",
     "forca", "agilidade", "intelecto", "vigor", "presenca", "defesa",
-    "historia", "pericias", "rituals", "inventario",
+    "historia", "pericias", "rituals", "inventario", "pontosPrestígio",
   ];
 
+  const patch: Record<string, unknown> = {};
   for (const key of allowed) {
-    if (req.body[key] !== undefined) {
-      const dbKey = camelToSnake(key);
-      updateData[dbKey === key ? key : dbKey] = req.body[key];
-    }
+    if (req.body[key] !== undefined) patch[key] = req.body[key];
+  }
+  if (patch["pontosPrestígio"] !== undefined) {
+    patch["patente"] = calcPatente(Number(patch["pontosPrestígio"]));
   }
 
   const [updated] = await db
     .update(personagensTable)
-    .set(req.body)
+    .set(patch)
     .where(eq(personagensTable.id, req.params.id))
     .returning();
 
@@ -183,6 +183,14 @@ function camelToSnake(str: string): string {
   return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 }
 
+function calcPatente(pp: number): string {
+  if (pp >= 200) return "Agente de Elite";
+  if (pp >= 100) return "Oficial de Operações";
+  if (pp >= 50)  return "Agente Especial";
+  if (pp >= 20)  return "Operador";
+  return "Recruta";
+}
+
 function mapCharacter(char: Record<string, unknown>) {
   return {
     id: char.id,
@@ -193,6 +201,7 @@ function mapCharacter(char: Record<string, unknown>) {
     nivel: char.nivel,
     nex: char.nex,
     patente: char.patente,
+    pontosPrestígio: char.pontosPrestígio ?? 0,
     pvAtual: char.pvAtual,
     pvMaximo: char.pvMaximo,
     peAtual: char.peAtual,

@@ -105,6 +105,16 @@ export const itensTable = pgTable("itens", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+export type InventarioItem = {
+  uid: string;
+  itemId: string;
+  nome: string;
+  categoria: string;
+  espacos: number;
+  tipo: string;
+  subtipo: string | null;
+};
+
 export const personagensTable = pgTable("personagens", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
@@ -115,6 +125,7 @@ export const personagensTable = pgTable("personagens", {
   nivel: integer("nivel").notNull().default(1),
   nex: integer("nex").notNull().default(0),
   patente: text("patente").default("Recruta"),
+  pontosPrestígio: integer("pontos_prestigio").notNull().default(0),
   pvAtual: integer("pv_atual").default(10),
   pvMaximo: integer("pv_maximo").default(10),
   peAtual: integer("pe_atual").default(4),
@@ -130,7 +141,7 @@ export const personagensTable = pgTable("personagens", {
   historia: text("historia"),
   pericias: jsonb("pericias").$type<string[]>().default([]),
   rituals: jsonb("rituals").$type<string[]>().default([]),
-  inventario: jsonb("inventario").$type<Record<string, unknown>[]>().default([]),
+  inventario: jsonb("inventario").$type<InventarioItem[]>().default([]),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
