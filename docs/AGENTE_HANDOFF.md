@@ -570,7 +570,7 @@ O seed e idempotente: verifica se as tabelas ja tem dados antes de inserir.
 
 ## 14. Arquivo SQL de Dump
 
-O arquivo `docs/DUMP_DATABASE.sql` contem um dump completo do banco PostgreSQL (estrutura + todos os dados incluindo usuarios, sessoes, personagens, campanhas e dados de jogo). Para restaurar em outro ambiente:
+O arquivo `docs/DUMP_DATABASE.sql` contem um dump completo do banco PostgreSQL (estrutura + dados de jogo, personagens e campanhas). Dados de usuarios e sessoes foram **sanitizados** — o dump inclui dois usuarios placeholder com emails ficticios (`admin@placeholder.local` e `player@placeholder.local`) para satisfazer foreign keys. Apos a restauracao, crie contas reais e atualize as referencias se necessario. Para restaurar em outro ambiente:
 
 ```bash
 psql -U postgres -d ordorealitas < DUMP_DATABASE.sql
