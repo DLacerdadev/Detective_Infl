@@ -194,7 +194,7 @@ artifacts-monorepo/
 | habilidades | jsonb | Array de `{ nex, nome, descricao }` — habilidades desbloqueadas por NEX |
 | created_at | timestamptz | |
 
-**`rituais`** (160 registros: Sangue:38, Morte:37, Conhecimento:34, Energia:36, Medo:14, Variavel:1)
+**`rituais`** (107 registros: Sangue:22, Morte:23, Conhecimento:23, Energia:22, Medo:16, Variavel:1)
 | Coluna | Tipo | Descricao |
 |--------|------|-----------|
 | id | varchar (UUID) PK | |
@@ -452,7 +452,7 @@ Todas as rotas sao montadas sob `/api/`. Ex: `GET /api/classes`.
 - Total de pericias treinadas = `periciasTreindasBase_classe + intelecto`
 
 ### Rituais (Ocultista)
-- 160 rituais catalogados, organizados por elemento e circulo
+- 107 rituais catalogados, organizados por elemento e circulo
 - Elementos: Sangue, Morte, Conhecimento, Energia, Medo, Variavel
 - Circulos: 1o a 4o (maior circulo = mais poderoso)
 - Cada ritual tem custo PE, alcance, duracao, descricao + versoes discente/verdadeiro
@@ -551,7 +551,7 @@ docker compose logs -f
 - Agentes em campanha (vincular personagens)
 - Fase de Preparacao de Missao (rituais, itens, toggle pronto)
 - Deploy Docker Compose funcional
-- 160 rituais + 117 itens + 46 origens + 28 pericias + 27 trilhas seedados
+- 107 rituais + 117 itens + 46 origens + 28 pericias + 27 trilhas + 140 habilidades seedados
 
 ### Planejado / Em Andamento
 - **Em Cena** (aba placeholder): sistema de sessao em tempo real para o mestre conduzir a missao
@@ -565,7 +565,7 @@ docker compose logs -f
 
 Os dados de seed estao em:
 - `lib/db/src/seed.ts` — orquestra todo o seed
-- `lib/db/src/data/rituais.json` — 160 rituais
+- `lib/db/src/data/rituais.json` — 107 rituais
 - `lib/db/src/seed-equipamentos.sql` — 117 itens/equipamentos
 - Classes, trilhas, origens e pericias sao seedados programaticamente em `seed.ts`
 
