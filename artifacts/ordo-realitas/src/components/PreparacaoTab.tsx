@@ -130,6 +130,14 @@ function RitualPickerDialog({
   );
 }
 
+const ITEM_TYPE_LABELS: Record<string, string> = {
+  ARMA: "Armas",
+  PROTECAO: "Proteções",
+  GERAL: "Gerais",
+  MUNICAO: "Munições",
+};
+const ITEM_TYPE_KEYS = ["ARMA", "PROTECAO", "GERAL", "MUNICAO"] as const;
+
 function ItemPickerDialog({
   open,
   onClose,
@@ -144,13 +152,16 @@ function ItemPickerDialog({
   onToggle: (id: string) => void;
 }) {
   const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState<string | null>(null);
   const filtered = useMemo(() => {
+    let items = allItems;
+    if (typeFilter) items = items.filter((i) => i.tipo === typeFilter);
     const q = search.toLowerCase().trim();
-    if (!q) return allItems;
-    return allItems.filter(
+    if (q) items = items.filter(
       (i) => i.nome.toLowerCase().includes(q) || (i.descricao ?? "").toLowerCase().includes(q),
     );
-  }, [allItems, search]);
+    return items;
+  }, [allItems, search, typeFilter]);
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
@@ -161,11 +172,36 @@ function ItemPickerDialog({
         <div className="relative mb-2">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar item..."
+            placeholder="Buscar item por nome..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9 bg-secondary/30 border-border font-mono text-sm"
           />
+        </div>
+        <div className="flex gap-1.5 mb-2 flex-wrap">
+          <button
+            onClick={() => setTypeFilter(null)}
+            className={`text-[10px] font-display tracking-widest px-2 py-1 rounded-sm border transition-colors ${
+              typeFilter === null
+                ? "border-primary bg-primary/20 text-primary"
+                : "border-border/40 text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            TODOS
+          </button>
+          {ITEM_TYPE_KEYS.map((t) => (
+            <button
+              key={t}
+              onClick={() => setTypeFilter(t === typeFilter ? null : t)}
+              className={`text-[10px] font-display tracking-widest px-2 py-1 rounded-sm border transition-colors ${
+                typeFilter === t
+                  ? "border-primary bg-primary/20 text-primary"
+                  : "border-border/40 text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {ITEM_TYPE_LABELS[t]}
+            </button>
+          ))}
         </div>
         <div className="flex-1 overflow-y-auto space-y-1 min-h-0">
           {filtered.length === 0 ? (
@@ -189,9 +225,14 @@ function ItemPickerDialog({
                     {active && <Check className="w-3 h-3" />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <span className="text-sm font-mono text-foreground">{item.nome}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-mono text-foreground">{item.nome}</span>
+                      <span className="text-[9px] font-mono text-muted-foreground/60">
+                        {ITEM_TYPE_LABELS[item.tipo] ?? item.tipo}
+                      </span>
+                    </div>
                     {item.categoria && (
-                      <span className="text-[9px] font-mono text-muted-foreground ml-2">Cat. {item.categoria}</span>
+                      <span className="text-[9px] font-mono text-muted-foreground">Cat. {item.categoria}</span>
                     )}
                   </div>
                 </button>
@@ -395,6 +436,32 @@ function AgentPrepCard({
 
       {expanded && (
         <div className="px-4 pb-4 space-y-4 border-t border-border/40 pt-3">
+          <div className="space-y-2">
+            <span className="text-[10px] font-display uppercase tracking-widest text-muted-foreground">
+              Atributos & Vitais
+            </span>
+            <div className="flex gap-1.5 flex-wrap">
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm border bg-red-900/30 border-red-700/40 text-red-300">FOR {entry.personagemForca}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm border bg-green-900/30 border-green-700/40 text-green-300">AGI {entry.personagemAgilidade}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm border bg-blue-900/30 border-blue-700/40 text-blue-300">INT {entry.personagemIntelecto}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm border bg-amber-900/30 border-amber-700/40 text-amber-300">VIG {entry.personagemVigor}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm border bg-purple-900/30 border-purple-700/40 text-purple-300">PRE {entry.personagemPresenca}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm border border-border/50 text-muted-foreground">DEF {entry.personagemDefesa}</span>
+            </div>
+            <div className="flex gap-3 text-[10px] font-mono text-muted-foreground">
+              {entry.personagemPvAtual != null && entry.personagemPvMaximo != null && (
+                <span className="text-red-400">PV {entry.personagemPvAtual}/{entry.personagemPvMaximo}</span>
+              )}
+              {entry.personagemPeAtual != null && entry.personagemPeMaximo != null && (
+                <span className="text-blue-400">PE {entry.personagemPeAtual}/{entry.personagemPeMaximo}</span>
+              )}
+              {entry.personagemSanAtual != null && entry.personagemSanMaximo != null && (
+                <span className="text-amber-400">SAN {entry.personagemSanAtual}/{entry.personagemSanMaximo}</span>
+              )}
+              <span>NEX {entry.personagemNex}%</span>
+            </div>
+          </div>
+
           {isOcultista && knownRitualIds.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -552,11 +619,17 @@ export default function PreparacaoTab({
   amMestre: boolean;
 }) {
   const { user } = useAuth();
-  const { data: entries = [], isLoading } = useListCampanhaPersonagens(campanhaId);
+  const { data: allEntries = [], isLoading } = useListCampanhaPersonagens(campanhaId);
   const { data: allRituals = [] } = useListRituals();
   const { data: allItems = [] } = useListItens();
 
-  const readyCount = entries.filter((e) => (e.preparacao as PreparacaoData | null)?.pronto).length;
+  const visibleEntries = useMemo(
+    () => amMestre ? allEntries : allEntries.filter((e) => e.userId === user?.id),
+    [allEntries, amMestre, user?.id],
+  );
+
+  const readyCount = allEntries.filter((e) => (e.preparacao as PreparacaoData | null)?.pronto).length;
+  const totalCount = allEntries.length;
 
   if (isLoading) {
     return (
@@ -566,7 +639,7 @@ export default function PreparacaoTab({
     );
   }
 
-  if (entries.length === 0) {
+  if (allEntries.length === 0) {
     return (
       <div className="border border-border/40 border-dashed rounded-sm p-10 text-center space-y-2">
         <Shield className="w-10 h-10 text-muted-foreground/30 mx-auto" />
@@ -575,6 +648,20 @@ export default function PreparacaoTab({
         </p>
         <p className="font-mono text-xs text-muted-foreground/50">
           Adicione agentes na aba "Agentes" antes de preparar a missão.
+        </p>
+      </div>
+    );
+  }
+
+  if (visibleEntries.length === 0) {
+    return (
+      <div className="border border-border/40 border-dashed rounded-sm p-10 text-center space-y-2">
+        <Shield className="w-10 h-10 text-muted-foreground/30 mx-auto" />
+        <p className="font-mono text-sm text-muted-foreground">
+          Você não tem agentes designados nesta operação.
+        </p>
+        <p className="font-mono text-xs text-muted-foreground/50">
+          Adicione seus personagens na aba "Agentes" para preparar a missão.
         </p>
       </div>
     );
@@ -592,17 +679,17 @@ export default function PreparacaoTab({
         <Badge
           variant="outline"
           className={`text-[10px] font-display tracking-widest ${
-            readyCount === entries.length
+            readyCount === totalCount
               ? "border-green-600/50 text-green-400"
               : "border-amber-600/40 text-amber-400"
           }`}
         >
-          {readyCount}/{entries.length} PRONTOS
+          {readyCount}/{totalCount} PRONTOS
         </Badge>
       </div>
 
       <div className="space-y-2">
-        {entries.map((entry) => {
+        {visibleEntries.map((entry) => {
           const canEdit = amMestre || entry.userId === user?.id;
           return (
             <AgentPrepCard
