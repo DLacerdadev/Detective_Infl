@@ -3,6 +3,10 @@ import { classesTable, origensTable, periciasTable, trilhasTable, rituaisTable, 
 import { count, eq } from "drizzle-orm";
 import { readFileSync } from "fs";
 import { join } from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = join(__filename, "..");
 
 async function seedRituais() {
   console.log("==> Seeding rituais...");

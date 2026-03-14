@@ -2175,7 +2175,7 @@
       "alvo": "1 objeto ou pessoa",
       "duracao": "Cena",
       "resistencia": "Vontade anula (veja texto)",
-      "efeito": "Este ritual pode encontrar uma pessoa ou objeto a sua escolha. Você pode pensar em termos gerais ("um policial", "algo de metal") ou específicos ("a delegada Joana", "uma pistola"). O ritual indica a direção e distância da pessoa ou objeto mais próximo desse tipo, caso esteja ao alcance. Você pode movimentar-se para continuar procurando. Procurar algo muito específico exige que você tenha em mente uma imagem precisa do objeto; caso a imagem não seja parecida com a verdade, o ritual falha, mas você gasta os PE mesmo assim. Este ritual pode ser bloqueado por uma fina camada de chumbo.",
+      "efeito": "Este ritual pode encontrar uma pessoa ou objeto a sua escolha. Você pode pensar em termos gerais (\"um policial\", \"algo de metal\") ou específicos (\"a delegada Joana\", \"uma pistola\"). O ritual indica a direção e distância da pessoa ou objeto mais próximo desse tipo, caso esteja ao alcance. Você pode movimentar-se para continuar procurando. Procurar algo muito específico exige que você tenha em mente uma imagem precisa do objeto; caso a imagem não seja parecida com a verdade, o ritual falha, mas você gasta os PE mesmo assim. Este ritual pode ser bloqueado por uma fina camada de chumbo.",
       "discente": "(+3 PE): muda o alcance para \"toque\", o alvo para \"1 pessoa\" e a duração para \"1 hora\". Em vez do normal, a pessoa tocada descobre o caminho mais direto para entrar ou sair de um lugar.",
       "verdadeiro": null,
       "fonte": "Livro Base"
