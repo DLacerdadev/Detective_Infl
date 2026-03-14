@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "AX8avzD6R5lDlLYKbktZd"
+uri = "file://docs/AGENTE_HANDOFF.md"
+type = "text"
+title = "Documentacao de Handoff para Agente IA"
