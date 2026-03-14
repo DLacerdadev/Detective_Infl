@@ -48,7 +48,7 @@ export const campanhaPersonagensTable = pgTable("campanha_personagens", {
   personagemId: varchar("personagem_id").notNull().references(() => personagensTable.id, { onDelete: "cascade" }),
   userId: varchar("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
   addedAt: timestamp("added_at", { withTimezone: true }).notNull().defaultNow(),
-  preparacao: jsonb("preparacao").$type<{ rituais?: string[]; itens?: string[]; pronto?: boolean }>().default({}),
+  preparacao: jsonb("preparacao").$type<{ rituais: string[]; itens: string[]; pronto: boolean }>().default({ rituais: [], itens: [], pronto: false }),
 }, (t) => [
   unique("campanha_personagem_uniq").on(t.campanhaId, t.personagemId),
 ]);
