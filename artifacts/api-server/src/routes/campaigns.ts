@@ -532,6 +532,7 @@ router.post("/campanhas/:id/personagens", async (req: Request, res: Response) =>
     personagemSanMaximo: personagensTable.sanMaximo,
     personagemPericias: personagensTable.pericias,
     personagemRituals: personagensTable.rituals,
+    personagemInventario: personagensTable.inventario,
     classeNome: classesTable.nome,
     classeId: personagensTable.classeId,
     userFirstName: usersTable.firstName,
