@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useUpdateCharacterMut } from "@/hooks/use-api-mutations";
 import CharacterPericiasTab from "@/components/CharacterPericiasTab";
 import CharacterHabilidadesTab from "@/components/CharacterHabilidadesTab";
+import CharacterRituaisTab from "@/components/CharacterRituaisTab";
 import {
   ArrowLeft, Shield, Skull, BookOpen, Backpack, ScrollText,
   Pencil, Zap,
@@ -314,10 +315,10 @@ export default function CharacterSheet() {
           )}
 
           {activeTab === "rituais" && (
-            <div className="border border-border/40 border-dashed rounded-sm p-10 text-center space-y-2">
-              <ScrollText className="w-10 h-10 text-muted-foreground/30 mx-auto" />
-              <p className="font-mono text-sm text-muted-foreground">Catálogo de Rituais (em desenvolvimento)</p>
-            </div>
+            <CharacterRituaisTab
+              ritualIds={(char.rituals as string[]) ?? []}
+              classeNome={char.classe?.nome ?? null}
+            />
           )}
 
           {activeTab === "inventario" && (
