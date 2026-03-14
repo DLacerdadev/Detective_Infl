@@ -45,6 +45,7 @@ router.post("/characters", async (req: Request, res: Response) => {
   let pvMaximo = 10;
   let peMaximo = 4;
   let sanMaximo = 12;
+  let finalNex = nex;
 
   if (classeId) {
     const [classe] = await db.select().from(classesTable).where(eq(classesTable.id, classeId));
@@ -52,6 +53,11 @@ router.post("/characters", async (req: Request, res: Response) => {
       pvMaximo  = classe.pvInicial  + (classe.pvPorNivel  * (nivel - 1)) + vigor;
       peMaximo  = classe.peInicial  + (classe.pePorNivel  * (nivel - 1)) + presenca;
       sanMaximo = classe.sanInicial + (classe.sanPorNivel * (nivel - 1)) + presenca;
+
+      const classesOrdem = ["Combatente", "Especialista", "Ocultista"];
+      if (classesOrdem.includes(classe.nome) && nex === 0) {
+        finalNex = 5;
+      }
     }
   }
 
@@ -63,7 +69,7 @@ router.post("/characters", async (req: Request, res: Response) => {
     classeId: classeId || null,
     origemId: origemId || null,
     nivel,
-    nex,
+    nex: finalNex,
     patente,
     pvAtual: pvMaximo,
     pvMaximo,
