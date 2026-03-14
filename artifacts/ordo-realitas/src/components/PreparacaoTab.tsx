@@ -683,6 +683,13 @@ function AgentPrepCard({
                       {item.categoria && item.categoria !== "0" && (
                         <span className="text-[9px] opacity-50">({item.categoria})</span>
                       )}
+                      <span className={`text-[8px] font-display tracking-widest px-1 py-0.5 rounded-sm ${
+                        fromEstoque
+                          ? "bg-blue-900/40 text-blue-300/80"
+                          : "bg-amber-900/40 text-amber-300/80"
+                      }`}>
+                        {fromEstoque ? "ESTOQUE" : "LOJA"}
+                      </span>
                       {canEdit && (
                         <button
                           onClick={(e) => { e.stopPropagation(); handleRemoveItem(item.id); }}
