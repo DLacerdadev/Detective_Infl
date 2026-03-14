@@ -82,7 +82,7 @@ Manages all static game data:
 - `campanhas` — RPG campaigns with `codigoConvite` (invite code)
 - `campanha_membros` — Campaign members with `papel` (mestre/jogador), unique per campanha+user
 - `campanha_rolagens` — Dice rolls per campaign: server-side roll engine, persisted history, supports pericia/atributo/dano types
-- `campanha_personagens` — Characters (agents) linked to campaigns. Unique per campanha+personagem. Members can add their own characters; mestre can add/remove any. Foreign keys cascade on delete.
+- `campanha_personagens` — Characters (agents) linked to campaigns. Unique per campanha+personagem. Members can add their own characters; mestre can add/remove any. Foreign keys cascade on delete. Has `preparacao` JSONB field `{ rituais?: string[], itens?: string[], pronto?: boolean }` for mission prep phase.
 - `itens` — Equipment with full weapon/armor stats:
   - `tipo`: ARMA | PROTECAO | MUNICAO | GERAL
   - `subtipo`: weapon sub-types (CORPO_LEVE, CORPO_UMA_MAO, CORPO_DUAS_MAOS, DISPARO_DUAS_MAOS, FOGO_LEVE, FOGO_UMA_MAO, FOGO_DUAS_MAOS, PESADA, ARREMESSO) and general sub-types (ACESSORIO, EXPLOSIVO, OPERACIONAL, MEDICAMENTO, PARANORMAL)

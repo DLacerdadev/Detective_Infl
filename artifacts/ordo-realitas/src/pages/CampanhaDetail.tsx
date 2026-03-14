@@ -23,11 +23,12 @@ import {
 } from "@/components/ui/dialog";
 import {
   Crown, Users, Copy, ArrowLeft, Trash2,
-  LogOut, UserCheck, Loader2, Pencil, Swords, Check, Dice5, Shield,
+  LogOut, UserCheck, Loader2, Pencil, Swords, Check, Dice5, Shield, ClipboardList, Zap,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import RolagensTab from "@/components/RolagensTab";
 import PersonagensTab from "@/components/PersonagensTab";
+import PreparacaoTab from "@/components/PreparacaoTab";
 
 function memberName(m: { firstName?: string | null; lastName?: string | null; email: string }) {
   if (m.firstName || m.lastName) return [m.firstName, m.lastName].filter(Boolean).join(" ");
@@ -161,7 +162,7 @@ function EditDialog({
   );
 }
 
-type Tab = "membros" | "rolagens" | "agentes";
+type Tab = "membros" | "rolagens" | "agentes" | "preparacao" | "emcena";
 
 export default function CampanhaDetail() {
   const [, params] = useRoute("/campanhas/:id");
@@ -217,6 +218,8 @@ export default function CampanhaDetail() {
   const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: "rolagens", label: "Rolagens", icon: <Dice5 className="w-3.5 h-3.5" /> },
     { id: "agentes", label: "Agentes", icon: <Shield className="w-3.5 h-3.5" /> },
+    { id: "preparacao", label: "Preparação", icon: <ClipboardList className="w-3.5 h-3.5" /> },
+    { id: "emcena", label: "Em Cena", icon: <Zap className="w-3.5 h-3.5" /> },
     { id: "membros", label: "Membros", icon: <Users className="w-3.5 h-3.5" /> },
   ];
 
@@ -288,6 +291,22 @@ export default function CampanhaDetail() {
 
       {activeTab === "agentes" && (
         <PersonagensTab campanhaId={campanha.id} amMestre={amMestre} />
+      )}
+
+      {activeTab === "preparacao" && (
+        <PreparacaoTab campanhaId={campanha.id} amMestre={amMestre} />
+      )}
+
+      {activeTab === "emcena" && (
+        <div className="border border-border/40 border-dashed rounded-sm p-10 text-center space-y-2">
+          <Zap className="w-10 h-10 text-muted-foreground/30 mx-auto" />
+          <p className="font-mono text-sm text-muted-foreground">
+            Modo Em Cena — em desenvolvimento.
+          </p>
+          <p className="font-mono text-xs text-muted-foreground/50">
+            Aqui será possível acompanhar a sessão em tempo real com recursos de combate e narrativa.
+          </p>
+        </div>
       )}
 
       {activeTab === "membros" && (

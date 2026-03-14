@@ -380,6 +380,7 @@ router.get("/campanhas/:id/personagens", async (req: Request, res: Response) => 
       personagemId: campanhaPersonagensTable.personagemId,
       userId: campanhaPersonagensTable.userId,
       addedAt: campanhaPersonagensTable.addedAt,
+      preparacao: campanhaPersonagensTable.preparacao,
       personagemNome: personagensTable.nome,
       personagemNex: personagensTable.nex,
       personagemNivel: personagensTable.nivel,
@@ -397,6 +398,7 @@ router.get("/campanhas/:id/personagens", async (req: Request, res: Response) => 
       personagemSanAtual: personagensTable.sanAtual,
       personagemSanMaximo: personagensTable.sanMaximo,
       personagemPericias: personagensTable.pericias,
+      personagemRituals: personagensTable.rituals,
       classeNome: classesTable.nome,
       classeId: personagensTable.classeId,
       userFirstName: usersTable.firstName,
@@ -410,6 +412,54 @@ router.get("/campanhas/:id/personagens", async (req: Request, res: Response) => 
     .orderBy(campanhaPersonagensTable.addedAt);
 
   res.json(rows);
+});
+
+router.put("/campanhas/:id/personagens/:personagemId/preparacao", async (req: Request, res: Response) => {
+  if (!isMembro(req)) { res.status(401).json({ error: "Unauthorized" }); return; }
+  const userId = req.user!.id;
+  const membership = await getMembroship(req.params.id, userId);
+  if (!membership) { res.status(403).json({ error: "Forbidden" }); return; }
+
+  const [entry] = await db.select().from(campanhaPersonagensTable)
+    .where(and(eq(campanhaPersonagensTable.campanhaId, req.params.id), eq(campanhaPersonagensTable.personagemId, req.params.personagemId)));
+  if (!entry) { res.status(404).json({ error: "Personagem não encontrado nesta campanha" }); return; }
+
+  const isMestr = await getMestreCampaign(req.params.id, userId);
+  if (!isMestr && entry.userId !== userId) {
+    res.status(403).json({ error: "Você só pode editar a preparação dos seus próprios personagens" }); return;
+  }
+
+  const { rituais, itens, pronto } = req.body;
+  const prep: { rituais?: string[]; itens?: string[]; pronto?: boolean } = {};
+  if (Array.isArray(rituais)) {
+    if (!rituais.every((r: unknown) => typeof r === "string")) {
+      res.status(400).json({ error: "rituais must be an array of strings" }); return;
+    }
+    const [personagem] = await db.select({ rituals: personagensTable.rituals })
+      .from(personagensTable).where(eq(personagensTable.id, req.params.personagemId));
+    const knownSet = new Set(personagem?.rituals ?? []);
+    const invalidRituals = (rituais as string[]).filter((id) => !knownSet.has(id));
+    if (invalidRituals.length > 0) {
+      res.status(400).json({ error: "Rituais inválidos — agente não conhece esses rituais" }); return;
+    }
+    prep.rituais = [...new Set(rituais as string[])];
+  }
+  if (Array.isArray(itens)) {
+    if (!itens.every((i: unknown) => typeof i === "string")) {
+      res.status(400).json({ error: "itens must be an array of strings" }); return;
+    }
+    prep.itens = [...new Set(itens as string[])];
+  }
+  if (typeof pronto === "boolean") prep.pronto = pronto;
+
+  const existing = (entry.preparacao ?? {}) as { rituais?: string[]; itens?: string[]; pronto?: boolean };
+  const merged = { ...existing, ...prep };
+
+  await db.update(campanhaPersonagensTable)
+    .set({ preparacao: merged })
+    .where(eq(campanhaPersonagensTable.id, entry.id));
+
+  res.json(merged);
 });
 
 router.post("/campanhas/:id/personagens", async (req: Request, res: Response) => {
@@ -457,6 +507,7 @@ router.post("/campanhas/:id/personagens", async (req: Request, res: Response) =>
     personagemId: campanhaPersonagensTable.personagemId,
     userId: campanhaPersonagensTable.userId,
     addedAt: campanhaPersonagensTable.addedAt,
+    preparacao: campanhaPersonagensTable.preparacao,
     personagemNome: personagensTable.nome,
     personagemNex: personagensTable.nex,
     personagemNivel: personagensTable.nivel,
@@ -474,6 +525,7 @@ router.post("/campanhas/:id/personagens", async (req: Request, res: Response) =>
     personagemSanAtual: personagensTable.sanAtual,
     personagemSanMaximo: personagensTable.sanMaximo,
     personagemPericias: personagensTable.pericias,
+    personagemRituals: personagensTable.rituals,
     classeNome: classesTable.nome,
     classeId: personagensTable.classeId,
     userFirstName: usersTable.firstName,

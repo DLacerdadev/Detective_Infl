@@ -160,12 +160,19 @@ export function useRemoverMembro(campanhaId: string) {
   });
 }
 
+export interface PreparacaoData {
+  rituais?: string[];
+  itens?: string[];
+  pronto?: boolean;
+}
+
 export interface CampanhaPersonagemEntry {
   id: string;
   campanhaId: string;
   personagemId: string;
   userId: string;
   addedAt: string;
+  preparacao: PreparacaoData | null;
   personagemNome: string;
   personagemNex: number;
   personagemNivel: number;
@@ -183,6 +190,7 @@ export interface CampanhaPersonagemEntry {
   personagemSanAtual: number | null;
   personagemSanMaximo: number | null;
   personagemPericias: string[] | null;
+  personagemRituals: string[] | null;
   classeNome: string | null;
   classeId: string | null;
   userFirstName: string | null;
@@ -213,6 +221,18 @@ export function useRemoverPersonagemDaCampanha(campanhaId: string) {
   return useMutation<void, Error, string>({
     mutationFn: (personagemId) =>
       apiFetch(`/api/campanhas/${campanhaId}/personagens/${personagemId}`, { method: "DELETE" }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: personagensKey(campanhaId) }),
+  });
+}
+
+export function useUpdatePreparacao(campanhaId: string) {
+  const qc = useQueryClient();
+  return useMutation<PreparacaoData, Error, { personagemId: string; data: Partial<PreparacaoData> }>({
+    mutationFn: ({ personagemId, data }) =>
+      apiFetch(`/api/campanhas/${campanhaId}/personagens/${personagemId}/preparacao`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+      }),
     onSuccess: () => qc.invalidateQueries({ queryKey: personagensKey(campanhaId) }),
   });
 }
