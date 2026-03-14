@@ -164,14 +164,15 @@ function PPTracker({
 function CargaLimites({
   forca, inventario, patente,
 }: { forca: number; inventario: InventarioItem[]; patente: ReturnType<typeof calcPatente> }) {
+  const safeInv = Array.isArray(inventario) ? inventario : [];
   const capacidade = capacidadeCarga(forca);
-  const usados = inventario.reduce((s, i) => s + (i.espacos ?? 1), 0);
+  const usados = safeInv.reduce((s, i) => s + (i.espacos ?? 1), 0);
   const pct = Math.min(100, (usados / capacidade) * 100);
   const sobrecarregado = usados > capacidade;
   const limite_abs = capacidade * 2;
 
   const usadosPorCat = { I: 0, II: 0, III: 0, IV: 0 };
-  for (const item of inventario) {
+  for (const item of safeInv) {
     const cat = item.categoria as keyof typeof usadosPorCat;
     if (cat in usadosPorCat) usadosPorCat[cat]++;
   }
@@ -313,35 +314,92 @@ function classifySection(item: ItemCompendio): SectionKey {
   return "geral_outro";
 }
 
-function ItemRow({ item, onAdd, onClose, setSearch }: {
+type BlockReason = "patente" | "limite" | null;
+
+function checkBlocked(
+  item: ItemCompendio,
+  patenteLimites: Record<string, number>,
+  usadosPorCat: Record<string, number>,
+): BlockReason {
+  const cat = item.categoria ?? "0";
+  if (cat === "0") return null;
+  const limite = patenteLimites[cat] ?? 0;
+  if (limite === 0) return "patente";
+  const usado = usadosPorCat[cat] ?? 0;
+  if (usado >= limite) return "limite";
+  return null;
+}
+
+function ItemRow({ item, onAdd, onClose, setSearch, blocked }: {
   item: ItemCompendio;
   onAdd: (i: ItemCompendio) => void;
   onClose: () => void;
   setSearch: (s: string) => void;
+  blocked: BlockReason;
 }) {
+  const isBlocked = blocked !== null;
+
   return (
-    <button
-      onClick={() => { onAdd(item); onClose(); setSearch(""); }}
-      className="w-full text-left flex items-center gap-2 px-3 py-1.5 rounded hover:bg-slate-800/80 transition-colors group"
-    >
-      {catBadge(item.categoria)}
-      <span className="flex-1 text-slate-200 text-sm">{item.nome}</span>
-      <span className="text-xs text-slate-600 font-mono shrink-0">{(item.espacos ?? 1) === 0 ? "—" : `${item.espacos ?? 1}esp`}</span>
-      {item.fonte === "SOBREVIVENDO_AO_HORROR" && (
-        <span className="text-xs text-amber-400/60 font-mono shrink-0">SaH</span>
+    <div className="relative group/row">
+      <button
+        disabled={isBlocked}
+        onClick={() => { if (!isBlocked) { onAdd(item); onClose(); setSearch(""); } }}
+        className={`
+          w-full text-left flex items-center gap-2 px-3 py-1.5 rounded transition-colors
+          ${isBlocked
+            ? "opacity-40 cursor-not-allowed"
+            : "hover:bg-slate-800/80 cursor-pointer"
+          }
+        `}
+      >
+        {catBadge(item.categoria)}
+        <span className={`flex-1 text-sm ${isBlocked ? "text-slate-500" : "text-slate-200"}`}>{item.nome}</span>
+        <span className="text-xs text-slate-600 font-mono shrink-0">{(item.espacos ?? 1) === 0 ? "—" : `${item.espacos ?? 1}esp`}</span>
+        {item.fonte === "SOBREVIVENDO_AO_HORROR" && (
+          <span className="text-xs text-amber-400/60 font-mono shrink-0">SaH</span>
+        )}
+        {isBlocked ? (
+          <AlertTriangle className="h-3.5 w-3.5 text-slate-600 shrink-0" />
+        ) : (
+          <Plus className="h-3.5 w-3.5 text-slate-600 group-hover/row:text-emerald-400 transition-colors shrink-0" />
+        )}
+      </button>
+      {isBlocked && (
+        <div className="absolute right-8 top-1/2 -translate-y-1/2 hidden group-hover/row:flex items-center z-10">
+          <span className="bg-slate-950 border border-slate-700 text-slate-300 text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap">
+            {blocked === "patente"
+              ? "Patente insuficiente para esta categoria"
+              : "Limite de itens desta categoria atingido"
+            }
+          </span>
+        </div>
       )}
-      <Plus className="h-3.5 w-3.5 text-slate-600 group-hover:text-emerald-400 transition-colors shrink-0" />
-    </button>
+    </div>
   );
 }
 
 function AddItemDialog({
-  open, onClose, onAdd,
-}: { open: boolean; onClose: () => void; onAdd: (item: ItemCompendio) => void }) {
+  open, onClose, onAdd, inventario, patenteLimites,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onAdd: (item: ItemCompendio) => void;
+  inventario: InventarioItem[];
+  patenteLimites: Record<string, number>;
+}) {
   const { data: itens } = useListItens();
   const [search, setSearch] = useState("");
 
   const searching = search.trim().length > 0;
+
+  const usadosPorCat = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const item of (Array.isArray(inventario) ? inventario : [])) {
+      const cat = item.categoria ?? "0";
+      counts[cat] = (counts[cat] ?? 0) + 1;
+    }
+    return counts;
+  }, [inventario]);
 
   const flatFiltered = useMemo(() => {
     if (!itens || !searching) return [];
@@ -390,7 +448,14 @@ function AddItemDialog({
             /* ── flat search results ── */
             <div className="space-y-0.5 py-1">
               {flatFiltered.map((item) => (
-                <ItemRow key={item.id} item={item} onAdd={onAdd} onClose={onClose} setSearch={setSearch} />
+                <ItemRow
+                  key={item.id}
+                  item={item}
+                  onAdd={onAdd}
+                  onClose={onClose}
+                  setSearch={setSearch}
+                  blocked={checkBlocked(item, patenteLimites, usadosPorCat)}
+                />
               ))}
               {flatFiltered.length === 0 && (
                 <p className="text-center py-8 text-slate-500 text-sm">Nenhum item encontrado.</p>
@@ -413,7 +478,14 @@ function AddItemDialog({
                     </div>
                     <div className="space-y-0.5">
                       {items.map((item) => (
-                        <ItemRow key={item.id} item={item} onAdd={onAdd} onClose={onClose} setSearch={setSearch} />
+                        <ItemRow
+                          key={item.id}
+                          item={item}
+                          onAdd={onAdd}
+                          onClose={onClose}
+                          setSearch={setSearch}
+                          blocked={checkBlocked(item, patenteLimites, usadosPorCat)}
+                        />
                       ))}
                     </div>
                   </div>
@@ -438,8 +510,9 @@ interface CharacterInventarioTabProps {
 }
 
 export default function CharacterInventarioTab({
-  charId, forca, pontosPrestígio, inventario, isOwner,
+  charId, forca, pontosPrestígio, inventario: inventarioRaw, isOwner,
 }: CharacterInventarioTabProps) {
+  const inventario = Array.isArray(inventarioRaw) ? inventarioRaw : [];
   const [addOpen, setAddOpen] = useState(false);
   const updateMut = useUpdateCharacterMut(charId);
   const { toast } = useToast();
@@ -569,6 +642,8 @@ export default function CharacterInventarioTab({
         open={addOpen}
         onClose={() => setAddOpen(false)}
         onAdd={handleAddItem}
+        inventario={inventario}
+        patenteLimites={patente.limites}
       />
     </div>
   );
