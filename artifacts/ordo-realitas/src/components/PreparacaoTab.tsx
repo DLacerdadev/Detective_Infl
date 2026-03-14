@@ -274,10 +274,15 @@ function AgentPrepCard({
   const [localItens, setLocalItens] = useState<string[] | null>(null);
   const [localPronto, setLocalPronto] = useState<boolean | null>(null);
 
-  const rituaisRef = useRef<string[]>(serverPrep.rituais ?? []);
+  const knownRitualIds = entry.personagemRituals ?? [];
+  const defaultRituais = (serverPrep.rituais ?? []).length === 0 && knownRitualIds.length > 0
+    ? knownRitualIds
+    : serverPrep.rituais ?? [];
+
+  const rituaisRef = useRef<string[]>(defaultRituais);
   const itensRef = useRef<string[]>(serverPrep.itens ?? []);
 
-  const effectiveRituais = localRituais ?? serverPrep.rituais ?? [];
+  const effectiveRituais = localRituais ?? defaultRituais;
   const effectiveItens = localItens ?? serverPrep.itens ?? [];
   const isReady = localPronto ?? serverPrep.pronto ?? false;
 
@@ -287,7 +292,6 @@ function AgentPrepCard({
   const selectedRitualIds = useMemo(() => new Set(effectiveRituais), [effectiveRituais]);
   const selectedItemIds = useMemo(() => new Set(effectiveItens), [effectiveItens]);
 
-  const knownRitualIds = entry.personagemRituals ?? [];
   const isOcultista = entry.classeNome?.toLowerCase().includes("ocultista");
 
   const prepRituals = useMemo(

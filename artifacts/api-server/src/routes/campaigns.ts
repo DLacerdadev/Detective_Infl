@@ -499,6 +499,11 @@ router.post("/campanhas/:id/personagens", async (req: Request, res: Response) =>
     campanhaId: req.params.id,
     personagemId,
     userId: personagem.userId,
+    preparacao: {
+      rituais: personagem.rituals ?? [],
+      itens: [],
+      pronto: false,
+    },
   });
 
   const [row] = await db.select({
