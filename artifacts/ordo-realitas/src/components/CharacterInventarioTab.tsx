@@ -244,28 +244,128 @@ function CargaLimites({
 
 // ── sub: add item dialog ─────────────────────────────────────
 
+const CAT_ORDER: Record<string, number> = { "0": 0, "I": 1, "II": 2, "III": 3, "IV": 4 };
+
+type SectionKey =
+  | "arma_corpo_leve"
+  | "arma_corpo_uma_mao"
+  | "arma_corpo_duas_maos"
+  | "arma_arremesso"
+  | "arma_disparo"
+  | "arma_fogo_leve"
+  | "arma_fogo_uma_mao"
+  | "arma_fogo_duas_maos"
+  | "arma_pesada"
+  | "municao"
+  | "protecao"
+  | "geral_acessorio"
+  | "geral_explosivo"
+  | "geral_operacional"
+  | "geral_medicamento"
+  | "geral_paranormal"
+  | "geral_outro";
+
+const SECTION_META: { key: SectionKey; label: string; icon: React.ReactNode }[] = [
+  { key: "arma_corpo_leve",      label: "Corpo a Corpo · Leve",        icon: <Sword className="h-3.5 w-3.5" /> },
+  { key: "arma_corpo_uma_mao",   label: "Corpo a Corpo · Uma Mão",     icon: <Sword className="h-3.5 w-3.5" /> },
+  { key: "arma_corpo_duas_maos", label: "Corpo a Corpo · Duas Mãos",   icon: <Sword className="h-3.5 w-3.5" /> },
+  { key: "arma_arremesso",       label: "Arremesso",                   icon: <Sword className="h-3.5 w-3.5" /> },
+  { key: "arma_disparo",         label: "Disparo",                     icon: <Zap className="h-3.5 w-3.5" /> },
+  { key: "arma_fogo_leve",       label: "Fogo · Leve",                 icon: <Zap className="h-3.5 w-3.5" /> },
+  { key: "arma_fogo_uma_mao",    label: "Fogo · Uma Mão",              icon: <Zap className="h-3.5 w-3.5" /> },
+  { key: "arma_fogo_duas_maos",  label: "Fogo · Duas Mãos",            icon: <Zap className="h-3.5 w-3.5" /> },
+  { key: "arma_pesada",          label: "Arma Pesada",                 icon: <Zap className="h-3.5 w-3.5" /> },
+  { key: "municao",              label: "Munições",                    icon: <Package className="h-3.5 w-3.5" /> },
+  { key: "protecao",             label: "Proteções",                   icon: <Shield className="h-3.5 w-3.5" /> },
+  { key: "geral_acessorio",      label: "Gerais · Acessório",          icon: <Package className="h-3.5 w-3.5" /> },
+  { key: "geral_explosivo",      label: "Gerais · Explosivo",          icon: <Package className="h-3.5 w-3.5" /> },
+  { key: "geral_operacional",    label: "Gerais · Operacional",        icon: <Package className="h-3.5 w-3.5" /> },
+  { key: "geral_medicamento",    label: "Gerais · Medicamento",        icon: <FlaskConical className="h-3.5 w-3.5" /> },
+  { key: "geral_paranormal",     label: "Gerais · Paranormal",         icon: <Sparkles className="h-3.5 w-3.5" /> },
+  { key: "geral_outro",          label: "Gerais",                      icon: <Package className="h-3.5 w-3.5" /> },
+];
+
+function classifySection(item: ItemCompendio): SectionKey {
+  const t = item.tipo;
+  const s = item.subtipo ?? "";
+  if (t === "ARMA") {
+    if (s === "CORPO_LEVE")      return "arma_corpo_leve";
+    if (s === "CORPO_UMA_MAO")   return "arma_corpo_uma_mao";
+    if (s === "CORPO_DUAS_MAOS") return "arma_corpo_duas_maos";
+    if (s === "ARREMESSO")       return "arma_arremesso";
+    if (s === "DISPARO_DUAS_MAOS") return "arma_disparo";
+    if (s === "FOGO_LEVE")       return "arma_fogo_leve";
+    if (s === "FOGO_UMA_MAO")    return "arma_fogo_uma_mao";
+    if (s === "FOGO_DUAS_MAOS")  return "arma_fogo_duas_maos";
+    if (s === "PESADA")          return "arma_pesada";
+    return "arma_corpo_uma_mao";
+  }
+  if (t === "MUNICAO")  return "municao";
+  if (t === "PROTECAO") return "protecao";
+  if (t === "GERAL") {
+    if (s === "ACESSORIO")   return "geral_acessorio";
+    if (s === "EXPLOSIVO")   return "geral_explosivo";
+    if (s === "OPERACIONAL") return "geral_operacional";
+    if (s === "MEDICAMENTO") return "geral_medicamento";
+    if (s === "PARANORMAL")  return "geral_paranormal";
+    return "geral_outro";
+  }
+  return "geral_outro";
+}
+
+function ItemRow({ item, onAdd, onClose, setSearch }: {
+  item: ItemCompendio;
+  onAdd: (i: ItemCompendio) => void;
+  onClose: () => void;
+  setSearch: (s: string) => void;
+}) {
+  return (
+    <button
+      onClick={() => { onAdd(item); onClose(); setSearch(""); }}
+      className="w-full text-left flex items-center gap-2 px-3 py-1.5 rounded hover:bg-slate-800/80 transition-colors group"
+    >
+      {catBadge(item.categoria)}
+      <span className="flex-1 text-slate-200 text-sm">{item.nome}</span>
+      <span className="text-xs text-slate-600 font-mono shrink-0">{(item.espacos ?? 1) === 0 ? "—" : `${item.espacos ?? 1}esp`}</span>
+      {item.fonte === "SOBREVIVENDO_AO_HORROR" && (
+        <span className="text-xs text-amber-400/60 font-mono shrink-0">SaH</span>
+      )}
+      <Plus className="h-3.5 w-3.5 text-slate-600 group-hover:text-emerald-400 transition-colors shrink-0" />
+    </button>
+  );
+}
+
 function AddItemDialog({
   open, onClose, onAdd,
 }: { open: boolean; onClose: () => void; onAdd: (item: ItemCompendio) => void }) {
   const { data: itens } = useListItens();
   const [search, setSearch] = useState("");
 
-  const filtered = useMemo(() => {
-    const q = search.toLowerCase().trim();
-    if (!itens) return [];
-    if (!q) return itens;
-    return itens.filter(
-      (i) => i.nome.toLowerCase().includes(q) || (i.subtipo ?? "").toLowerCase().includes(q)
-    );
-  }, [itens, search]);
+  const searching = search.trim().length > 0;
 
-  const SUBTIPO_LABEL: Record<string, string> = {
-    CORPO_LEVE: "Corpo Leve", CORPO_UMA_MAO: "Uma Mão", CORPO_DUAS_MAOS: "Duas Mãos",
-    DISPARO_DUAS_MAOS: "Disparo", FOGO_LEVE: "Fogo Leve", FOGO_UMA_MAO: "Fogo Uma Mão",
-    FOGO_DUAS_MAOS: "Fogo Duas Mãos", PESADA: "Pesada", ARREMESSO: "Arremesso",
-    ACESSORIO: "Acessório", EXPLOSIVO: "Explosivo", OPERACIONAL: "Operacional",
-    MEDICAMENTO: "Medicamento", PARANORMAL: "Paranormal",
-  };
+  const flatFiltered = useMemo(() => {
+    if (!itens || !searching) return [];
+    const q = search.toLowerCase().trim();
+    return itens.filter((i) => i.nome.toLowerCase().includes(q));
+  }, [itens, search, searching]);
+
+  const grouped = useMemo(() => {
+    if (!itens) return new Map<SectionKey, ItemCompendio[]>();
+    const map = new Map<SectionKey, ItemCompendio[]>();
+    for (const item of itens) {
+      const key = classifySection(item);
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(item);
+    }
+    for (const [, arr] of map) {
+      arr.sort((a, b) => {
+        const ca = CAT_ORDER[a.categoria ?? "0"] ?? 0;
+        const cb = CAT_ORDER[b.categoria ?? "0"] ?? 0;
+        return ca !== cb ? ca - cb : a.nome.localeCompare(b.nome, "pt-BR");
+      });
+    }
+    return map;
+  }, [itens]);
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
@@ -274,39 +374,52 @@ function AddItemDialog({
           <DialogTitle className="font-display text-slate-100">Adicionar Item ao Inventário</DialogTitle>
         </DialogHeader>
 
-        <div className="relative">
+        <div className="relative shrink-0">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
           <Input
             autoFocus
-            placeholder="Buscar item…"
+            placeholder="Buscar item por nome…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9 bg-slate-800 border-slate-700"
           />
         </div>
 
-        <div className="flex-1 overflow-y-auto space-y-1 pr-1">
-          {filtered.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => { onAdd(item); onClose(); setSearch(""); }}
-              className="w-full text-left flex items-center gap-2 px-3 py-2 rounded hover:bg-slate-800/80 transition-colors group"
-            >
-              <span className="text-slate-500 shrink-0">{TIPO_ICON[item.tipo] ?? <Package className="h-3.5 w-3.5" />}</span>
-              {catBadge(item.categoria)}
-              <span className="flex-1 text-slate-200 text-sm">{item.nome}</span>
-              {item.subtipo && (
-                <span className="text-slate-500 text-xs">{SUBTIPO_LABEL[item.subtipo] ?? item.subtipo}</span>
+        <div className="flex-1 overflow-y-auto pr-1">
+          {searching ? (
+            /* ── flat search results ── */
+            <div className="space-y-0.5 py-1">
+              {flatFiltered.map((item) => (
+                <ItemRow key={item.id} item={item} onAdd={onAdd} onClose={onClose} setSearch={setSearch} />
+              ))}
+              {flatFiltered.length === 0 && (
+                <p className="text-center py-8 text-slate-500 text-sm">Nenhum item encontrado.</p>
               )}
-              <span className="text-xs text-slate-600 font-mono">{item.espacos ?? 1}esp</span>
-              {item.fonte === "SOBREVIVENDO_AO_HORROR" && (
-                <span className="text-xs text-amber-400/70 font-mono">SaH</span>
-              )}
-              <Plus className="h-3.5 w-3.5 text-slate-600 group-hover:text-emerald-400 transition-colors shrink-0" />
-            </button>
-          ))}
-          {filtered.length === 0 && (
-            <p className="text-center py-8 text-slate-500 text-sm">Nenhum item encontrado.</p>
+            </div>
+          ) : (
+            /* ── grouped sections ── */
+            <div className="space-y-3 py-1">
+              {SECTION_META.map((sec) => {
+                const items = grouped.get(sec.key);
+                if (!items || items.length === 0) return null;
+                return (
+                  <div key={sec.key}>
+                    <div className="flex items-center gap-1.5 px-1 py-1 mb-0.5">
+                      <span className="text-slate-500">{sec.icon}</span>
+                      <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest font-mono">
+                        {sec.label}
+                      </span>
+                      <div className="flex-1 h-px bg-slate-800 ml-1" />
+                    </div>
+                    <div className="space-y-0.5">
+                      {items.map((item) => (
+                        <ItemRow key={item.id} item={item} onAdd={onAdd} onClose={onClose} setSearch={setSearch} />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           )}
         </div>
       </DialogContent>
