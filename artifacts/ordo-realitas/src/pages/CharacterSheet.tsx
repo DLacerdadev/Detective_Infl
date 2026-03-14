@@ -6,10 +6,9 @@ import CharacterPericiasTab from "@/components/CharacterPericiasTab";
 import CharacterHabilidadesTab from "@/components/CharacterHabilidadesTab";
 import CharacterRituaisTab from "@/components/CharacterRituaisTab";
 import CharacterInventarioTab, { type InventarioItem } from "@/components/CharacterInventarioTab";
-import { EquipamentosTab } from "@/components/EquipamentosTab";
 import {
   ArrowLeft, Shield, Skull, BookOpen, Backpack, ScrollText,
-  Pencil, Zap, Package,
+  Pencil, Zap,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,7 +19,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 
-type Tab = "pericias" | "habilidades" | "rituais" | "inventario" | "equipamentos" | "historia";
+type Tab = "pericias" | "habilidades" | "rituais" | "inventario" | "historia";
 
 const ATTR_COLOR: Record<string, string> = {
   FOR: "border-red-700/60 bg-red-900/20 text-red-300",
@@ -159,9 +158,8 @@ export default function CharacterSheet() {
     { id: "pericias", label: "Perícias", icon: <BookOpen className="w-3.5 h-3.5" /> },
     { id: "habilidades", label: "Habilidades", icon: <Zap className="w-3.5 h-3.5" /> },
     { id: "rituais", label: "Rituais", icon: <ScrollText className="w-3.5 h-3.5" /> },
-    { id: "inventario",    label: "Inventário",   icon: <Backpack className="w-3.5 h-3.5" /> },
-    { id: "equipamentos",  label: "Equipamentos", icon: <Package className="w-3.5 h-3.5" /> },
-    { id: "historia",      label: "Histórico",    icon: <Skull className="w-3.5 h-3.5" /> },
+    { id: "inventario", label: "Inventário", icon: <Backpack className="w-3.5 h-3.5" /> },
+    { id: "historia", label: "Histórico", icon: <Skull className="w-3.5 h-3.5" /> },
   ];
 
   const atributos = {
@@ -332,10 +330,6 @@ export default function CharacterSheet() {
               inventario={((char as any).inventario ?? []) as InventarioItem[]}
               isOwner={isOwner}
             />
-          )}
-
-          {activeTab === "equipamentos" && (
-            <EquipamentosTab />
           )}
 
           {activeTab === "historia" && (

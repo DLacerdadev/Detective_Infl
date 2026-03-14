@@ -4,11 +4,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useListClasses, useListPericias } from "@workspace/api-client-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { ShieldAlert } from "lucide-react";
+import { ShieldAlert, Package } from "lucide-react";
 import { OrigensTab } from "@/components/OrigensTab";
 import { RituaisAdminTab } from "@/components/RituaisAdminTab";
 import { HabilidadesAdminTab } from "@/components/HabilidadesAdminTab";
 import { TrilhasAdminTab } from "@/components/TrilhasAdminTab";
+import { EquipamentosTab } from "@/components/EquipamentosTab";
 
 function GenericTable({ title, data, columns }: { title: string; data: any[] | undefined; columns: { key: string; label: string }[] }) {
   if (!data) return <div className="p-4 text-muted-foreground animate-pulse font-mono text-sm">Carregando...</div>;
@@ -65,13 +66,17 @@ export default function Admin() {
       </div>
 
       <Tabs defaultValue="origens" className="w-full">
-        <TabsList className="mb-6 bg-secondary/20 p-1 border border-border">
+        <TabsList className="mb-6 bg-secondary/20 p-1 border border-border flex-wrap">
           <TabsTrigger value="origens">ORIGENS</TabsTrigger>
           <TabsTrigger value="classes">CLASSES</TabsTrigger>
           <TabsTrigger value="pericias">PERÍCIAS</TabsTrigger>
           <TabsTrigger value="rituais">RITUAIS</TabsTrigger>
           <TabsTrigger value="habilidades">HABILIDADES</TabsTrigger>
           <TabsTrigger value="trilhas">TRILHAS</TabsTrigger>
+          <TabsTrigger value="equipamentos" className="gap-1.5">
+            <Package className="h-3.5 w-3.5" />
+            EQUIPAMENTOS
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="origens">
@@ -113,6 +118,10 @@ export default function Admin() {
 
         <TabsContent value="trilhas">
           <TrilhasAdminTab />
+        </TabsContent>
+
+        <TabsContent value="equipamentos">
+          <EquipamentosTab />
         </TabsContent>
       </Tabs>
     </div>
