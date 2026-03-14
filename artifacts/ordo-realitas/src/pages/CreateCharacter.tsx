@@ -1,10 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { useListClasses, useListOrigins } from "@workspace/api-client-react";
+import { useListClasses, useListOrigins, useListRituals, type Ritual } from "@workspace/api-client-react";
 import { useCreateCharacterMut } from "@/hooks/use-api-mutations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
-import { Search, Lock, CheckCircle2, Circle } from "lucide-react";
+import { Search, Lock, CheckCircle2, Circle, Sparkles } from "lucide-react";
 
 // ── static pericias ───────────────────────────────────────────────────────
 type PericiaStatic = {
@@ -114,6 +114,16 @@ function LockedBadge({ nome, color }: { nome: string; color: "amber" | "blue" })
   );
 }
 
+// ── element config ─────────────────────────────────────────────────────────
+const ELEM_CONFIG: Record<string, { label: string; color: string; bg: string; border: string }> = {
+  Sangue:       { label: "Sangue",       color: "text-red-400",    bg: "bg-red-900/20",    border: "border-red-700/50" },
+  Morte:        { label: "Morte",        color: "text-slate-400",  bg: "bg-slate-900/30",  border: "border-slate-600/50" },
+  Conhecimento: { label: "Conhecimento", color: "text-cyan-400",   bg: "bg-cyan-900/20",   border: "border-cyan-700/50" },
+  Energia:      { label: "Energia",      color: "text-yellow-400", bg: "bg-yellow-900/20", border: "border-yellow-700/50" },
+  Medo:         { label: "Medo",         color: "text-purple-400", bg: "bg-purple-900/20", border: "border-purple-700/50" },
+  "Variável":   { label: "Variável",     color: "text-slate-400",  bg: "bg-slate-800/20",  border: "border-slate-600/50" },
+};
+
 // ── component ─────────────────────────────────────────────────────────────
 export default function CreateCharacter() {
   const [, setLocation] = useLocation();
@@ -121,9 +131,13 @@ export default function CreateCharacter() {
   const [step, setStep] = useState(1);
   const [periciaSearch, setPericiaSearch] = useState("");
   const [classeGrupoChoices, setClasseGrupoChoices] = useState<(string | null)[]>([null, null]);
+  const [selectedRituais, setSelectedRituais] = useState<string[]>([]);
+  const [ritualSearch, setRitualSearch] = useState("");
+  const [ritualElementFilter, setRitualElementFilter] = useState<string>("todos");
 
   const { data: classes } = useListClasses();
   const { data: origins } = useListOrigins();
+  const { data: allRituais } = useListRituals();
   const createMut = useCreateCharacterMut();
 
   const form = useForm<FormData>({
@@ -143,6 +157,7 @@ export default function CreateCharacter() {
 
   const selectedClass  = (classes as any[])?.find((c: any) => c.id === watchedClasseId);
   const selectedOrigin = (origins as any[])?.find((o: any) => o.id === watchedOrigemId);
+  const isOcultista = selectedClass?.nome === "Ocultista";
 
   const classeConfig: ClassePericiaConfig =
     CLASSE_PERICIAS[selectedClass?.nome ?? ""] ?? { fixas: [], grupos: [] };
@@ -151,6 +166,37 @@ export default function CreateCharacter() {
   useMemo(() => {
     setClasseGrupoChoices(new Array(Math.max(classeConfig.grupos.length, 2)).fill(null));
   }, [watchedClasseId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Reset ritual selection and clamp step when class changes
+  useEffect(() => {
+    setSelectedRituais([]);
+    setRitualSearch("");
+    setRitualElementFilter("todos");
+    setStep((s) => Math.min(s, isOcultista ? 6 : 5));
+  }, [watchedClasseId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // First-circle rituals filtered and searched
+  const rituaisPrimeirCirculo = useMemo(() => {
+    const q = ritualSearch.toLowerCase().trim();
+    return ((allRituais as Ritual[]) ?? [])
+      .filter((r) => r.circulo === 1)
+      .filter((r) => ritualElementFilter === "todos" || r.elemento === ritualElementFilter)
+      .filter((r) => !q || r.nome.toLowerCase().includes(q) || r.elemento.toLowerCase().includes(q));
+  }, [allRituais, ritualSearch, ritualElementFilter]);
+
+  const ritualElementos = useMemo(() => {
+    const set = new Set<string>();
+    ((allRituais as Ritual[]) ?? []).filter((r) => r.circulo === 1).forEach((r) => set.add(r.elemento));
+    return Array.from(set).sort();
+  }, [allRituais]);
+
+  const toggleRitual = (id: string) => {
+    setSelectedRituais((prev) => {
+      if (prev.includes(id)) return prev.filter((x) => x !== id);
+      if (prev.length >= 3) return prev;
+      return [...prev, id];
+    });
+  };
 
   // Pericias from class (fixas + grupo selections)
   const periciasDaClasse: string[] = [
@@ -210,7 +256,11 @@ export default function CreateCharacter() {
   const pointsRemaining = attrPointsTotal - (currentTotal - 5);
 
   // ── navigation ────────────────────────────────────────────────────────
-  const TOTAL_STEPS = 5;
+  const TOTAL_STEPS = isOcultista ? 6 : 5;
+
+  const STEP_LABELS = isOcultista
+    ? ["Identificação", "Classe", "Origem", "Atributos", "Perícias", "Rituais"]
+    : ["Identificação", "Classe", "Origem", "Atributos", "Perícias"];
 
   const nextStep = async () => {
     let valid = false;
@@ -221,6 +271,7 @@ export default function CreateCharacter() {
       valid = await form.trigger(["forca", "agilidade", "intelecto", "vigor", "presenca"]);
       if (valid && pointsRemaining < 0) valid = false;
     }
+    if (step === 5) valid = true;
     if (valid) setStep((s) => s + 1);
   };
 
@@ -232,7 +283,13 @@ export default function CreateCharacter() {
       new Set([...periciasDaClasse, ...periciasDaOrigem, ...data.pericias])
     );
     try {
-      const result = await createMut.mutateAsync({ data: { ...data, pericias: allPericias } });
+      const result = await createMut.mutateAsync({
+        data: {
+          ...data,
+          pericias: allPericias,
+          rituals: isOcultista ? selectedRituais : [],
+        },
+      });
       toast({ title: "Dossiê Criado", description: "Agente registrado com sucesso." });
       setLocation(`/characters/${result.id}`);
     } catch {
@@ -251,7 +308,7 @@ export default function CreateCharacter() {
           ))}
         </div>
         <div className="flex justify-between mt-1">
-          {(["Identificação", "Classe", "Origem", "Atributos", "Perícias"] as const).map((label, i) => (
+          {STEP_LABELS.map((label, i) => (
             <span
               key={label}
               className={`text-[10px] font-mono uppercase tracking-widest transition-colors ${step === i + 1 ? "text-primary" : "text-muted-foreground/50"}`}
@@ -524,6 +581,140 @@ export default function CreateCharacter() {
                       <div className="col-span-3 text-center py-6 text-muted-foreground font-mono text-sm">Nenhuma perícia encontrada.</div>
                     )}
                   </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* ── Step 6: Rituais (Ocultista only) ──────────────── */}
+            {step === 6 && isOcultista && (
+              <motion.div key="s6" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
+                <div className="flex items-end justify-between border-b border-border/50 pb-2">
+                  <div>
+                    <h2 className="text-xl font-display text-primary flex items-center gap-2">
+                      <Sparkles className="h-5 w-5" />
+                      VI. RITUAIS INICIAIS
+                    </h2>
+                    <p className="text-xs text-muted-foreground font-mono mt-1">
+                      Poder de classe Ocultista — escolha 3 rituais de 1º círculo
+                    </p>
+                  </div>
+                  <div className={`font-display text-sm px-3 py-1 rounded-sm border transition-colors ${selectedRituais.length === 3 ? "bg-green-900/30 text-green-500 border-green-800" : "bg-secondary text-foreground border-border"}`}>
+                    {selectedRituais.length}/3
+                  </div>
+                </div>
+
+                {/* info box */}
+                <div className="bg-purple-950/20 border border-purple-800/30 rounded-sm px-4 py-3 text-xs text-purple-200/70 font-mono space-y-1 leading-relaxed">
+                  <p>Rituais podem ser de <strong className="text-purple-300">qualquer elemento</strong>. Você pode trocar rituais por outros de 1º círculo durante interlúdios.</p>
+                  <p>A seleção é opcional — avance sem escolher se preferir definir depois.</p>
+                </div>
+
+                {/* search + element filter */}
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                    <input
+                      type="text"
+                      placeholder="Buscar ritual..."
+                      value={ritualSearch}
+                      onChange={(e) => setRitualSearch(e.target.value)}
+                      className="w-full bg-background border border-border/60 rounded-sm py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary/60 transition-colors font-mono"
+                    />
+                  </div>
+                  <div className="flex gap-1 flex-wrap">
+                    <button
+                      type="button"
+                      onClick={() => setRitualElementFilter("todos")}
+                      className={`px-2.5 py-1.5 rounded-sm text-xs font-mono border transition-colors ${ritualElementFilter === "todos" ? "bg-secondary border-primary/50 text-foreground" : "border-border/50 text-muted-foreground hover:border-border"}`}
+                    >
+                      Todos
+                    </button>
+                    {ritualElementos.map((el) => {
+                      const cfg = ELEM_CONFIG[el] ?? ELEM_CONFIG["Variável"];
+                      const isActive = ritualElementFilter === el;
+                      return (
+                        <button
+                          key={el}
+                          type="button"
+                          onClick={() => setRitualElementFilter(el)}
+                          className={`px-2.5 py-1.5 rounded-sm text-xs font-mono border transition-colors ${isActive ? `${cfg.bg} ${cfg.border} ${cfg.color}` : "border-border/50 text-muted-foreground hover:border-border"}`}
+                        >
+                          {el}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* selected rituais preview */}
+                {selectedRituais.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {selectedRituais.map((id) => {
+                      const r = ((allRituais as Ritual[]) ?? []).find((x) => x.id === id);
+                      if (!r) return null;
+                      const cfg = ELEM_CONFIG[r.elemento] ?? ELEM_CONFIG["Variável"];
+                      return (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => toggleRitual(id)}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm border text-xs font-semibold transition-colors ${cfg.bg} ${cfg.border} ${cfg.color} hover:opacity-80`}
+                        >
+                          <Sparkles className="h-3 w-3" />
+                          {r.nome}
+                          <span className="text-[10px] opacity-60">✕</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* ritual grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[42vh] overflow-y-auto pr-1">
+                  {rituaisPrimeirCirculo.map((r) => {
+                    const cfg = ELEM_CONFIG[r.elemento] ?? ELEM_CONFIG["Variável"];
+                    const isSelected = selectedRituais.includes(r.id);
+                    const isDisabled = !isSelected && selectedRituais.length >= 3;
+                    return (
+                      <button
+                        key={r.id}
+                        type="button"
+                        disabled={isDisabled}
+                        onClick={() => toggleRitual(r.id)}
+                        className={`w-full text-left p-3 border rounded-sm transition-all ${
+                          isSelected
+                            ? `${cfg.bg} ${cfg.border} ring-1 ring-inset ring-current/20`
+                            : isDisabled
+                            ? "border-border/20 bg-secondary/5 opacity-40 cursor-not-allowed"
+                            : "border-border/40 bg-secondary/20 hover:border-border/70 hover:bg-secondary/30"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <div className={`shrink-0 h-4 w-4 rounded-sm border flex items-center justify-center transition-colors ${isSelected ? `${cfg.bg} ${cfg.border}` : "border-border/50 bg-background"}`}>
+                              {isSelected && <CheckCircle2 className={`h-3 w-3 ${cfg.color}`} />}
+                            </div>
+                            <span className={`text-sm font-semibold leading-tight truncate ${isSelected ? cfg.color : "text-foreground"}`}>{r.nome}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-sm border ${cfg.bg} ${cfg.border} ${cfg.color}`}>{r.elemento}</span>
+                            {r.custoPe != null && (
+                              <span className="text-[10px] font-mono text-muted-foreground">{r.custoPe} PE</span>
+                            )}
+                          </div>
+                        </div>
+                        {r.descricao && (
+                          <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2 leading-relaxed text-left">{r.descricao}</p>
+                        )}
+                        {r.execucao && (
+                          <p className="text-[10px] text-muted-foreground/60 font-mono mt-1">{r.execucao}</p>
+                        )}
+                      </button>
+                    );
+                  })}
+                  {rituaisPrimeirCirculo.length === 0 && (
+                    <div className="col-span-2 text-center py-6 text-muted-foreground font-mono text-sm">Nenhum ritual encontrado.</div>
+                  )}
                 </div>
               </motion.div>
             )}

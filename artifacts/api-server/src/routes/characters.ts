@@ -34,7 +34,7 @@ router.post("/characters", async (req: Request, res: Response) => {
   const {
     nome, classeId, origemId, nivel = 1, nex = 0,
     patente = "Recruta", forca = 1, agilidade = 1,
-    intelecto = 1, vigor = 1, presenca = 1, historia, pericias = [],
+    intelecto = 1, vigor = 1, presenca = 1, historia, pericias = [], rituals = [],
   } = req.body;
 
   if (!nome) {
@@ -79,7 +79,7 @@ router.post("/characters", async (req: Request, res: Response) => {
     defesa,
     historia: historia || null,
     pericias,
-    rituals: [],
+    rituals: Array.isArray(rituals) ? rituals : [],
     inventario: [],
   }).returning();
 

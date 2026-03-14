@@ -129,6 +129,7 @@ export interface CreateCharacterBody {
   presenca?: number;
   historia?: string;
   pericias?: string[];
+  rituals?: string[];
 }
 
 export type UpdateCharacterBodyInventarioItem = { [key: string]: unknown };
