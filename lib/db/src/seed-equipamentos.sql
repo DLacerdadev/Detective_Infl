@@ -370,3 +370,67 @@ INSERT INTO itens (nome, tipo, subtipo, categoria, espacos, descricao, fonte) VA
  'Roupa impermeável com tanque e máscara (1h de oxigênio). +5 em resistência contra efeitos ambientais e resistência a dano químico 5. Vestir/despir: ação completa.','SOBREVIVENDO_AO_HORROR'),
 ('Traje Espacial', 'GERAL','OPERACIONAL','II',5,
  'Proteção total para o vácuo. Suprimento de água e oxigênio por 8 horas. Protege contra raios cósmicos. +10 em resistência contra efeitos ambientais e resistência a dano químico 20. Vestir/despir: 2 rodadas.','SOBREVIVENDO_AO_HORROR');
+
+-- ============================================================
+-- EQUIPAMENTOS GERAIS — Itens Paranormais (LB)
+-- ============================================================
+INSERT INTO itens (nome, tipo, subtipo, categoria, espacos, descricao, fonte) VALUES
+('Amarras de Sangue',    'GERAL','PARANORMAL','II',1,
+ 'Cordas ou correntes feitas de Sangue paranormal. Armadilha (ação completa + 2 PE, 3×3m, Reflexos DT Int ou imóvel até fim da cena) ou Laçar (ação padrão + 1 PE, alcance curto, Vontade DT Agi ou paralisado; 1 PE/rodada para manter).','LIVRO_BASE'),
+('Amarras de Morte',     'GERAL','PARANORMAL','II',1,
+ 'Cordas ou correntes feitas de Morte paranormal. Armadilha (ação completa + 2 PE, 3×3m, Reflexos DT Int ou imóvel até fim da cena) ou Laçar (ação padrão + 1 PE, alcance curto, Vontade DT Agi ou paralisado; 1 PE/rodada para manter).','LIVRO_BASE'),
+('Amarras de Conhecimento','GERAL','PARANORMAL','II',1,
+ 'Cordas ou correntes feitas de Conhecimento paranormal. Armadilha (ação completa + 2 PE, 3×3m, Reflexos DT Int ou imóvel até fim da cena) ou Laçar (ação padrão + 1 PE, alcance curto, Vontade DT Agi ou paralisado; 1 PE/rodada para manter).','LIVRO_BASE'),
+('Amarras de Energia',   'GERAL','PARANORMAL','II',1,
+ 'Cordas ou correntes feitas de Energia paranormal. Armadilha (ação completa + 2 PE, 3×3m, Reflexos DT Int ou imóvel até fim da cena) ou Laçar (ação padrão + 1 PE, alcance curto, Vontade DT Agi ou paralisado; 1 PE/rodada para manter).','LIVRO_BASE'),
+('Amarras de Medo',      'GERAL','PARANORMAL','II',1,
+ 'Cordas ou correntes feitas de Medo paranormal. Armadilha (ação completa + 2 PE, 3×3m, Reflexos DT Int ou imóvel até fim da cena) ou Laçar (ação padrão + 1 PE, alcance curto, Vontade DT Agi ou paralisado; 1 PE/rodada para manter).','LIVRO_BASE'),
+('Câmera de Aura Paranormal','GERAL','PARANORMAL','II',1,
+ 'Câmera amaldiçoada com Energia e sigilos de Conhecimento. Ação padrão + 1 PE para tirar foto instantânea que revela auras paranormais (cor associada ao elemento). Modificação: Lente de Revelação — permite ver invisíveis/incorpóreos e fotografar criatura para remover invisibilidade/camuflagem até fim da cena (Vontade DT Pre evita).','LIVRO_BASE'),
+('Componentes Ritualísticos de Sangue',      'GERAL','PARANORMAL','0',1,
+ 'Objetos ligados ao elemento Sangue: órgãos, carne, animais vivos, navalhas, arame farpado, correntes, metal enferrujado… Necessários para conjurar rituais de Sangue.','LIVRO_BASE'),
+('Componentes Ritualísticos de Morte',       'GERAL','PARANORMAL','0',1,
+ 'Objetos ligados ao elemento Morte: ossos, dentes, cinzas, fios de cabelo, cristais pretos, relógios, galhos secos, areia, Lodo… Necessários para conjurar rituais de Morte.','LIVRO_BASE'),
+('Componentes Ritualísticos de Conhecimento','GERAL','PARANORMAL','0',1,
+ 'Objetos ligados ao elemento Conhecimento: escrituras, livros, pergaminhos, canetas, pedras preciosas, ouro, cristais brancos, vidro, máscaras… Necessários para conjurar rituais de Conhecimento.','LIVRO_BASE'),
+('Componentes Ritualísticos de Energia',     'GERAL','PARANORMAL','0',1,
+ 'Objetos ligados ao elemento Energia: eletricidade, celulares, circuitos eletrônicos, fontes de calor, pilhas, pólvora, moedas, dados, ímãs… Necessários para conjurar rituais de Energia.','LIVRO_BASE'),
+('Emissor de Pulsos Paranormais','GERAL','PARANORMAL','II',1,
+ 'Pequena caixa coberta de sigilos. Ação completa + 1 PE para ativar; emite pulso de um elemento (escolhido pelo ativador) que atrai criaturas do mesmo elemento e afasta criaturas do elemento oposto. Vontade DT Pre evita o efeito.','LIVRO_BASE'),
+('Escuta de Ruídos Paranormais', 'GERAL','PARANORMAL','II',1,
+ 'Microfone espião capaz de captar ruídos paranormais. Ação completa + 2 PE para ativar; grava por até 24 horas. Ouvir a gravação fornece +5 em Ocultismo para identificar criaturas.','LIVRO_BASE'),
+('Medidor de Estabilidade da Membrana','GERAL','PARANORMAL','II',1,
+ 'Dispositivo com medidores de temperatura, campo magnético e dilatação temporal. Personagem treinado em Ocultismo pode avaliar o estado da Membrana em uma área, indicando chance de manifestação de entidades.','LIVRO_BASE'),
+('Scanner de Manifestação Paranormal de Sangue',      'GERAL','PARANORMAL','II',1,
+ 'Scanner para o elemento Sangue. Ação padrão para ativar; consome 1 PE/rodada. Enquanto ativo, o usuário sempre sabe a direção de todas as manifestações paranormais de Sangue (rituais, criaturas, itens amaldiçoados) em alcance longo.','LIVRO_BASE'),
+('Scanner de Manifestação Paranormal de Morte',       'GERAL','PARANORMAL','II',1,
+ 'Scanner para o elemento Morte. Ação padrão para ativar; consome 1 PE/rodada. Enquanto ativo, o usuário sempre sabe a direção de todas as manifestações paranormais de Morte em alcance longo.','LIVRO_BASE'),
+('Scanner de Manifestação Paranormal de Conhecimento','GERAL','PARANORMAL','II',1,
+ 'Scanner para o elemento Conhecimento. Ação padrão para ativar; consome 1 PE/rodada. Enquanto ativo, o usuário sempre sabe a direção de todas as manifestações paranormais de Conhecimento em alcance longo.','LIVRO_BASE'),
+('Scanner de Manifestação Paranormal de Energia',     'GERAL','PARANORMAL','II',1,
+ 'Scanner para o elemento Energia. Ação padrão para ativar; consome 1 PE/rodada. Enquanto ativo, o usuário sempre sabe a direção de todas as manifestações paranormais de Energia em alcance longo.','LIVRO_BASE'),
+('Scanner de Manifestação Paranormal de Medo',        'GERAL','PARANORMAL','II',1,
+ 'Scanner para o elemento Medo. Ação padrão para ativar; consome 1 PE/rodada. Enquanto ativo, o usuário sempre sabe a direção de todas as manifestações paranormais de Medo em alcance longo.','LIVRO_BASE');
+
+-- ============================================================
+-- EQUIPAMENTOS GERAIS — Itens Paranormais (SoH)
+-- ============================================================
+INSERT INTO itens (nome, tipo, subtipo, categoria, espacos, descricao, fonte) VALUES
+('Catalisador Ritualístico — Ampliador',      'GERAL','PARANORMAL','I',0.5,
+ 'Componente ritualístico alterado por exposição paranormal. Consumido ao usar: aumenta o alcance do ritual em um passo (curto→médio, médio→longo, longo→extremo) ou dobra a área de efeito.','SOBREVIVENDO_AO_HORROR'),
+('Catalisador Ritualístico — Perturbador',    'GERAL','PARANORMAL','I',0.5,
+ 'Componente ritualístico alterado por exposição paranormal. Consumido ao usar: a DT para resistir ao ritual aumenta em +2.','SOBREVIVENDO_AO_HORROR'),
+('Catalisador Ritualístico — Potencializador','GERAL','PARANORMAL','I',0.5,
+ 'Componente ritualístico alterado por exposição paranormal. Consumido ao usar: o dano do ritual aumenta em um dado do mesmo tipo.','SOBREVIVENDO_AO_HORROR'),
+('Catalisador Ritualístico — Prolongador',    'GERAL','PARANORMAL','I',0.5,
+ 'Componente ritualístico alterado por exposição paranormal. Consumido ao usar: a duração do ritual dobra. Não funciona para rituais instantâneos ou sustentados.','SOBREVIVENDO_AO_HORROR'),
+('Ligação Direta Infernal','GERAL','PARANORMAL','II',1,
+ 'Fios de cobre contaminados com Sangue e Energia. Ação completa para ligar um veículo; o veículo ganha RD 20 e imunidade a Sangue, e você recebe +5 em Pilotagem. Porém o veículo tenta causar caos — falhas em testes de Pilotagem têm consequências dobradas. Remover: ação completa.','SOBREVIVENDO_AO_HORROR'),
+('Medidor de Condição Vertebral','GERAL','PARANORMAL','II',1,
+ 'Coluna vertebral sustentada por Lodo de Morte e fios de Energia. Conectar: ação completa (atordoado por 1 rodada). Conta como vestimenta (+2 em Fortitude). Ilumina em cores indicando saúde (verde=ótimo, vermelho=crítico) e emite pulsos lilás quando sob efeito paranormal. +5 em testes de Medicina feitos para auxiliar o usuário.','SOBREVIVENDO_AO_HORROR'),
+('Pé de Morto','GERAL','PARANORMAL','II',1,
+ 'Botas costuradas com pele de cadáveres amaldiçoados pela Morte. +5 em Furtividade. Em cenas de furtividade, qualquer ação chamativa que envolva apenas se mover (correr, saltar) aumenta a visibilidade em apenas +1 (em vez de mais).','SOBREVIVENDO_AO_HORROR'),
+('Pendrive Selado','GERAL','PARANORMAL','II',0.5,
+ 'Dispositivo gravado com sigilos dourados de Conhecimento. Não pode ser invadido ou afetado por rituais, seres e efeitos de Energia. Permite invadir outros dispositivos sem ser contaminado por entidades. Existem também HDs externos e celulares selados.','SOBREVIVENDO_AO_HORROR'),
+('Valete da Salvação','GERAL','PARANORMAL','I',0.5,
+ 'Valete de ouros pintado de dourado com sigilos de Conhecimento. Ação padrão para jogar ao ar; ela voa até alcance médio apontando para a melhor rota de fuga, depois desaparece. Em cena de perseguição, o usuário é automaticamente bem-sucedido em uma ação de cortar caminho.','SOBREVIVENDO_AO_HORROR');
