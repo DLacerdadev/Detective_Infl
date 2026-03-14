@@ -8,11 +8,11 @@ type Circulo = 0 | 1 | 2 | 3 | 4;
 
 const ELEM_CONFIG: Record<string, { label: string; color: string; border: string; bg: string; dot: string }> = {
   "Sangue":      { label: "🩸 Sangue",      color: "text-red-400",    border: "border-red-500/50",    bg: "bg-red-500/10",    dot: "bg-red-400" },
-  "Morte":       { label: "💀 Morte",        color: "text-slate-300",  border: "border-slate-400/50",  bg: "bg-slate-500/10",  dot: "bg-slate-300" },
-  "Conhecimento":{ label: "🧠 Conhecimento", color: "text-violet-400", border: "border-violet-500/50", bg: "bg-violet-500/10", dot: "bg-violet-400" },
-  "Energia":     { label: "⚡ Energia",      color: "text-yellow-400", border: "border-yellow-500/50", bg: "bg-yellow-500/10", dot: "bg-yellow-400" },
-  "Medo":        { label: "👁 Medo",         color: "text-purple-400", border: "border-purple-500/50", bg: "bg-purple-500/10", dot: "bg-purple-400" },
-  "Variável":    { label: "✦ Variável",      color: "text-amber-400",  border: "border-amber-500/50",  bg: "bg-amber-500/10",  dot: "bg-amber-400" },
+  "Morte":       { label: "💀 Morte",        color: "text-stone-500",  border: "border-stone-600/50",  bg: "bg-stone-900/30",  dot: "bg-stone-600" },
+  "Conhecimento":{ label: "🧠 Conhecimento", color: "text-yellow-400", border: "border-yellow-500/50", bg: "bg-yellow-500/10", dot: "bg-yellow-400" },
+  "Energia":     { label: "⚡ Energia",      color: "text-purple-400", border: "border-purple-500/50", bg: "bg-purple-500/10", dot: "bg-purple-400" },
+  "Medo":        { label: "👁 Medo",         color: "text-slate-300",  border: "border-slate-400/50",  bg: "bg-slate-500/10",  dot: "bg-slate-300" },
+  "Variável":    { label: "✦ Variável",      color: "text-violet-400", border: "border-violet-500/50", bg: "bg-violet-500/10", dot: "bg-violet-400" },
 };
 
 const CIRCULO_LABELS: Record<number, string> = { 1: "I", 2: "II", 3: "III", 4: "IV" };

@@ -62,11 +62,11 @@ const ELEM_CONFIG: Record<string, {
   border: string;
 }> = {
   Sangue:      { icon: <Flame   className="w-3 h-3" />, iconLg: <Flame   className="w-5 h-5" />, badge: "bg-red-900/60 text-red-300 border-red-700",         row: "hover:bg-red-950/20",    active: "bg-red-900/50 text-red-200",    border: "border-red-600" },
-  Morte:       { icon: <Skull   className="w-3 h-3" />, iconLg: <Skull   className="w-5 h-5" />, badge: "bg-slate-700/60 text-slate-300 border-slate-600",   row: "hover:bg-slate-900/20",  active: "bg-slate-700/50 text-slate-200",border: "border-slate-500" },
-  Conhecimento:{ icon: <Brain   className="w-3 h-3" />, iconLg: <Brain   className="w-5 h-5" />, badge: "bg-violet-900/60 text-violet-300 border-violet-700", row: "hover:bg-violet-950/20", active: "bg-violet-900/50 text-violet-200",border: "border-violet-600" },
-  Energia:     { icon: <Zap     className="w-3 h-3" />, iconLg: <Zap     className="w-5 h-5" />, badge: "bg-yellow-900/60 text-yellow-300 border-yellow-700", row: "hover:bg-yellow-950/20", active: "bg-yellow-900/50 text-yellow-200",border: "border-yellow-600" },
-  Medo:        { icon: <Ghost   className="w-3 h-3" />, iconLg: <Ghost   className="w-5 h-5" />, badge: "bg-purple-900/60 text-purple-300 border-purple-700", row: "hover:bg-purple-950/20", active: "bg-purple-900/50 text-purple-200",border: "border-purple-600" },
-  Variável:    { icon: <Shuffle className="w-3 h-3" />, iconLg: <Shuffle className="w-5 h-5" />, badge: "bg-amber-900/60 text-amber-300 border-amber-700",    row: "hover:bg-amber-950/20",  active: "bg-amber-900/50 text-amber-200", border: "border-amber-600" },
+  Morte:       { icon: <Skull   className="w-3 h-3" />, iconLg: <Skull   className="w-5 h-5" />, badge: "bg-stone-900/80 text-stone-400 border-stone-700",   row: "hover:bg-stone-950/30",  active: "bg-stone-900/70 text-stone-300", border: "border-stone-700" },
+  Conhecimento:{ icon: <Brain   className="w-3 h-3" />, iconLg: <Brain   className="w-5 h-5" />, badge: "bg-yellow-900/60 text-yellow-300 border-yellow-700", row: "hover:bg-yellow-950/20", active: "bg-yellow-900/50 text-yellow-200",border: "border-yellow-600" },
+  Energia:     { icon: <Zap     className="w-3 h-3" />, iconLg: <Zap     className="w-5 h-5" />, badge: "bg-purple-900/60 text-purple-300 border-purple-700", row: "hover:bg-purple-950/20", active: "bg-purple-900/50 text-purple-200",border: "border-purple-600" },
+  Medo:        { icon: <Ghost   className="w-3 h-3" />, iconLg: <Ghost   className="w-5 h-5" />, badge: "bg-slate-700/60 text-slate-300 border-slate-600",    row: "hover:bg-slate-900/20",  active: "bg-slate-700/50 text-slate-200", border: "border-slate-500" },
+  Variável:    { icon: <Shuffle className="w-3 h-3" />, iconLg: <Shuffle className="w-5 h-5" />, badge: "bg-violet-900/60 text-violet-300 border-violet-700",  row: "hover:bg-violet-950/20", active: "bg-violet-900/50 text-violet-200",border: "border-violet-600" },
 };
 
 const CIRC_BADGE: Record<number, string> = {

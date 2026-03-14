@@ -117,11 +117,11 @@ function LockedBadge({ nome, color }: { nome: string; color: "amber" | "blue" })
 // ── element config ─────────────────────────────────────────────────────────
 const ELEM_CONFIG: Record<string, { label: string; color: string; bg: string; border: string }> = {
   Sangue:       { label: "Sangue",       color: "text-red-400",    bg: "bg-red-900/20",    border: "border-red-700/50" },
-  Morte:        { label: "Morte",        color: "text-slate-400",  bg: "bg-slate-900/30",  border: "border-slate-600/50" },
-  Conhecimento: { label: "Conhecimento", color: "text-cyan-400",   bg: "bg-cyan-900/20",   border: "border-cyan-700/50" },
-  Energia:      { label: "Energia",      color: "text-yellow-400", bg: "bg-yellow-900/20", border: "border-yellow-700/50" },
-  Medo:         { label: "Medo",         color: "text-purple-400", bg: "bg-purple-900/20", border: "border-purple-700/50" },
-  "Variável":   { label: "Variável",     color: "text-slate-400",  bg: "bg-slate-800/20",  border: "border-slate-600/50" },
+  Morte:        { label: "Morte",        color: "text-stone-500",  bg: "bg-stone-950/40",  border: "border-stone-700/60" },
+  Conhecimento: { label: "Conhecimento", color: "text-yellow-400", bg: "bg-yellow-900/20", border: "border-yellow-700/50" },
+  Energia:      { label: "Energia",      color: "text-purple-400", bg: "bg-purple-900/20", border: "border-purple-700/50" },
+  Medo:         { label: "Medo",         color: "text-slate-400",  bg: "bg-slate-900/30",  border: "border-slate-600/50" },
+  "Variável":   { label: "Variável",     color: "text-cyan-400",   bg: "bg-cyan-900/20",   border: "border-cyan-700/50" },
 };
 
 // ── component ─────────────────────────────────────────────────────────────
