@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 1ZWnKA2RCy9L0rkcLo9JMCyKzhy0UbTDTypDXT7N0dX1PZAtyfbcqopax24VeKf
+\restrict ZTGqZmffYvkOkuE4qnCgQKc65MtS8BEewp2CcmWCbhdpN05bMMx0nviVmy9ThDC
 
 -- Dumped from database version 16.10
 -- Dumped by pg_dump version 16.10
@@ -830,17 +830,6 @@ b5c9e8f3-7cd0-4308-8684-4a9500276d9b	Conhecendo o Medo	Medo	4	Padrão	Toque	1 pe
 
 
 --
--- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.sessions (sid, sess, expire) FROM stdin;
-e352e66716cee3fba400f7bd6bf334bb7bb1df94a5139b33c8c0f5cffccaf957	{"user": {"id": "2142da82-5a31-4209-b821-06af2c8a9bb6", "role": "admin", "email": "dlacerda.dev@gmail.com", "lastName": "Lacerda", "firstName": "Daniel"}}	2026-03-19 14:12:46.831
-4880e3492ca111f814e6dea35f3f4336d860c0a414146a0bc5cd602210495ca3	{"user": {"id": "2142da82-5a31-4209-b821-06af2c8a9bb6", "role": "admin", "email": "dlacerda.dev@gmail.com", "lastName": "Lacerda", "firstName": "Daniel"}}	2026-03-20 13:19:27.613
-7d84685c50382d80a2d34d82df6f7016d32dab86863028b9fee377e9c4bac35a	{"user": {"id": "c7273c5e-8e85-4566-8a95-0bf90fdab8d9", "role": "user", "email": "soprajogos.daniel@gmail.com", "lastName": "7", "firstName": "Mika"}}	2026-03-21 16:18:25.806
-\.
-
-
---
 -- Data for Name: trilhas; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -872,17 +861,6 @@ e7cea3fb-6d55-40ac-87c7-4896b13fea2a	5882ea7c-0fa6-479d-a327-27423b19772c	Possu�
 29c17b4a-2146-406b-bec1-86f13557f342	307d335e-6217-44e2-8e9e-4e70b5048c7b	Durão	Sobrevivendo ao Horror	[{"nex": "Estágio 2", "nome": "Durão", "descricao": "Recebe +4 PV imediatos e +2 PV no próximo estágio."}, {"nex": "Estágio 4", "nome": "Pancada Forte", "descricao": "Gaste 1 PE para receber +5 no teste de ataque."}]	2026-03-12 03:58:08.913352+00
 1ad829e2-a860-4a8d-89cf-77fa36b6f921	307d335e-6217-44e2-8e9e-4e70b5048c7b	Esperto	Sobrevivendo ao Horror	[{"nex": "Estágio 2", "nome": "Esperto", "descricao": "Torna-se treinado em uma perícia adicional."}, {"nex": "Estágio 4", "nome": "Entendido", "descricao": "Escolha 2 perícias; gaste 1 PE para somar +1d4 no teste."}]	2026-03-12 03:58:08.913352+00
 8915c5be-8d28-4180-bd98-46c9ea443ceb	307d335e-6217-44e2-8e9e-4e70b5048c7b	Esotérico	Sobrevivendo ao Horror	[{"nex": "Estágio 2", "nome": "Esotérico", "descricao": "Gaste ação padrão e 1 PE para sentir energias paranormais em alcance curto."}, {"nex": "Estágio 4", "nome": "Iniciado", "descricao": "Aprende e pode conjurar um ritual de 1º círculo."}]	2026-03-12 03:58:08.913352+00
-\.
-
-
---
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.users (id, email, first_name, last_name, role, created_at, updated_at, password_hash) FROM stdin;
-72a8e31c-252c-404d-b76a-6630b54a969e	agente.teste.1773260286588@email.com	Agente	Teste	user	2026-03-11 20:18:12.80632+00	2026-03-11 20:18:12.80632+00	$2b$12$r/JGC..DbvEFuvcntfwf4.ECca/MJQxKRw70ollXmG.9Qi6OVVt9K
-2142da82-5a31-4209-b821-06af2c8a9bb6	dlacerda.dev@gmail.com	Daniel	Lacerda	admin	2026-03-11 21:20:54.21737+00	2026-03-11 21:20:54.21737+00	\N
-c7273c5e-8e85-4566-8a95-0bf90fdab8d9	soprajogos.daniel@gmail.com	Mika	7	user	2026-03-13 13:17:51.747103+00	2026-03-13 13:17:51.747103+00	\N
 \.
 
 
@@ -1137,5 +1115,5 @@ ALTER TABLE ONLY public.trilhas
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 1ZWnKA2RCy9L0rkcLo9JMCyKzhy0UbTDTypDXT7N0dX1PZAtyfbcqopax24VeKf
+\unrestrict ZTGqZmffYvkOkuE4qnCgQKc65MtS8BEewp2CcmWCbhdpN05bMMx0nviVmy9ThDC
 

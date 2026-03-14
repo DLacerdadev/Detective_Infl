@@ -336,6 +336,11 @@ artifacts-monorepo/
 
 Todas as rotas sao montadas sob `/api/`. Ex: `GET /api/classes`.
 
+### 6.0. Healthcheck (`routes/health.ts`)
+| Metodo | Rota | Descricao |
+|--------|------|-----------|
+| GET | `/healthz` | Healthcheck (retorna 200 OK) |
+
 ### 6.1. Autenticacao (`routes/auth.ts`)
 | Metodo | Rota | Descricao |
 |--------|------|-----------|
@@ -570,13 +575,24 @@ O seed e idempotente: verifica se as tabelas ja tem dados antes de inserir.
 
 ## 14. Arquivo SQL de Dump
 
-O arquivo `docs/DUMP_DATABASE.sql` contem um dump completo e inalterado do banco PostgreSQL gerado via `pg_dump --no-owner --no-acl`. Inclui estrutura de todas as 14 tabelas + todos os dados (usuarios, sessoes, personagens, campanhas, e dados de jogo). Para restaurar em outro ambiente:
+O dump do banco esta dividido em dois arquivos para seguranca (sem dados sensiveis de usuarios/sessoes):
+
+1. **`docs/DUMP_DATABASE.sql`** — Gerado via `pg_dump "$DATABASE_URL" --no-owner --no-acl --exclude-table-data=sessions --exclude-table-data=users`. Contem a estrutura completa de todas as 14 tabelas + dados de jogo (classes, trilhas, origens, pericias, rituais, itens, habilidades, campanhas, personagens, rolagens). Dados de `users` e `sessions` sao omitidos por privacidade.
+
+2. **`docs/SEED_PLACEHOLDER_USERS.sql`** — Insere dois usuarios placeholder com emails ficticios para satisfazer as foreign keys de tabelas que referenciam `users` (personagens, campanha_membros, etc.).
+
+Para restaurar em outro ambiente:
 
 ```bash
+createdb ordorealitas
 psql -U postgres -d ordorealitas < DUMP_DATABASE.sql
+psql -U postgres -d ordorealitas < SEED_PLACEHOLDER_USERS.sql
 ```
 
 Ou via Docker:
 ```bash
 docker exec -i <container_postgres> psql -U postgres -d ordorealitas < DUMP_DATABASE.sql
+docker exec -i <container_postgres> psql -U postgres -d ordorealitas < SEED_PLACEHOLDER_USERS.sql
 ```
+
+Apos restaurar, crie contas reais via o fluxo de registro do app e atualize as referencias de `user_id` se necessario.
