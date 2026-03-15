@@ -29,6 +29,7 @@ import { useToast } from "@/hooks/use-toast";
 import RolagensTab from "@/components/RolagensTab";
 import PersonagensTab from "@/components/PersonagensTab";
 import PreparacaoTab from "@/components/PreparacaoTab";
+import EmCenaTab from "@/components/EmCenaTab";
 
 function memberName(m: { firstName?: string | null; lastName?: string | null; email: string }) {
   if (m.firstName || m.lastName) return [m.firstName, m.lastName].filter(Boolean).join(" ");
@@ -298,15 +299,7 @@ export default function CampanhaDetail() {
       )}
 
       {activeTab === "emcena" && (
-        <div className="border border-border/40 border-dashed rounded-sm p-10 text-center space-y-2">
-          <Zap className="w-10 h-10 text-muted-foreground/30 mx-auto" />
-          <p className="font-mono text-sm text-muted-foreground">
-            Modo Em Cena — em desenvolvimento.
-          </p>
-          <p className="font-mono text-xs text-muted-foreground/50">
-            Aqui será possível acompanhar a sessão em tempo real com recursos de combate e narrativa.
-          </p>
-        </div>
+        <EmCenaTab campanhaId={campanha.id} amMestre={amMestre} />
       )}
 
       {activeTab === "membros" && (
