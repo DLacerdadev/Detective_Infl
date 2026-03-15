@@ -90,6 +90,7 @@ Manages all static game data:
 - `campanha_membros` — Campaign members with `papel` (mestre/jogador), unique per campanha+user
 - `campanha_rolagens` — Dice rolls per campaign: server-side roll engine, persisted history, supports pericia/atributo/dano types
 - `campanha_personagens` — Characters (agents) linked to campaigns. Unique per campanha+personagem. Members can add their own characters; mestre can add/remove any. Foreign keys cascade on delete. Has `preparacao` JSONB field `{ rituais?: string[], itens?: string[], pronto?: boolean }` for mission prep phase.
+- `campanha_em_cena` — Active scene state per campaign (unique per campanha). JSONB columns for `pistas` (EmCenaPista[]), `combatentes` (EmCenaCombatente[]), `tokens` (EmCenaToken[] with x/y positions), `ordemIniciativa` (string[]), `notasMestre` (string). Also stores `imagemCena` (URL), `ativa` (bool), `turnoAtual` (int). Auto-created on first GET. API at `/api/campanhas/:id/emcena/*` with role-based filtering (players don't see notasMestre, hidden pistas, or hidden combatentes).
 - `itens` — Equipment with full weapon/armor stats:
   - `tipo`: ARMA | PROTECAO | MUNICAO | GERAL
   - `subtipo`: weapon sub-types (CORPO_LEVE, CORPO_UMA_MAO, CORPO_DUAS_MAOS, DISPARO_DUAS_MAOS, FOGO_LEVE, FOGO_UMA_MAO, FOGO_DUAS_MAOS, PESADA, ARREMESSO) and general sub-types (ACESSORIO, EXPLOSIVO, OPERACIONAL, MEDICAMENTO, PARANORMAL)

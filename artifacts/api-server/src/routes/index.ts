@@ -4,6 +4,7 @@ import authRouter from "./auth";
 import charactersRouter from "./characters";
 import gameRouter from "./game";
 import campanhasRouter from "./campaigns";
+import cenaRouter from "./cena";
 
 const router: IRouter = Router();
 
@@ -12,5 +13,6 @@ router.use(authRouter);
 router.use(charactersRouter);
 router.use(gameRouter);
 router.use(campanhasRouter);
+router.use(cenaRouter);
 
 export default router;

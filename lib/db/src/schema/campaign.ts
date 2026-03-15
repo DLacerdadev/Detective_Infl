@@ -53,7 +53,55 @@ export const campanhaPersonagensTable = pgTable("campanha_personagens", {
   unique("campanha_personagem_uniq").on(t.campanhaId, t.personagemId),
 ]);
 
+export type EmCenaPista = {
+  id: string;
+  titulo: string;
+  descricao: string;
+  tipo: "pista" | "anotacao" | "local" | "pessoa" | "objeto";
+  visivel: boolean;
+  criadoEm: string;
+};
+
+export type EmCenaCombatente = {
+  id: string;
+  nome: string;
+  tipo: "jogador" | "monstro" | "aliado" | "neutro";
+  personagemId?: string | null;
+  iniciativa: number;
+  pvAtual: number;
+  pvMaximo: number;
+  defesa?: number | null;
+  ataque?: string | null;
+  notas?: string | null;
+  visivelParaJogadores: boolean;
+};
+
+export type EmCenaToken = {
+  id: string;
+  nome: string;
+  tipo: "jogador" | "monstro" | "aliado" | "neutro";
+  personagemId?: string | null;
+  combatenteId?: string | null;
+  x: number;
+  y: number;
+};
+
+export const campanhaEmCenaTable = pgTable("campanha_em_cena", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  campanhaId: varchar("campanha_id").notNull().references(() => campanhasTable.id, { onDelete: "cascade" }).unique(),
+  ativa: boolean("ativa").notNull().default(false),
+  imagemCena: text("imagem_cena"),
+  notasMestre: jsonb("notas_mestre").$type<string>().default(""),
+  pistas: jsonb("pistas").$type<EmCenaPista[]>().default([]),
+  combatentes: jsonb("combatentes").$type<EmCenaCombatente[]>().default([]),
+  tokens: jsonb("tokens").$type<EmCenaToken[]>().default([]),
+  ordemIniciativa: jsonb("ordem_iniciativa").$type<string[]>().default([]),
+  turnoAtual: integer("turno_atual").notNull().default(0),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
+});
+
 export type Campanha = typeof campanhasTable.$inferSelect;
 export type CampanhaMembro = typeof campanhaMembrosTable.$inferSelect;
 export type CampanhaRolagem = typeof campanhaRolagensTable.$inferSelect;
 export type CampanhaPersonagem = typeof campanhaPersonagensTable.$inferSelect;
+export type CampanhaEmCena = typeof campanhaEmCenaTable.$inferSelect;
